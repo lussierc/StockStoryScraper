@@ -3,7 +3,9 @@
 from newspaper import Article
 # NOTE: pip install newspaper3k
 
-link = input("* Enter Link: ")
+def main():
+    link = input("* Enter Link: ")
+    scrape_article(link)
 
 def scrape_article(link):
     article = Article(link)
@@ -12,3 +14,5 @@ def scrape_article(link):
 
     print("Article Text:")
     print(article.text)
+
+main()
