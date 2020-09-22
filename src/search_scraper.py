@@ -19,8 +19,10 @@ googlenews = GoogleNews(encode='utf-8')
 
 googlenews.search('IDEX')
 
-googlenews.getpage(2)
+googlenews.getpage(1)
 
-print(googlenews.result())
+print(googlenews.result()) # prints all info
 
-googlenews.gettext()
+print("\n\n\n")
+
+print(googlenews.gettext()) # prints titles
