@@ -21,8 +21,11 @@ def main():
     # print the results:
     print(googlenews.result())  # prints all info
     results = googlenews.result()
+
+    print(googlenews.gettext())  # prints titles
+    for result in results:
+        print("\n***", result)
     print("\n\n", results[0])
     print("\n\n\n")
-    print(googlenews.gettext())  # prints titles
 
 main()
