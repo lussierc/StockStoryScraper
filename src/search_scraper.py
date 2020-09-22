@@ -13,7 +13,7 @@ def main():
 
     # set search query parameters:
     googlenews = GoogleNews(start='06/12/2020',end='09/20/2020')
-    googlenews.search('IDEX')
+    googlenews.search('slack site:https://www.wsj.com')
     googlenews.getpage(1)
 
     # print the results:
