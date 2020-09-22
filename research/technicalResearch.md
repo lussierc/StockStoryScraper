@@ -22,7 +22,7 @@ Directly scrape google search results `https://google.com/search?q=<Query`, retu
 
 #### `google-search-results` pypi package
 
-Uses serp.api to get all the information we need.
+Uses serp.api to get all the information we need. However, since it uses serp.api, you must have an account that at minimum costs $50 a month.
 
 [PyPi Website](https://pypi.org/project/google-search-results/)
 

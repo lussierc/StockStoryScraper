@@ -1,5 +1,7 @@
 """Web scrape Google Searches to get article information."""
 
+# IT SEEMS YOU NEED A PAID API TO USE THIS PACKAGE AND AS A RESULT I WILL NOT LIKELY BE USING IT, HOLDING THIS FILE IN CASE
+
 from serpapi.google_search_results import GoogleSearchResults
 # pip3 install google-search-results
 
