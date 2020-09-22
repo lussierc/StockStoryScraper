@@ -41,3 +41,6 @@ Give URL to Google Search, query by days.
 #### Beautiful Soup
 
 Similar to requests.
+
+#### `GoogleNews` library
+[GoogleNews 1.4.1](https://pypi.org/project/GoogleNews/) is a Python library that can be installed via Pip. It can be used to easily scrape google news results, and you can search specifically by site by using queries, such as `slack site:https://www.wsj.com'`.

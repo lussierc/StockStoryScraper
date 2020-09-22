@@ -10,14 +10,18 @@ def main():
     googlenews = GoogleNews(lang='en')
     googlenews = GoogleNews(period='d')
     googlenews = GoogleNews(encode='utf-8')
+    googlenews.clear()  # clear past results
+
 
     # set search query parameters:
-    googlenews = GoogleNews(start='06/12/2020',end='09/20/2020')
+    googlenews = GoogleNews(start='09/01/2020',end='09/21/2020')
     googlenews.search('slack site:https://www.wsj.com')
     googlenews.getpage(1)
 
     # print the results:
     print(googlenews.result())  # prints all info
+    results = googlenews.result()
+    print("\n\n", results[0])
     print("\n\n\n")
     print(googlenews.gettext())  # prints titles
 
