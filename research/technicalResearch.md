@@ -24,6 +24,8 @@ Directly scrape google search results `https://google.com/search?q=<Query`, retu
 
 Uses serp.api to get all the information we need.
 
+[PyPi Website](https://pypi.org/project/google-search-results/)
+
 Information gathered includes:
 - Title
 - Link
