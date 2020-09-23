@@ -32,7 +32,11 @@ def scrape_google_news_search(googlenews):
 
     print("*** Printing results:")
     for result in results:
-        print("\n***", result)
+        print("***", result['title'])
+
+        link = result['link']
+        print("***", link)
+        scrape_article(link)
 
 
 def initalize_google_news():
