@@ -36,7 +36,11 @@ def scrape_google_news_search(googlenews):
 
         link = result['link']
         print("***", link)
-        scrape_article(link)
+        article_text = scrape_article(link)
+        result['text'] = article_text
+
+    print(results, "\n\n")  # prints all info
+
 
 
 def initalize_google_news():
@@ -60,8 +64,12 @@ def scrape_article(link):
     article.download()
     article.parse()
 
+    text = article.text
+
     print("Article Text:")
-    print(article.text)
+    print(text)
+
+    return text
 
 
 main()
