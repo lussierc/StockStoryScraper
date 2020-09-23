@@ -19,6 +19,7 @@ def get_search_queries():
             search_queries.append(query)
     return search_queries
 
+
 def main():
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news()
@@ -27,6 +28,7 @@ def main():
 
     for search_query in queries:
         scrape_google_news_search(googlenews, search_query)
+
 
 def scrape_google_news_search(googlenews, search_query):
     """Scrapes a Google News web search using a specifc query."""
@@ -47,16 +49,15 @@ def scrape_google_news_search(googlenews, search_query):
 
     print("*** Printing results:")
     for result in search_results:
-        print("***", result['title'])
+        print("***", result["title"])
 
-        link = result['link']
+        link = result["link"]
         print("***", link)
         article_text = scrape_article(link)
-        result['text'] = article_text
+        result["text"] = article_text
 
     print("*** Gathering results:")
     print(search_results, "\n\n")  # prints all info
-
 
 
 def initalize_google_news():
