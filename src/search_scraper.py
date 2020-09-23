@@ -6,19 +6,35 @@ from newspaper import Article
 # pip3 install GoogleNews, pip install newspaper3k
 
 
+def get_search_queries():
+    search_queries = []
+    stocks = ["apple"]
+    websites = ["www.wsj.com"]
+    for stock in stocks:
+        for website in websites:
+            website = "site:https://" + website
+            print(website)
+            query = stock + " " + website
+            print(query)
+            search_queries.append(query)
+    return search_queries
+
 def main():
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news()
-    scrape_google_news_search(googlenews)
 
+    queries = get_search_queries()
 
-def scrape_google_news_search(googlenews):
+    for search_query in queries:
+        scrape_google_news_search(googlenews, search_query)
+
+def scrape_google_news_search(googlenews, search_query):
     """Scrapes a Google News web search using a specifc query."""
 
     googlenews.clear()  # clear past results
 
     # set search query parameters:
-    googlenews.search("apple site:https://www.wsj.com")
+    googlenews.search(search_query)
     googlenews.getpage(1)
 
     # print the results:
