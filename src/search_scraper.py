@@ -1,10 +1,18 @@
 """Performs web scraping on Google News web searches."""
 
 from GoogleNews import GoogleNews
-# pip3 install GoogleNews
+from newspaper import Article
+# pip3 install GoogleNews, pip install newspaper3k
+
 
 def main():
+    scrape_google_news_search()
+
+main()
+
+def scrape_google_news_search():
     """Google News Web Scraping."""
+
     # initialize google news:
     googlenews = GoogleNews()
     googlenews = GoogleNews(lang='en')
@@ -21,11 +29,16 @@ def main():
     # print the results:
     print(googlenews.result())  # prints all info
     results = googlenews.result()
-
+    print("\n\n\n")
     print(googlenews.gettext())  # prints titles
+    print("\n\n\n")
     for result in results:
         print("\n***", result)
-    print("\n\n", results[0])
-    print("\n\n\n")
 
-main()
+def scrape_article(link):
+    article = Article(link)
+    article.download()
+    article.parse()
+
+    print("Article Text:")
+    print(article.text)
