@@ -22,16 +22,15 @@ def scrape_google_news_search(googlenews):
     googlenews.getpage(1)
 
     # print the results:
-    print("*** Gathering results:")
-    results = googlenews.result()
-    print(results, "\n\n")  # prints all info
+    search_results = googlenews.result()
+    print(search_results, "\n\n")  # prints all info
 
-    print("*** Gathering titles:")
-    titles = googlenews.gettext()
-    print(titles, "\n\n")  # prints titles
+    # print("*** Gathering titles:")
+    # titles = googlenews.gettext()
+    # print(titles, "\n\n")  # prints titles
 
     print("*** Printing results:")
-    for result in results:
+    for result in search_results:
         print("***", result['title'])
 
         link = result['link']
@@ -39,7 +38,8 @@ def scrape_google_news_search(googlenews):
         article_text = scrape_article(link)
         result['text'] = article_text
 
-    print(results, "\n\n")  # prints all info
+    print("*** Gathering results:")
+    print(search_results, "\n\n")  # prints all info
 
 
 
