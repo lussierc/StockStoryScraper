@@ -4,26 +4,18 @@ from GoogleNews import GoogleNews
 from newspaper import Article
 # pip3 install GoogleNews, pip install newspaper3k
 
-
 def main():
-    scrape_google_news_search()
+    googlenews = initalize_google_news()
+    scrape_google_news_search(googlenews)
 
-main()
-
-def scrape_google_news_search():
+def scrape_google_news_search(googlenews):
     """Google News Web Scraping."""
-
-    # initialize google news:
-    googlenews = GoogleNews()
-    googlenews = GoogleNews(lang='en')
-    googlenews = GoogleNews(period='d')
-    googlenews = GoogleNews(encode='utf-8')
     googlenews.clear()  # clear past results
 
 
     # set search query parameters:
     googlenews = GoogleNews(start='09/01/2020',end='09/21/2020')
-    googlenews.search('slack site:https://www.wsj.com')
+    googlenews.search('apple site:https://www.wsj.com')
     googlenews.getpage(1)
 
     # print the results:
@@ -35,6 +27,15 @@ def scrape_google_news_search():
     for result in results:
         print("\n***", result)
 
+def initalize_google_news():
+    print("initalize_google_news...")
+    # initialize google news:
+    googlenews = GoogleNews()
+    googlenews = GoogleNews(lang='en')
+    googlenews = GoogleNews(period='d')
+    googlenews = GoogleNews(encode='utf-8')
+    return googlenews
+
 def scrape_article(link):
     article = Article(link)
     article.download()
@@ -42,3 +43,5 @@ def scrape_article(link):
 
     print("Article Text:")
     print(article.text)
+
+main()
