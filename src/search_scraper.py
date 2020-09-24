@@ -7,16 +7,20 @@ from newspaper import Article
 
 
 def get_search_queries():
-    search_queries = []
-    stocks = ["apple"]
-    websites = ["www.wsj.com"]
+    """Gets search queries to be performed on Google News."""
+    search_queries = []  # list to hold created search queries
+
+    stocks = ["apple"]  # holds stocks that will be apart of search queries
+    websites = ["www.wsj.com"]  # holds websites for search queries
+
     for stock in stocks:
         for website in websites:
-            website = "site:https://" + website
+            website = "site:https://" + website  # add necessary site portion of query for website
             print(website)
-            query = stock + " " + website
+            query = stock + " " + website  # create query
             print(query)
-            search_queries.append(query)
+            search_queries.append(query)  # store created query
+
     return search_queries
 
 
