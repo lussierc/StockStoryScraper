@@ -2,9 +2,10 @@
 
 from GoogleNews import GoogleNews
 from newspaper import Article
+import spacy
 
 # pip3 install GoogleNews, pip install newspaper3k
-
+# pip install -U spacy
 
 def get_search_queries():
     """Gets search queries to be performed on Google News."""
