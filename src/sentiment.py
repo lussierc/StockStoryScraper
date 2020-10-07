@@ -19,3 +19,27 @@ columnName = ['Review','Sentiment']
 data_yelp.columns = columnName
 print(data_yelp.head(5))
 print(data_yelp.shape)
+
+
+punct = string.punctuation
+print(punct)
+
+
+def dataCleaning(sentence):
+  doc = nlp(sentence)
+  tokens = []
+  for token in doc:
+    if token.lemma_ != '-PRON-':
+      temp = token.lemma_.lower().strip()
+    else:
+      temp = token.lower_
+    tokens.append(temp)
+  clean_tokens = []
+  for token in tokens:
+    if token not in punct and token not in stopwords:
+      clean_tokens.append(token)
+  return clean_tokens
+
+test = dataCleaning("Today we are having heavy rainfall, We recommend you to stay at your home and be safe, Do not start running here and there")
+
+print(test)
