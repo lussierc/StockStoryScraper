@@ -17,6 +17,21 @@ import en_core_web_sm
 
 from search_scraper import *
 
+def dataCleaning(sentence):
+    doc = nlp(sentence)
+    tokens = []
+    for token in doc:
+        if token.lemma_ != "-PRON-":
+            temp = token.lemma_.lower().strip()
+        else:
+            temp = token.lower_
+        tokens.append(temp)
+    clean_tokens = []
+    for token in tokens:
+        if token not in punct and token not in stopwords:
+            clean_tokens.append(token)
+    return clean_tokens
+
 # load spacy small model as the nlp
 nlp = en_core_web_sm.load()
 from spacy.lang.en.stop_words import STOP_WORDS
@@ -34,22 +49,6 @@ print(data_yelp.head(5))
 print(data_yelp.shape)
 
 data = data_yelp
-
-def dataCleaning(sentence):
-    doc = nlp(sentence)
-    tokens = []
-    for token in doc:
-        if token.lemma_ != "-PRON-":
-            temp = token.lemma_.lower().strip()
-        else:
-            temp = token.lower_
-        tokens.append(temp)
-    clean_tokens = []
-    for token in tokens:
-        if token not in punct and token not in stopwords:
-            clean_tokens.append(token)
-    return clean_tokens
-
 
 X = data["Review"]
 y = data["Sentiment"]
@@ -99,9 +98,3 @@ for article in articles:
     article['text_sent'] = text_sent[0]
 
 print(articles)
-
-# article = ["I am testing a sad bad sentence here", "Ah man, I just cried, what should I do", "this is the best day of my life"]
-#
-# print("THE REAL TEST", pipe.predict(article))
-#
-# print(dataCleaning("Today we are having heavy rainfall, We recommend you to stay at your home and be safe, Do not start running here and there"))
