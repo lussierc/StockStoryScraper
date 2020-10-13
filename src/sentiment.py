@@ -77,22 +77,31 @@ for article in articles:
     title = []
     desc = []
     text = []
+
     print("\n\n------ ARTICLE: -------")
     print("* Title:", article['title'])
     title.append(article['title'])
-    print("* * Title Sentiment Rating:", pipe.predict(title))
+    title_sent = pipe.predict(title)
+    print("* * Title Sentiment Rating:", title_sent[0])
+    article['title_sent'] = title_sent[0]
+
     print("* Desc:", article['desc'])
     desc.append(article['desc'])
-    print("* * Desc Sentiment Rating:", pipe.predict(desc))
+    desc_sent = pipe.predict(desc)
+    print("* * Desc Sentiment Rating:", desc_sent[0])
+    article['desc_sent'] = desc_sent[0]
+
     print("* Text: (Keywords):",)
     print(dataCleaning(article['text']))
     text.append(article['text'])
-    print("* * Text Sentiment Rating:", pipe.predict(text))
+    text_sent = pipe.predict(text)
+    print("* * Text Sentiment Rating:", text_sent[0])
+    article['text_sent'] = text_sent[0]
 
+print(articles)
 
-
-article = ["I am testing a sad bad sentence here", "Ah man, I just cried, what should I do", "this is the best day of my life"]
-
-print("THE REAL TEST", pipe.predict(article))
-
-print(dataCleaning("Today we are having heavy rainfall, We recommend you to stay at your home and be safe, Do not start running here and there"))
+# article = ["I am testing a sad bad sentence here", "Ah man, I just cried, what should I do", "this is the best day of my life"]
+#
+# print("THE REAL TEST", pipe.predict(article))
+#
+# print(dataCleaning("Today we are having heavy rainfall, We recommend you to stay at your home and be safe, Do not start running here and there"))
