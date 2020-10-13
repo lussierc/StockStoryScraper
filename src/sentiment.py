@@ -74,7 +74,20 @@ articles = run()
 articles = articles[0] # remove outer list layer
 
 for article in articles:
-    print("***ARTICLE: ", article)
+    title = []
+    desc = []
+    text = []
+    print("\n\n------ ARTICLE: -------")
+    print("* Title:", article['title'])
+    title.append(article['title'])
+    print("* * Title Sentiment Rating:", pipe.predict(title))
+    print("* Desc:", article['desc'])
+    desc.append(article['desc'])
+    print("* * Desc Sentiment Rating:", pipe.predict(desc))
+    print("* Text:", article['text'])
+    text.append(article['text'])
+    print("* * Text Sentiment Rating:", pipe.predict(text))
+
 
 
 article = ["I am testing a sad bad sentence here", "Ah man, I just cried, what should I do", "this is the best day of my life"]
