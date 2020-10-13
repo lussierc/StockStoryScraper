@@ -84,7 +84,8 @@ for article in articles:
     print("* Desc:", article['desc'])
     desc.append(article['desc'])
     print("* * Desc Sentiment Rating:", pipe.predict(desc))
-    print("* Text:", article['text'])
+    print("* Text: (Keywords):",)
+    print(dataCleaning(article['text']))
     text.append(article['text'])
     print("* * Text Sentiment Rating:", pipe.predict(text))
 
