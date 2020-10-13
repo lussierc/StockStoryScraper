@@ -79,25 +79,24 @@ def main():
         text = []
 
         print("\n\n------ ARTICLE: -------")
-        print("* Title:", article['title'])
+        # print("* Title:", article['title'])
         title.append(article['title'])
         title_sent = pipe.predict(title)
-        print("* * Title Sentiment Rating:", title_sent[0])
+        # print("* * Title Sentiment Rating:", title_sent[0])
         article['title_sent'] = title_sent[0]
 
-        print("* Desc:", article['desc'])
+        # print("* Desc:", article['desc'])
         desc.append(article['desc'])
         desc_sent = pipe.predict(desc)
-        print("* * Desc Sentiment Rating:", desc_sent[0])
+        # print("* * Desc Sentiment Rating:", desc_sent[0])
         article['desc_sent'] = desc_sent[0]
 
         print("* Text: (Keywords):",)
-        print(dataCleaning(article['text']))
+        # print(dataCleaning(article['text']))
         text.append(article['text'])
         text_sent = pipe.predict(text)
-        print("* * Text Sentiment Rating:", text_sent[0])
+        # print("* * Text Sentiment Rating:", text_sent[0])
         article['text_sent'] = text_sent[0]
 
     print(articles)
     return articles
-main()
