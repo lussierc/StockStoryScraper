@@ -1,3 +1,9 @@
+"""Simple spacy-based sentiment analyzer."""
+# Insipiration: https://www.kaggle.com/krutarthhd/sentiment-classification-using-spacy/notebook
+# 1 sentiment is positive, 2 is 0
+
+
+# import necessary libraries
 import spacy
 from spacy import displacy
 import pandas as pd
@@ -9,24 +15,25 @@ from sklearn.svm import LinearSVC
 import string
 import en_core_web_sm
 
+from search_scraper import *
+
+# load spacy small model as the nlp
 nlp = en_core_web_sm.load()
 from spacy.lang.en.stop_words import STOP_WORDS
 
+# gather stop words & punctutation
 stopwords = list(STOP_WORDS)
-print(len(stopwords))
+punct = string.punctuation
 
 # TRAIN
-data_yelp = pd.read_csv("data/data.txt", sep="\t", header=None)
+data_yelp = pd.read_csv("data/data.txt", sep="\t", header=None)  # currently using yelp review data
 columnName = ["Review", "Sentiment"]
 data_yelp.columns = columnName
+
 print(data_yelp.head(5))
 print(data_yelp.shape)
 
 data = data_yelp
-
-punct = string.punctuation
-print(punct)
-
 
 def dataCleaning(sentence):
     doc = nlp(sentence)
@@ -44,16 +51,10 @@ def dataCleaning(sentence):
     return clean_tokens
 
 
-test = dataCleaning(
-    "Today we are having heavy rainfall, We recommend you to stay at your home and be safe, Do not start running here and there"
-)
-
-print(test)
-
 X = data["Review"]
 y = data["Sentiment"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-print(X_train.shape, y_test.shape)
+# print(X_train.shape, y_test.shape)
 
 
 # preparing the model:
@@ -65,8 +66,19 @@ pipe = Pipeline(steps)
 pipe.fit(X_train, y_train)
 
 y_pred = pipe.predict(X_test)
-print(classification_report(y_test, y_pred))
-print("\n\n")
-print(confusion_matrix(y_test, y_pred))
+# print(classification_report(y_test, y_pred))
+# print("\n\n")
+# print(confusion_matrix(y_test, y_pred))
 
-print("THE REAL TEST", pipe.predict(["I am testing a sad bad sentence here"]))
+articles = run()
+articles = articles[0] # remove outer list layer
+
+for article in articles:
+    print("***ARTICLE: ", article)
+
+
+article = ["I am testing a sad bad sentence here", "Ah man, I just cried, what should I do", "this is the best day of my life"]
+
+print("THE REAL TEST", pipe.predict(article))
+
+print(dataCleaning("Today we are having heavy rainfall, We recommend you to stay at your home and be safe, Do not start running here and there"))
