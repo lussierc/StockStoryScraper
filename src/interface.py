@@ -18,12 +18,21 @@ for i in range(len(data)):
     st.markdown("### Title:")
     st.markdown(article['title'])
     st.markdown("#### Title Sentiment:")
-    st.markdown(article['title_sent'])
+    if article['title_sent'] == 0:
+        st.markdown("Negative")
+    elif article['title_sent'] == 1:
+        st.markdown("Positive")
 
     st.markdown("### Description:")
     st.markdown(article['desc'])
     st.markdown("#### Description Sentiment:")
-    st.markdown(article['desc_sent'])
+    if article['desc_sent'] == 0:
+        st.markdown("Negative")
+    elif article['desc_sent'] == 1:
+        st.markdown("Positive")
 
     st.markdown("### Overall Text Sentiment:")
-    st.markdown(article['text_sent'])
+    if article['text_sent'] == 0:
+        st.markdown("Negative")
+    elif article['text_sent'] == 1:
+        st.markdown("Positive")
