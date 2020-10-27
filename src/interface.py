@@ -7,8 +7,12 @@ from PIL import Image
 from sentiment import *
 
 st.title("StockTextMining")
-stocks_input = st.text_input("Enter Stock Names To Search (EX: Apple, Draftkings):")
+st.markdown("#### Enter Stock Names:")
+stocks_input = st.text_input(
+    "Enter Stock Names Separated by Commas (EX: Apple, Draftkings):"
+)
 
+st.markdown("#### Choose Websites To Search Given Stocks With:")
 WSJ = st.checkbox("www.wsj.com")
 mfool = st.checkbox("www.fool.com")
 mktwatch = st.checkbox("www.marketwatch.com")
@@ -41,25 +45,25 @@ for i in range(len(data)):
 
     st.markdown("## Article", i)
     st.markdown("#### Media:")
-    st.markdown(article['media'])
+    st.markdown(article["media"])
     st.markdown("### Title:")
-    st.markdown(article['title'])
+    st.markdown(article["title"])
     st.markdown("#### Title Sentiment:")
-    if article['title_sent'] == 0:
+    if article["title_sent"] == 0:
         st.markdown("Negative")
-    elif article['title_sent'] == 1:
+    elif article["title_sent"] == 1:
         st.markdown("Positive")
 
     st.markdown("### Description:")
-    st.markdown(article['desc'])
+    st.markdown(article["desc"])
     st.markdown("#### Description Sentiment:")
-    if article['desc_sent'] == 0:
+    if article["desc_sent"] == 0:
         st.markdown("Negative")
-    elif article['desc_sent'] == 1:
+    elif article["desc_sent"] == 1:
         st.markdown("Positive")
 
     st.markdown("### Overall Text Sentiment:")
-    if article['text_sent'] == 0:
+    if article["text_sent"] == 0:
         st.markdown("Negative")
-    elif article['text_sent'] == 1:
+    elif article["text_sent"] == 1:
         st.markdown("Positive")
