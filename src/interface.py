@@ -12,6 +12,7 @@ stocks_input = st.text_input(
     "Enter Stock Names Separated by Commas (EX: Apple, Draftkings):"
 )
 
+
 st.markdown("#### Choose Websites To Search Given Stocks With:")
 WSJ = st.checkbox("www.wsj.com")
 mfool = st.checkbox("www.fool.com")
@@ -44,6 +45,8 @@ for i in range(len(data)):
     article = data[i]
 
     st.markdown("## Article", i)
+    st.markdown("#### Stock:")
+    st.markdown(article["stock"])
     st.markdown("#### Media:")
     st.markdown(article["media"])
     st.markdown("### Title:")

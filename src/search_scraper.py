@@ -22,23 +22,28 @@ def get_search_queries(stocks, websites):
             # print(query)
             search_queries.append(query)  # store created query
 
-    return search_queries
+    return search_queries, stock_list
 
 
 def run(stocks, websites):
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news()
 
-    queries = get_search_queries(stocks, websites)
+    queries, stock_list = get_search_queries(stocks, websites)
     results = []
+
+    i = 0
     for search_query in queries:
-        print(search_query)
-        results.append(scrape_google_news_search(googlenews, search_query))
+        for stock in stock_list:
+            if stock in search_query:
+                current_stock = stock
+        print(search_query, "STOCK", current_stock)
+        results.append(scrape_google_news_search(googlenews, search_query, current_stock))
 
     return results
 
 
-def scrape_google_news_search(googlenews, search_query):
+def scrape_google_news_search(googlenews, search_query, current_stock):
     """Scrapes a Google News web search using a specifc query."""
 
     googlenews.clear()  # clear past results
@@ -63,6 +68,7 @@ def scrape_google_news_search(googlenews, search_query):
         #print("***", link)
         article_text = scrape_article(link)
         result["text"] = article_text
+        result["stock"] = current_stock
 
     # print("*** Gathering results:")
     # #print(search_results, "\n\n")  # prints all info
