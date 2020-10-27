@@ -6,14 +6,14 @@ from PIL import Image
 
 from sentiment import *
 st.title("StockTextMining")
+stocks_input = st.text_input("Enter Stock Names To Search:", "EX: Apple, Draftkings")
 
-data = main()
+data = main(stocks_input)
 print("\n\n\nDATADOGS:", data)
 
 for i in range(len(data)):
     article = data[i]
 
-    user_input = st.text_input("Enter Stock Names To Search:", "EX: Apple, Draftkings")
 
     st.markdown("## Article", i)
 

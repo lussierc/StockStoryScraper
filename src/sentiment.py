@@ -36,7 +36,7 @@ def dataCleaning(sentence):
             clean_tokens.append(token)
     return clean_tokens
 
-def main():
+def main(stocks):
     # load spacy small model as the nlp
 
     # gather stop words & punctutation
@@ -70,7 +70,7 @@ def main():
     # print("\n\n")
     # print(confusion_matrix(y_test, y_pred))
 
-    data = run()
+    data = run(stocks)
 
     articles = [j for i in data for j in i] # combine inner and outer list elements (results of individual search queries)
 

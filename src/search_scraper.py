@@ -26,11 +26,10 @@ def get_search_queries(stocks):
     return search_queries
 
 
-def run():
+def run(stocks):
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news()
 
-    stocks = "Draftkings, Apple"
     queries = get_search_queries(stocks)
     results = []
     for search_query in queries:
@@ -82,7 +81,7 @@ def initalize_google_news():
     googlenews = GoogleNews(lang="en")
     googlenews = GoogleNews(period="d")
     googlenews = GoogleNews(encode="utf-8")
-    googlenews = GoogleNews(start="09/01/2020", end="09/21/2020")
+    googlenews = GoogleNews(start="10/01/2020", end="10/26/2020")
 
     return googlenews
 
