@@ -6,9 +6,15 @@ from PIL import Image
 
 from sentiment import *
 st.title("StockTextMining")
-stocks_input = st.text_input("Enter Stock Names To Search:", "EX: Apple, Draftkings")
+stocks_input = st.text_input("Enter Stock Names To Search (EX: Apple, Draftkings):")
 
-data = main(stocks_input)
+WSJ = st.checkbox("www.wsj.com")
+websites = []
+if WSJ:
+    websites.append("www.wsj.com")
+
+data = main(stocks_input, websites)
+
 print("\n\n\nDATADOGS:", data)
 
 for i in range(len(data)):
