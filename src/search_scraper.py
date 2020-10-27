@@ -7,14 +7,15 @@ import spacy
 # pip3 install GoogleNews, pip install newspaper3k
 # pip install -U spacy
 
-def get_search_queries():
+def get_search_queries(stocks):
     """Gets search queries to be performed on Google News."""
     search_queries = []  # list to hold created search queries
 
-    stocks = ["facebook"]  # holds stocks that will be apart of search queries
+    stock_list = stocks.split(", ")
+    print(stock_list)
     websites = ["www.wsj.com"]  # holds websites for search queries
 
-    for stock in stocks:
+    for stock in stock_list:
         for website in websites:
             website = "site:https://" + website  # add necessary site portion of query for website
             # print(website)
@@ -29,9 +30,11 @@ def run():
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news()
 
-    queries = get_search_queries()
+    stocks = "Draftkings, Apple"
+    queries = get_search_queries(stocks)
     results = []
     for search_query in queries:
+        print(search_query)
         results.append(scrape_google_news_search(googlenews, search_query))
 
     return results

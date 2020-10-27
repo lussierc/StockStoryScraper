@@ -70,8 +70,10 @@ def main():
     # print("\n\n")
     # print(confusion_matrix(y_test, y_pred))
 
-    articles = run()
-    articles = articles[0] # remove outer list layer
+    data = run()
+
+    articles = [j for i in data for j in i] # combine inner and outer list elements (results of individual search queries)
+
 
     for article in articles:
         title = []
