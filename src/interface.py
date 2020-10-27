@@ -27,7 +27,8 @@ for i in range(len(data)):
 
 
     st.markdown("## Article", i)
-
+    st.markdown("#### Media:")
+    st.markdown(article['media'])
     st.markdown("### Title:")
     st.markdown(article['title'])
     st.markdown("#### Title Sentiment:")
