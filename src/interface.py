@@ -5,18 +5,32 @@ import pandas as pd
 from PIL import Image
 
 from sentiment import *
+
 st.title("StockTextMining")
 stocks_input = st.text_input("Enter Stock Names To Search (EX: Apple, Draftkings):")
 
 WSJ = st.checkbox("www.wsj.com")
-nyt = st.checkbox("www.nytimes.com")
+mfool = st.checkbox("www.fool.com")
+mktwatch = st.checkbox("www.marketwatch.com")
+bloom = st.checkbox("www.bloomberg.com")
+yahoo = st.checkbox("finance.yahoo.com")
 
 websites = []
 if WSJ:
     websites.append("www.wsj.com")
 
-if nyt:
-    websites.append("www.nytimes.com")
+if mfool:
+    websites.append("www.fool.com")
+
+if mktwatch:
+    websites.append("www.marketwatch.com")
+
+if bloom:
+    websites.append("www.bloomberg.com")
+
+if yahoo:
+    websites.append("finance.yahoo.com")
+
 
 data = main(stocks_input, websites)
 
@@ -24,7 +38,6 @@ print("\n\n\nDATADOGS:", data)
 
 for i in range(len(data)):
     article = data[i]
-
 
     st.markdown("## Article", i)
     st.markdown("#### Media:")
