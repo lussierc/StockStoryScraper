@@ -9,9 +9,14 @@ st.title("StockTextMining")
 stocks_input = st.text_input("Enter Stock Names To Search (EX: Apple, Draftkings):")
 
 WSJ = st.checkbox("www.wsj.com")
+nyt = st.checkbox("www.nytimes.com")
+
 websites = []
 if WSJ:
     websites.append("www.wsj.com")
+
+if nyt:
+    websites.append("www.nytimes.com")
 
 data = main(stocks_input, websites)
 
