@@ -90,13 +90,16 @@ def initalize_google_news():
 def scrape_article(link):
     """Scrapes a specific article given a link."""
 
-    article = Article(link)
-    article.download()
-    article.parse()
+    try:
+        article = Article(link)
+        article.download()
+        article.parse()
 
-    text = article.text
+        text = article.text
 
-    # print("Article Text:")
-    # print(text)
+        # print("Article Text:")
+        # print(text)
+    except:
+        print("nope")
 
     return text

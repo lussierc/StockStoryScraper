@@ -13,6 +13,8 @@ print("\n\n\nDATADOGS:", data)
 for i in range(len(data)):
     article = data[i]
 
+    user_input = st.text_input("Enter Stock Names To Search:", "EX: Apple, Draftkings")
+
     st.markdown("## Article", i)
 
     st.markdown("### Title:")
