@@ -107,3 +107,7 @@ def scrape_article(link):
         print("nope")
 
     return text
+
+def new_article_validator():
+    """Ensures an article is new by looking at scraped links."""
+    print("placeholder")

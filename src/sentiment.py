@@ -1,22 +1,20 @@
 """Simple spacy-based sentiment analyzer."""
-# Insipiration: https://www.kaggle.com/krutarthhd/sentiment-classification-using-spacy/notebook
+# Sentiment Insipiration: https://www.kaggle.com/krutarthhd/sentiment-classification-using-spacy/notebook
 # 1 sentiment is positive, 2 is 0
 
-
-# import necessary libraries
-import spacy
-from spacy import displacy
+# import necessary libraries:
+import spacy, string, en_core_web_sm
 import pandas as pd
+from search_scraper import *
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 from sklearn.svm import LinearSVC
-import string
-import en_core_web_sm
+from spacy import displacy
 from spacy.lang.en.stop_words import STOP_WORDS
 
-from search_scraper import *
+# initialize necessary sentiment objects:
 nlp = en_core_web_sm.load()
 punct = string.punctuation
 stopwords = list(STOP_WORDS)
@@ -35,6 +33,7 @@ def dataCleaning(sentence):
         if token not in punct and token not in stopwords:
             clean_tokens.append(token)
     return clean_tokens
+
 
 def main(stocks, websites):
     # load spacy small model as the nlp
