@@ -1,7 +1,7 @@
 """Determines and saves results."""
-
+import csv
 from sentiment_analyzer import *
-
+from csv_handler import *
 
 def temp_cml_interface():
     print("** Need to ask user for date range & if they have an existing CSV File.")
@@ -15,23 +15,19 @@ def generate_results(stocks, websites):
     stocks_list = stocks.split(", ")
 
     articles = analyze_all_articles(stocks, websites)
-    print("GEN",articles)
 
     scored_articles = calc_article_sent_scores(articles)
-    print("\n\n\nHERE", scored_articles)
+    print("\n\nScored Articles:", scored_articles)
 
     scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
-    print("STOCKS SENT", scored_stocks)
     # save run date to overall dict for csv purposes
     scored_stocks = calc_recent_stock_sentiment(scored_articles, scored_stocks)
-    print("STOCKS", scored_stocks)
 
     scored_stocks = calc_stock_trifold_rating(scored_articles, scored_stocks)
-    print(scored_stocks)
 
     scored_stocks = calc_ovr_stock_article_feelings(scored_articles, scored_stocks)
-    print(scored_stocks)
-
+    print("\n\nScored Stocks", scored_stocks)
+    write_data(scored_articles)
     #scored_stocks = calc_ovr_website_rating(scored_articles, scored_stocks)
     #print(scored_stocks)
 
@@ -261,8 +257,6 @@ def calc_ovr_website_rating(scored_articles, scored_stocks):
                     media_dict['count']
                 else:
                     media_dict = {'media': article['media'], 'summed_score': article['ovr_text_sent_score'], 'article_count': 1}
-
-                    print("MEDIA", media)
 
     return scored_stocks
 
