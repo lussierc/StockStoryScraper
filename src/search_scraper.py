@@ -75,7 +75,7 @@ def initalize_google_news():
     googlenews = GoogleNews(lang="en")
     googlenews = GoogleNews(period="d")
     googlenews = GoogleNews(encode="utf-8")
-    googlenews = GoogleNews(start="10/01/2020", end="10/26/2020")
+    googlenews = GoogleNews(start="11/03/2020", end="11/06/2020")
 
     return googlenews
 

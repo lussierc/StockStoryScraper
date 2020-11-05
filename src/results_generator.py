@@ -2,7 +2,7 @@
 
 from sentiment_analyzer import *
 
-stocks = "apple"
+stocks = "draftkings"
 websites = ["www.fool.com"]
 
 
@@ -16,8 +16,11 @@ def generate_results(stocks, websites):
     scored_articles = calc_article_sent_scores(articles)
     print("\n\n\nHERE", scored_articles)
 
-
+    scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
+    print("STOCKS SENT", scored_stocks)
     # save run date to overall dict for csv purposes
+    scored_stocks = calc_recent_stock_sentiment(scored_articles, scored_stocks, stocks_list)
+    print("STOCKS", scored_stocks)
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
@@ -105,29 +108,68 @@ def calc_article_trifold_rating(ovr_text_sent_score, ovr_title_sent_score, ovr_d
     return trifold_score, trifold_rating
 
 
-def calc_stock_sentiment():
+def calc_stock_sentiment(scored_articles, stocks_list):
     # pass articles and stocks_list
     """Calculates average sentiment score for a stock based on all articles (text) for given stock."""
-    stock_sentiments = {}
+    scored_stocks = []
 
-    # for stock in stocks_list
-    # for article in articles:
-    # if article['stock'] = stock
-    # article_count += 1
-    # article_sent = article['ovr_text_sent_score']
-    # ovr_article_sent += article_sent
-    # outside if: stock_sentiment = {'article_count': article_count, 'stock_sent_score'}
+    for stock in stocks_list:
+        article_count = 0
+        stock_sent_score = 0
+        for article in scored_articles:
+            print("ARTICLE", article)
+            if article['stock'] == stock:
+                article_count += 1
+                stock_sent_score += article['ovr_text_sent_score']
 
+        avg_stock_sent_score = stock_sent_score / article_count
+        stock_sent_dict = {'stock': stock, 'avg_stock_sent_score': avg_stock_sent_score, 'article_count': article_count}
+        scored_stocks.append(stock_sent_dict)
 
-    # give this to stock_sent for appending the most recent
+    return scored_stocks
 
-
-def calc_recent_stock_sentiment():
+def calc_recent_stock_sentiment(scored_articles, scored_stocks, stocks_list):
     # pass articles, stocks, and stock_sentiments{}
     """Calculates average sentiment score for a stock based the most recent articles (within last 7 days)."""
     # must go by date
     # if article[date] == '1 week ago'
     # average score
+
+    for stock in scored_stocks:
+        recent_article_count = 0
+        day_article_count = 0
+        day_stock_sent_score = 0
+        stock_sent_score = 0
+        for article in scored_articles:
+            if article['stock'] == stock['stock']:
+                if 'day' in article['date']: # see if day is in it because then we know it is less than a week old/recent
+                    print("ARTICLE", article)
+                    recent_article_count += 1
+                    stock_sent_score += article['ovr_text_sent_score']
+                elif 'hour' in article['date']:
+                    #day
+                    day_article_count += 1
+                    day_stock_sent_score += article['ovr_text_sent_score']
+                    #recent
+                    recent_article_count += 1
+                    stock_sent_score += article['ovr_text_sent_score']
+
+        try:
+            rcnt_text_sent_score = stock_sent_score / recent_article_count
+        except:
+            rcnt_text_sent_score = 0
+        stock['recent_article_count'] = recent_article_count
+        stock['rcnt_text_sent_score'] = rcnt_text_sent_score
+
+        try:
+            day_text_sent_score = day_stock_sent_score / day_article_count
+        except:
+            day_text_sent_score = 0
+        stock['day_article_count'] = day_article_count
+        stock['day_stock_sent_score'] = day_stock_sent_score
+
+    return scored_stocks
+
 
 def calc_ovr_stock_article_feelings():
     """Sees if the articles for a stock are generally positive, neutral, or negative."""
