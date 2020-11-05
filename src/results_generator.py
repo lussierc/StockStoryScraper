@@ -19,7 +19,7 @@ def generate_results(stocks, websites):
     scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
     print("STOCKS SENT", scored_stocks)
     # save run date to overall dict for csv purposes
-    scored_stocks = calc_recent_stock_sentiment(scored_articles, scored_stocks, stocks_list)
+    scored_stocks = calc_recent_stock_sentiment(scored_articles, scored_stocks)
     print("STOCKS", scored_stocks)
 
     scored_stocks = calc_stock_trifold_rating(scored_articles, scored_stocks)
