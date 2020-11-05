@@ -5,7 +5,6 @@ from sentiment_analyzer import *
 stocks = "draftkings"
 websites = ["www.fool.com"]
 
-
 def generate_results(stocks, websites):
     stocks_list = []
     stocks_list = stocks.split(", ")
@@ -23,6 +22,9 @@ def generate_results(stocks, websites):
     print("STOCKS", scored_stocks)
 
     scored_stocks = calc_stock_trifold_rating(scored_articles, scored_stocks)
+    print(scored_stocks)
+
+    scored_stocks = calc_ovr_stock_article_feelings(scored_articles, scored_stocks)
     print(scored_stocks)
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
@@ -173,12 +175,49 @@ def calc_recent_stock_sentiment(scored_articles, scored_stocks):
     return scored_stocks
 
 
-def calc_ovr_stock_article_feelings():
+def calc_ovr_stock_article_feelings(scored_articles, scored_stocks):
     """Sees if the articles for a stock are generally positive, neutral, or negative."""
     # parses all of the article['text_sent_rating']
     # if neutral,
     # if somewhat positive, positiive, extremely positive,
     # if somewhat negative, negative, very negative
+    for stock in scored_stocks:
+        positive_article_count = 0
+        neutral_article_count = 0
+        negative_article_count = 0
+
+        for article in scored_articles:
+            sent_score = article['ovr_text_sent_score']
+            if article['stock'] == stock['stock']:
+                if sent_score > .05:
+                    positive_article_count += 1
+                elif sent_score >= -0.05 and sent_score <= 0.05:
+                    neutral_article_count += 1
+                elif sent_score < -.05:
+                    negative_article_count += 1
+                else:
+                    pass
+
+        count_list = []
+        count_list.append(positive_article_count)
+        count_list.append(neutral_article_count)
+        count_list.append(negative_article_count)
+        largest = max(count_list)
+        if largest == positive_article_count:
+            stock['overall_stock_articles_feelings'] = 'Positive'
+        elif largest == neutral_article_count:
+            stock['overall_stock_articles_feelings'] = 'Neutral'
+        elif largest == negative_article_count:
+            stock['overall_stock_articles_feelings'] = 'Negative'
+        else:
+            stock['overall_stock_articles_feelings'] = 'Undetermined'
+
+
+
+        stock['positive_article_count'] = positive_article_count
+        stock['neutral_article_count'] = neutral_article_count
+        stock['negative_article_count'] = negative_article_count
+        return scored_stocks
 
 def calc_stock_trifold_rating(scored_articles, scored_stocks):
     """Takes the trifold ratings for each article for a given stock and gets the average trifold rating."""
@@ -188,7 +227,7 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
         for article in scored_articles:
             if article['stock'] == stock['stock']:
                 stock_article_count += 1
-                stock_trifold_rating += stock['trifold_score']
+                stock_trifold_rating += article['trifold_score']
 
     try:
         ovr_stock_trifold_rating = stock_trifold_rating / stock_article_count
@@ -196,11 +235,13 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
         ovr_stock_trifold_rating = 0
     stock['ovr_stock_trifold_rating'] = ovr_stock_trifold_rating
 
+    return scored_stocks
+
 def calc_ovr_website_rating():
     """Calculates a given websites rating for a given stock based on it's overall articles."""
 
 def predict_stock_swing():
     """Predicts the overall view of a stock and whether it will continue to rise or fall."""
-    # takes stock_trifold_rating, ovr_stock_text_sent, calc_recent_stock_sentiment, ovr_stock_feelings
+    # takes stock_trifold_rating, ovr_stock_text_sent, calc_recent_stock_sentiment, ovr_stock_feelings as inputs
 
 generate_results(stocks, websites)
