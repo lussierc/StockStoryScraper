@@ -2,7 +2,7 @@
 
 from sentiment_analyzer import *
 
-stocks = "apple, draftkings"
+stocks = "apple"
 websites = ["www.fool.com"]
 
 
@@ -13,21 +13,53 @@ def generate_results(stocks, websites):
     articles = analyze_all_articles(stocks, websites)
     print("GEN",articles)
 
-    #scored_articles =
-    calc_text_score(articles)
+    scored_articles = calc_article_sent_scores(articles)
+    print("\n\n\nHERE", scored_articles)
 
     # save run date to overall dict for csv purposes
 
-generate_results(stocks, websites)
-
-def calc_text_score(articles):
+def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
     print("Calcuting text score....")
     for article in articles:
-        print(article['text_sent'])
         #ovr_text_sent_score
+        ovr_text_sent_score = 0
+        sent_count = 0
+        for txsent in article['text_sent']:
+            sent_count += 1
+            print("COMPOUND", txsent['compound'])
+            ovr_text_sent_score += txsent['compound']
+
+        ovr_text_sent_score = ovr_text_sent_score / sent_count
+        article['ovr_text_sent_score'] = ovr_text_sent_score
+
         #ovr_title_sent_score
+        ovr_title_sent_score = 0
+        sent_count = 0
+        for tisent in article['title_sent']:
+            sent_count += 1
+            print("COMPOUND", tisent['compound'])
+            ovr_title_sent_score += tisent['compound']
+
+        print("OVR",ovr_title_sent_score, "/", sent_count)
+        ovr_title_sent_score = ovr_title_sent_score / sent_count
+        print("OVR", ovr_title_sent_score)
+        article['ovr_title_sent_score'] = ovr_title_sent_score
+
+
         #ovr_desc_sent_score
+        ovr_desc_sent_score = 0
+        sent_count = 0
+        for dsent in article['desc_sent']:
+            sent_count += 1
+            print("COMPOUND", dsent['compound'])
+            ovr_desc_sent_score += dsent['compound']
+
+        print("OVR",ovr_desc_sent_score, "/", sent_count)
+        ovr_desc_sent_score = ovr_desc_sent_score / sent_count
+        print("OVR", ovr_desc_sent_score)
+        article['ovr_desc_sent_score'] = ovr_desc_sent_score
+
 
         # call calc_sent_rating():
         #text_sent_rating
@@ -35,6 +67,7 @@ def calc_text_score(articles):
         #desc_sent_rating
 
         # add all these scores back to articles dictionary and return it so others can ues the scores
+    return articles
 
 def calc_sent_rating():
     """Calculates the sentiment rating for a given title, description, or text sentiment rating for an article."""
@@ -90,3 +123,5 @@ def calc_ovr_website_rating():
 def predict_stock_swing():
     """Predicts the overall view of a stock and whether it will continue to rise or fall."""
     # takes stock_trifold_rating, ovr_stock_text_sent, calc_recent_stock_sentiment, ovr_stock_feelings
+
+generate_results(stocks, websites)
