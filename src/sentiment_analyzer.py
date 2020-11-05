@@ -50,8 +50,3 @@ def get_article_dicts(stocks, websites):
     articles = [j for i in data for j in i] # combine inner and outer list elements (results of individual search queries)
 
     return articles
-
-stocks = "apple"
-websites = ["www.fool.com"]
-
-print(analyze_all_articles(stocks, websites))
