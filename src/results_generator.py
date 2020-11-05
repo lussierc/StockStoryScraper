@@ -16,6 +16,7 @@ def generate_results(stocks, websites):
     scored_articles = calc_article_sent_scores(articles)
     print("\n\n\nHERE", scored_articles)
 
+
     # save run date to overall dict for csv purposes
 
 def calc_article_sent_scores(articles):
@@ -53,6 +54,11 @@ def calc_article_sent_scores(articles):
         article['ovr_title_sent_score'] = ovr_title_sent_score
         article['ovr_desc_sent_score'] = ovr_desc_sent_score
 
+        trifold_score, trifold_rating = calc_article_trifold_rating(ovr_text_sent_score, ovr_title_sent_score, ovr_desc_sent_score)
+        article['trifold_score'] = trifold_score
+        article['trifold_rating'] = trifold_rating
+
+
 
         # call calc_sent_rating():
         #text_sent_rating
@@ -89,12 +95,14 @@ def calc_sent_rating(sent_score):
 
     return rating
 
-def calc_article_trifold_rating():
+def calc_article_trifold_rating(ovr_text_sent_score, ovr_title_sent_score, ovr_desc_sent_score):
     """Calculates a overall 'trifold' score for an article based on the title, description, and text sentiment scores."""
 
-    #ovr_text_sent_score
-    #ovr_title_sent_score
-    #ovr_desc_sent_score
+    trifold_score = (ovr_text_sent_score + ovr_title_sent_score + ovr_desc_sent_score) / 3
+
+    trifold_rating = calc_sent_rating(trifold_score)
+
+    return trifold_score, trifold_rating
 
 
 def calc_stock_sentiment():
