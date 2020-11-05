@@ -26,13 +26,19 @@ def calc_text_score(articles):
         #ovr_text_sent_score
         #ovr_title_sent_score
         #ovr_desc_sent_score
+
+        # call calc_sent_rating():
         #text_sent_rating
         #title_sent_rating
         #desc_sent_rating
 
         # add all these scores back to articles dictionary and return it so others can ues the scores
 
-
+def calc_sent_rating():
+    """Calculates the sentiment rating for a given title, description, or text sentiment rating for an article."""
+    # if neutral,
+    # if somewhat positive, positiive, extremely positive,
+    # if somewhat negative, negative, very negative
 
 def calc_article_trifold_rating():
     """Calculates a overall 'trifold' score for an article based on the title, description, and text sentiment scores."""
@@ -61,7 +67,10 @@ def calc_stock_sentiment():
 
 def calc_recent_stock_sentiment():
     # pass articles, stocks, and stock_sentiments{}
-    """Calculates average sentiment score for a stock based the most recent articles (within 5-7 days)."""
+    """Calculates average sentiment score for a stock based the most recent articles (within last 7 days)."""
+    # must go by date
+    # if article[date] == '1 week ago'
+    # average score
 
 def calc_ovr_stock_article_feelings():
     """Sees if the articles for a stock are generally positive, neutral, or negative."""
