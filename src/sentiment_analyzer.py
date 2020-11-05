@@ -12,6 +12,7 @@ from search_scraper import *
 
 
 def analyze_all_articles(stocks, websites):
+    """Perform sentiment analysis on all articles' titles, descriptions, and texts."""
     article_dicts = get_article_dicts(stocks, websites)
 
     for article in article_dicts:
@@ -31,7 +32,7 @@ def analyze_all_articles(stocks, websites):
 
 
 def sent_analyze(sentence):
-    """Analyze the title, desc, and text."""
+    """Analyze a given sentence/block of text."""
     english = spacy.load("en_core_web_sm")
     # nlp = en_core_web_sm.load()
     result = english(sentence)
@@ -42,6 +43,7 @@ def sent_analyze(sentence):
 
 
 def get_article_dicts(stocks, websites):
+    """Get all articles in their respective dictionaries."""
     data = run_web_search_scraper(stocks, websites)
 
     articles = [
