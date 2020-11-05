@@ -2,8 +2,13 @@
 
 from sentiment_analyzer import *
 
-stocks = "draftkings"
-websites = ["www.fool.com"]
+
+def temp_cml_interface():
+    print("** Need to ask user for date range & if they have an existing CSV File.")
+    websites = ["www.fool.com"]
+    print("** Websites being used: ")
+    stocks = input("** Enter your stocks, separated by commas: ")
+    generate_results(stocks, websites)
 
 def generate_results(stocks, websites):
     stocks_list = []
@@ -26,6 +31,10 @@ def generate_results(stocks, websites):
 
     scored_stocks = calc_ovr_stock_article_feelings(scored_articles, scored_stocks)
     print(scored_stocks)
+
+    #scored_stocks = calc_ovr_website_rating(scored_articles, scored_stocks)
+    #print(scored_stocks)
+
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
     print("Calcuting text score....")
@@ -237,11 +246,30 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
 
     return scored_stocks
 
-def calc_ovr_website_rating():
+def calc_ovr_website_rating(scored_articles, scored_stocks):
     """Calculates a given websites rating for a given stock based on it's overall articles."""
+
+    for stock in scored_stocks:
+        stock_trifold_rating = 0
+        count_str = 'count'
+        score_str = 'score'
+        media_dict = {}
+        for article in scored_articles:
+            if article['stock'] == stock['stock']:
+                if article['media'] in media_dict:
+                    media_dict['score'] += article['ovr_text_sent_score']
+                    media_dict['count']
+                else:
+                    media_dict = {'media': article['media'], 'summed_score': article['ovr_text_sent_score'], 'article_count': 1}
+
+                    print("MEDIA", media)
+
+    return scored_stocks
+
+
 
 def predict_stock_swing():
     """Predicts the overall view of a stock and whether it will continue to rise or fall."""
     # takes stock_trifold_rating, ovr_stock_text_sent, calc_recent_stock_sentiment, ovr_stock_feelings as inputs
 
-generate_results(stocks, websites)
+temp_cml_interface()
