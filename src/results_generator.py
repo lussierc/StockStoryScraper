@@ -16,6 +16,8 @@ def generate_results(stocks, websites):
     #scored_articles =
     calc_text_score(articles)
 
+    # save run date to overall dict for csv purposes
+
 generate_results(stocks, websites)
 
 def calc_text_score(articles):
@@ -81,6 +83,9 @@ def calc_ovr_stock_article_feelings():
 
 def calc_stock_trifold_rating():
     """Takes the trifold ratings for each article for a given stock and gets the average trifold rating."""
+
+def calc_ovr_website_rating():
+    """Calculates a given websites rating for a given stock based on it's overall articles."""
 
 def predict_stock_swing():
     """Predicts the overall view of a stock and whether it will continue to rise or fall."""

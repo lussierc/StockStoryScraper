@@ -7,6 +7,9 @@ from PIL import Image
 from sentiment_analyzer import *
 
 st.title("StockTextMining")
+
+# if run with old file call csv_handler
+# if new file send her over to results_generator 
 st.markdown("#### Enter Stock Names:")
 stocks_input = st.text_input(
     "Enter Stock Names Separated by Commas (EX: Apple, Draftkings):"

@@ -1,4 +1,4 @@
-"""Simple spacy-based sentiment analyzer."""
+"""Simple spacy & vaderSentiment based analyzer."""
 # Sentiment Insipiration: https://www.kaggle.com/krutarthhd/sentiment-classification-using-spacy/notebook
 # 1 sentiment is positive, 2 is 0
 
