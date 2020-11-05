@@ -4,7 +4,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 
-from sentiment import *
+from sentiment2 import *
 
 st.title("StockTextMining")
 st.markdown("#### Enter Stock Names:")
@@ -40,7 +40,7 @@ if yahoo:
     websites.append("finance.yahoo.com")
 
 
-data = main(stocks_input, websites)
+data = analyze_all_articles(stocks_input, websites)
 
 print("\n\n\nDATADOGS:", data)
 
@@ -59,34 +59,12 @@ for stock in stocks_list:
             st.markdown("### Title:")
             st.markdown(article["title"])
             st.markdown("#### Title Sentiment:")
-            if article["title_sent"] == 0:
-                st.markdown("Negative")
-            elif article["title_sent"] == 1:
-                st.markdown("Positive")
+            st.markdown(title_sent)
 
-            st.markdown("### Description:")
-            st.markdown(article["desc"])
-            st.markdown("#### Description Sentiment:")
-            if article["desc_sent"] == 0:
-                st.markdown("Negative")
-            elif article["desc_sent"] == 1:
-                st.markdown("Positive")
-
-            st.markdown("### Overall Text Sentiment:")
-            if article["text_sent"] == 0:
-                st.markdown("Negative")
-                dict['title_pos'] += 1
-            elif article["text_sent"] == 1:
-                st.markdown("Positive")
-                dict['title_neg'] += 1
-
-    graph_list.append(dict)
-    print("GRAPHLIST", dict)
-
-    for stock in stocks_list:
-        for graph_dict in graph_list:
-            if stock == graph_dict['stock']:
-                df = pd.DataFrame.from_dict(graph_dict, orient="index")
-                st.markdown("### Bar chart:")
-                st.markdown(stock)
-                st.bar_chart(df)  # display dataframe/graph that vizualizes commit info
+    # for stock in stocks_list:
+    #     for graph_dict in graph_list:
+    #         if stock == graph_dict['stock']:
+    #             df = pd.DataFrame.from_dict(graph_dict, orient="index")
+    #             st.markdown("### Bar chart:")
+    #             st.markdown(stock)
+    #             st.bar_chart(df)  # display dataframe/graph that vizualizes commit info

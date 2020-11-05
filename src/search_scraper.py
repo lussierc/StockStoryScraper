@@ -25,7 +25,7 @@ def get_search_queries(stocks, websites):
     return search_queries, stock_list
 
 
-def run(stocks, websites):
+def run_web_search_scraper(stocks, websites):
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news()
 
@@ -54,25 +54,14 @@ def scrape_google_news_search(googlenews, search_query, current_stock):
 
     # print the results:
     search_results = googlenews.result()
-    # print(search_results, "\n\n")  # prints all info
 
-    # print("*** Gathering titles:")
-    # titles = googlenews.gettext()
-    # print(titles, "\n\n")  # prints titles
-
-    # print("*** Printing results:")
     for result in search_results:
-        #print("***", result["title"])
+        link = result['link']
 
-        link = result["link"]
-        #print("***", link)
         article_text = scrape_article(link)
-        result["text"] = article_text
-        result["stock"] = current_stock
+        result['text'] = article_text
 
-    # print("*** Gathering results:")
-    # #print(search_results, "\n\n")  # prints all info
-    # print(search_results[0]['title'], "\n\n")  # prints all info
+        result['stock'] = current_stock
 
     return search_results
 
@@ -100,11 +89,9 @@ def scrape_article(link):
         article.parse()
 
         text = article.text
-
-        # print("Article Text:")
-        # print(text)
     except:
-        print("nope")
+        print("No text scraped for this article.")
+        text = ""
 
     return text
 

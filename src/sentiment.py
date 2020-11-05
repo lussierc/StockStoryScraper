@@ -2,102 +2,56 @@
 # Sentiment Insipiration: https://www.kaggle.com/krutarthhd/sentiment-classification-using-spacy/notebook
 # 1 sentiment is positive, 2 is 0
 
+#pip install spacy vaderSentiment
+
+
 # import necessary libraries:
 import spacy, string, en_core_web_sm
 import pandas as pd
+from vaderSentiment import vaderSentiment
+
 from search_scraper import *
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
-from sklearn.svm import LinearSVC
-from spacy import displacy
-from spacy.lang.en.stop_words import STOP_WORDS
-
-# initialize necessary sentiment objects:
-nlp = en_core_web_sm.load()
-punct = string.punctuation
-stopwords = list(STOP_WORDS)
-
-def dataCleaning(sentence):
-    doc = nlp(sentence)
-    tokens = []
-    for token in doc:
-        if token.lemma_ != "-PRON-":
-            temp = token.lemma_.lower().strip()
-        else:
-            temp = token.lower_
-        tokens.append(temp)
-    clean_tokens = []
-    for token in tokens:
-        if token not in punct and token not in stopwords:
-            clean_tokens.append(token)
-    return clean_tokens
 
 
-def main(stocks, websites):
-    # load spacy small model as the nlp
+# sentence = "Apple needs to maintain its free trials in order to give viewers a chance to see if Apple+ is something they're interested in. Netflix has been moving away from free. God help us I hate it."
 
-    # gather stop words & punctutation
+def analyze_all_articles(stocks, websites):
+    article_dicts = get_article_dicts(stocks, websites)
 
-    # TRAIN
-    data_yelp = pd.read_csv("data/data.txt", sep="\t", header=None)  # currently using yelp review data
-    columnName = ["Review", "Sentiment"]
-    data_yelp.columns = columnName
+    for article in article_dicts:
+        # analyze title
+        title_sent = sent_analyze(article['title'])
+        article['title_sent'] = title_sent
+        print("Title Sentiment", article['title_sent'])
 
-    print(data_yelp.head(5))
-    print(data_yelp.shape)
+        desc_sent = sent_analyze(article['desc'])
+        article['desc_sent'] = desc_sent
+        print("Desc Sentiment", article['desc_sent'])
 
-    data = data_yelp
+        text_sent = sent_analyze(article['text'])
+        article['text_sent'] = desc_sent
+        print("Text Sentiment", article['text_sent'])
 
-    X = data["Review"]
-    y = data["Sentiment"]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-    # print(X_train.shape, y_test.shape)
+    return article_dicts
 
+def sent_analyze(sentence):
+    """Analyze the title, desc, and text."""
+    english = spacy.load("en_core_web_sm")
+    #nlp = en_core_web_sm.load()
+    result = english(sentence)
+    sentences = [str(s) for s in result.sents]
+    analyzer = vaderSentiment.SentimentIntensityAnalyzer()
+    sentiment = [analyzer.polarity_scores(str(s)) for s in sentences]
+    return sentiment
 
-    # preparing the model:
-    tfidf = TfidfVectorizer(tokenizer=dataCleaning)
-    svm = LinearSVC()
-    steps = [("tfidf", tfidf), ("svm", svm)]
-    pipe = Pipeline(steps)
-
-    pipe.fit(X_train, y_train)
-
-    y_pred = pipe.predict(X_test)
-    # print(classification_report(y_test, y_pred))
-    # print("\n\n")
-    # print(confusion_matrix(y_test, y_pred))
-
-    data = run(stocks, websites)
+def get_article_dicts(stocks, websites):
+    data = run_web_search_scraper(stocks, websites)
 
     articles = [j for i in data for j in i] # combine inner and outer list elements (results of individual search queries)
 
-
-    for article in articles:
-        title = []
-        desc = []
-        text = []
-
-        print("\n\n------ ARTICLE: -------")
-        # print("* Title:", article['title'])
-        title.append(article['title'])
-        title_sent = pipe.predict(title)
-        # print("* * Title Sentiment Rating:", title_sent[0])
-        article['title_sent'] = title_sent[0]
-
-        # print("* Desc:", article['desc'])
-        desc.append(article['desc'])
-        desc_sent = pipe.predict(desc)
-        # print("* * Desc Sentiment Rating:", desc_sent[0])
-        article['desc_sent'] = desc_sent[0]
-
-        print("* Text: (Keywords):",)
-        # print(dataCleaning(article['text']))
-        text.append(article['text'])
-        text_sent = pipe.predict(text)
-        # print("* * Text Sentiment Rating:", text_sent[0])
-        article['text_sent'] = text_sent[0]
-
-    print(articles)
     return articles
+
+stocks = "apple"
+websites = ["www.fool.com"]
+
+print(analyze_all_articles(stocks, websites))
