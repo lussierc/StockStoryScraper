@@ -63,17 +63,38 @@ def calc_article_sent_scores(articles):
 
         # call calc_sent_rating():
         #text_sent_rating
+        text_sent_rating = calc_sent_rating(ovr_text_sent_score)
+        article['text_sent_rating'] = text_sent_rating
         #title_sent_rating
+        title_sent_rating = calc_sent_rating(ovr_title_sent_score)
+        article['title_sent_rating'] = title_sent_rating
         #desc_sent_rating
+        desc_sent_rating = calc_sent_rating(ovr_desc_sent_score)
+        article['desc_sent_rating'] = desc_sent_rating
 
         # add all these scores back to articles dictionary and return it so others can ues the scores
+
     return articles
 
-def calc_sent_rating():
+def calc_sent_rating(sent_score):
     """Calculates the sentiment rating for a given title, description, or text sentiment rating for an article."""
-    # if neutral,
-    # if somewhat positive, positiive, extremely positive,
-    # if somewhat negative, negative, very negative
+    if sent_score >= -0.05 and sent_score <= 0.05:
+        print("NEUTRAL")
+        rating = "Neutral"
+    elif sent_score <= -.05 and sent_score >= -.30:
+        rating = "Somewhat Negative"
+    elif sent_score <= -.31 and sent_score >= -.70:
+        rating = "Negative"
+    elif sent_score <= -.71 and -sent_score >= 1.0:
+        rating = "Very Negative"
+    elif sent_score >= .05 and sent_score <= .30:
+        rating = "Somewhat Positive"
+    elif sent_score >= .31 and sent_score <= .70:
+        rating = "Positive"
+    elif sent_score >= .71 and sent_score <= 1.0:
+        rating = "Very Positive"
+
+    return rating
 
 def calc_article_trifold_rating():
     """Calculates a overall 'trifold' score for an article based on the title, description, and text sentiment scores."""
