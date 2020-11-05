@@ -22,6 +22,8 @@ def generate_results(stocks, websites):
     scored_stocks = calc_recent_stock_sentiment(scored_articles, scored_stocks, stocks_list)
     print("STOCKS", scored_stocks)
 
+    scored_stocks = calc_stock_trifold_rating(scored_articles, scored_stocks)
+    print(scored_stocks)
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
     print("Calcuting text score....")
@@ -128,7 +130,7 @@ def calc_stock_sentiment(scored_articles, stocks_list):
 
     return scored_stocks
 
-def calc_recent_stock_sentiment(scored_articles, scored_stocks, stocks_list):
+def calc_recent_stock_sentiment(scored_articles, scored_stocks):
     # pass articles, stocks, and stock_sentiments{}
     """Calculates average sentiment score for a stock based the most recent articles (within last 7 days)."""
     # must go by date
@@ -178,8 +180,21 @@ def calc_ovr_stock_article_feelings():
     # if somewhat positive, positiive, extremely positive,
     # if somewhat negative, negative, very negative
 
-def calc_stock_trifold_rating():
+def calc_stock_trifold_rating(scored_articles, scored_stocks):
     """Takes the trifold ratings for each article for a given stock and gets the average trifold rating."""
+    for stock in scored_stocks:
+        stock_trifold_rating = 0
+        stock_article_count = 0
+        for article in scored_articles:
+            if article['stock'] == stock['stock']:
+                stock_article_count += 1
+                stock_trifold_rating += stock['trifold_score']
+
+    try:
+        ovr_stock_trifold_rating = stock_trifold_rating / stock_article_count
+    except:
+        ovr_stock_trifold_rating = 0
+    stock['ovr_stock_trifold_rating'] = ovr_stock_trifold_rating
 
 def calc_ovr_website_rating():
     """Calculates a given websites rating for a given stock based on it's overall articles."""
