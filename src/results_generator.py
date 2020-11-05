@@ -29,9 +29,7 @@ def calc_article_sent_scores(articles):
             sent_count += 1
             print("COMPOUND", txsent['compound'])
             ovr_text_sent_score += txsent['compound']
-
         ovr_text_sent_score = ovr_text_sent_score / sent_count
-        article['ovr_text_sent_score'] = ovr_text_sent_score
 
         #ovr_title_sent_score
         ovr_title_sent_score = 0
@@ -40,12 +38,7 @@ def calc_article_sent_scores(articles):
             sent_count += 1
             print("COMPOUND", tisent['compound'])
             ovr_title_sent_score += tisent['compound']
-
-        print("OVR",ovr_title_sent_score, "/", sent_count)
         ovr_title_sent_score = ovr_title_sent_score / sent_count
-        print("OVR", ovr_title_sent_score)
-        article['ovr_title_sent_score'] = ovr_title_sent_score
-
 
         #ovr_desc_sent_score
         ovr_desc_sent_score = 0
@@ -54,10 +47,10 @@ def calc_article_sent_scores(articles):
             sent_count += 1
             print("COMPOUND", dsent['compound'])
             ovr_desc_sent_score += dsent['compound']
-
-        print("OVR",ovr_desc_sent_score, "/", sent_count)
         ovr_desc_sent_score = ovr_desc_sent_score / sent_count
-        print("OVR", ovr_desc_sent_score)
+
+        article['ovr_text_sent_score'] = ovr_text_sent_score
+        article['ovr_title_sent_score'] = ovr_title_sent_score
         article['ovr_desc_sent_score'] = ovr_desc_sent_score
 
 
