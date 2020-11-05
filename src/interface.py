@@ -4,7 +4,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 
-from sentiment2 import *
+from sentimentimport *
 
 st.title("StockTextMining")
 st.markdown("#### Enter Stock Names:")
