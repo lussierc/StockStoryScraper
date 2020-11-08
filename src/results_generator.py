@@ -89,20 +89,34 @@ def calc_article_sent_scores(articles):
 
 def calc_sent_rating(sent_score):
     """Calculates the sentiment rating for a given title, description, or text sentiment rating for an article."""
-    if sent_score >= -0.05 and sent_score <= 0.05:
-        print("NEUTRAL")
+    # if sent_score >= -0.05 and sent_score <= 0.05:
+    #     rating = "Neutral"
+    # elif sent_score <= -.055 and sent_score >= -.30:
+    #     rating = "Somewhat Negative"
+    # elif sent_score <= -.31 and sent_score >= -.70:
+    #     rating = "Negative"
+    # elif sent_score <= -.71 and sent_score >= 1.0:
+    #     rating = "Very Negative"
+    # elif sent_score >= .05 and sent_score <= .30:
+    #     rating = "Somewhat Positive"
+    # elif sent_score >= .31 and sent_score <= .70:
+    #     rating = "Positive"
+    # elif sent_score >= .71 and sent_score <= 1.0:
+    #     rating = "Very Positive"
+
+    if sent_score >= -0.05554 and sent_score <= 0.05554:
         rating = "Neutral"
-    elif sent_score <= -.05 and sent_score >= -.30:
+    elif sent_score <= -.05555 and sent_score >= -.30554:
         rating = "Somewhat Negative"
-    elif sent_score <= -.31 and sent_score >= -.70:
+    elif sent_score <= -.30555 and sent_score >= -.70554:
         rating = "Negative"
-    elif sent_score <= -.71 and -sent_score >= 1.0:
+    elif sent_score <= -.70555 and sent_score >= 1.0:
         rating = "Very Negative"
-    elif sent_score >= .05 and sent_score <= .30:
+    elif sent_score >= .05555 and sent_score <= .30554:
         rating = "Somewhat Positive"
-    elif sent_score >= .31 and sent_score <= .70:
+    elif sent_score >= .30555 and sent_score <= .70554:
         rating = "Positive"
-    elif sent_score >= .71 and sent_score <= 1.0:
+    elif sent_score >= .70555 and sent_score <= 1.0:
         rating = "Very Positive"
 
     return rating
@@ -259,7 +273,6 @@ def calc_ovr_website_rating(scored_articles, scored_stocks):
                     media_dict = {'media': article['media'], 'summed_score': article['ovr_text_sent_score'], 'article_count': 1}
 
     return scored_stocks
-
 
 
 def predict_stock_swing():
