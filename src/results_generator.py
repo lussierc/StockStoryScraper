@@ -29,8 +29,7 @@ def generate_results(stocks, websites):
     print("\n\nScored Stocks", scored_stocks)
     write_data(scored_articles)
 
-    #calc_ovr_website_rating(scored_articles, scored_stocks)
-    scored_stocks = calc_ovr_website_rating(scored_articles, scored_stocks)
+    scored_stocks = calc_ovr_media_rating(scored_articles, scored_stocks)
     print(scored_stocks)
 
 def calc_article_sent_scores(articles):
@@ -258,7 +257,7 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
 
     return scored_stocks
 
-def calc_ovr_website_rating(scored_articles, scored_stocks):
+def calc_ovr_media_rating(scored_articles, scored_stocks):
     """Calculates a given websites rating for a given stock based on it's overall articles."""
 
     media_list = []
@@ -280,7 +279,8 @@ def calc_ovr_website_rating(scored_articles, scored_stocks):
                     article_count += 1
                     media_sent_score += article['ovr_text_sent_score']
             stock_media_avg_sent_score = media_sent_score / article_count
-            media_dict = {'media': media, 'media_avg_sent_score': stock_media_avg_sent_score, 'article_count': article_count}
+            media_sent_rating = calc_sent_rating(stock_media_avg_sent_score)
+            media_dict = {'media': media, 'media_avg_sent_score': stock_media_avg_sent_score, 'article_count': article_count, 'media_sent_rating': media_sent_rating}
             stock_media_list.append(media_dict)
         stock['media_results'] = stock_media_list
 
