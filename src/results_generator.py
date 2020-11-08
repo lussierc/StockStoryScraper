@@ -5,7 +5,7 @@ from csv_handler import *
 
 def temp_cml_interface():
     print("** Need to ask user for date range & if they have an existing CSV File.")
-    websites = ["www.fool.com"]
+    websites = ["www.fool.com", "www.bloomberg.com"]
     print("** Websites being used: ")
     stocks = input("** Enter your stocks, separated by commas: ")
     generate_results(stocks, websites)
@@ -28,8 +28,10 @@ def generate_results(stocks, websites):
     scored_stocks = calc_ovr_stock_article_feelings(scored_articles, scored_stocks)
     print("\n\nScored Stocks", scored_stocks)
     write_data(scored_articles)
-    #scored_stocks = calc_ovr_website_rating(scored_articles, scored_stocks)
-    #print(scored_stocks)
+
+    #calc_ovr_website_rating(scored_articles, scored_stocks)
+    scored_stocks = calc_ovr_website_rating(scored_articles, scored_stocks)
+    print(scored_stocks)
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
@@ -259,21 +261,30 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
 def calc_ovr_website_rating(scored_articles, scored_stocks):
     """Calculates a given websites rating for a given stock based on it's overall articles."""
 
+    media_list = []
+    for article in scored_articles:
+        media = article['media']
+        if media in media_list:
+            pass
+        else:
+            media_list.append(media)
+    print("MEDIA", media_list)
+
     for stock in scored_stocks:
-        stock_trifold_rating = 0
-        count_str = 'count'
-        score_str = 'score'
-        media_dict = {}
-        for article in scored_articles:
-            if article['stock'] == stock['stock']:
-                if article['media'] in media_dict:
-                    media_dict['score'] += article['ovr_text_sent_score']
-                    media_dict['count']
-                else:
-                    media_dict = {'media': article['media'], 'summed_score': article['ovr_text_sent_score'], 'article_count': 1}
+        stock_media_list = []
+        for media in media_list:
+            article_count = 0
+            media_sent_score = 0
+            for article in scored_articles:
+                if article['media'] == media and article['stock'] == stock['stock']:
+                    article_count += 1
+                    media_sent_score += article['ovr_text_sent_score']
+            stock_media_avg_sent_score = media_sent_score / article_count
+            media_dict = {'media': media, 'media_avg_sent_score': stock_media_avg_sent_score, 'article_count': article_count}
+            stock_media_list.append(media_dict)
+        stock['media_results'] = stock_media_list
 
     return scored_stocks
-
 
 def predict_stock_swing():
     """Predicts the overall view of a stock and whether it will continue to rise or fall."""
