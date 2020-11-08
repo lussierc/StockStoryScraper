@@ -7,14 +7,14 @@ import spacy
 # pip3 install GoogleNews, pip install newspaper3k
 # pip install -U spacy
 
-def get_search_queries():
+def get_search_queries(stocks, websites):
     """Gets search queries to be performed on Google News."""
     search_queries = []  # list to hold created search queries
 
-    stocks = ["facebook"]  # holds stocks that will be apart of search queries
-    websites = ["www.wsj.com"]  # holds websites for search queries
+    stock_list = stocks.split(", ")
+    print(stock_list)
 
-    for stock in stocks:
+    for stock in stock_list:
         for website in websites:
             website = "site:https://" + website  # add necessary site portion of query for website
             # print(website)
@@ -22,22 +22,28 @@ def get_search_queries():
             # print(query)
             search_queries.append(query)  # store created query
 
-    return search_queries
+    return search_queries, stock_list
 
 
-def run():
+def run_web_search_scraper(stocks, websites):
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news()
 
-    queries = get_search_queries()
+    queries, stock_list = get_search_queries(stocks, websites)
     results = []
+
+    i = 0
     for search_query in queries:
-        results.append(scrape_google_news_search(googlenews, search_query))
+        for stock in stock_list:
+            if stock in search_query:
+                current_stock = stock
+        print(search_query, "STOCK", current_stock)
+        results.append(scrape_google_news_search(googlenews, search_query, current_stock))
 
     return results
 
 
-def scrape_google_news_search(googlenews, search_query):
+def scrape_google_news_search(googlenews, search_query, current_stock):
     """Scrapes a Google News web search using a specifc query."""
 
     googlenews.clear()  # clear past results
@@ -48,24 +54,14 @@ def scrape_google_news_search(googlenews, search_query):
 
     # print the results:
     search_results = googlenews.result()
-    # print(search_results, "\n\n")  # prints all info
 
-    # print("*** Gathering titles:")
-    # titles = googlenews.gettext()
-    # print(titles, "\n\n")  # prints titles
-
-    # print("*** Printing results:")
     for result in search_results:
-        #print("***", result["title"])
+        link = result['link']
 
-        link = result["link"]
-        #print("***", link)
         article_text = scrape_article(link)
-        result["text"] = article_text
+        result['text'] = article_text
 
-    # print("*** Gathering results:")
-    # #print(search_results, "\n\n")  # prints all info
-    # print(search_results[0]['title'], "\n\n")  # prints all info
+        result['stock'] = current_stock
 
     return search_results
 
@@ -79,7 +75,7 @@ def initalize_google_news():
     googlenews = GoogleNews(lang="en")
     googlenews = GoogleNews(period="d")
     googlenews = GoogleNews(encode="utf-8")
-    googlenews = GoogleNews(start="09/01/2020", end="09/21/2020")
+    googlenews = GoogleNews(start="11/03/2020", end="11/06/2020")
 
     return googlenews
 
@@ -87,13 +83,18 @@ def initalize_google_news():
 def scrape_article(link):
     """Scrapes a specific article given a link."""
 
-    article = Article(link)
-    article.download()
-    article.parse()
+    try:
+        article = Article(link)
+        article.download()
+        article.parse()
 
-    text = article.text
-
-    # print("Article Text:")
-    # print(text)
+        text = article.text
+    except:
+        print("No text scraped for this article.")
+        text = ""
 
     return text
+
+def new_article_validator():
+    """Ensures an article is new by looking at scraped links."""
+    print("placeholder")
