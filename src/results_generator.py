@@ -91,21 +91,6 @@ def calc_article_sent_scores(articles):
 
 def calc_sent_rating(sent_score):
     """Calculates the sentiment rating for a given title, description, or text sentiment rating for an article."""
-    # if sent_score >= -0.05 and sent_score <= 0.05:
-    #     rating = "Neutral"
-    # elif sent_score <= -.055 and sent_score >= -.30:
-    #     rating = "Somewhat Negative"
-    # elif sent_score <= -.31 and sent_score >= -.70:
-    #     rating = "Negative"
-    # elif sent_score <= -.71 and sent_score >= 1.0:
-    #     rating = "Very Negative"
-    # elif sent_score >= .05 and sent_score <= .30:
-    #     rating = "Somewhat Positive"
-    # elif sent_score >= .31 and sent_score <= .70:
-    #     rating = "Positive"
-    # elif sent_score >= .71 and sent_score <= 1.0:
-    #     rating = "Very Positive"
-
     if sent_score >= -0.05554 and sent_score <= 0.05554:
         rating = "Neutral"
     elif sent_score <= -.05555 and sent_score >= -.30554:
