@@ -13,4 +13,6 @@ To run the project in it's current state, ensure `Python` and `pipenv` are insta
 
 You can then run `pipenv lock` to install the necessary dependencies needed to run the project, in pipenv.
 
-You can then run the project by using the command `pipenv run streamlit run interface.py`.
+You can then run the project by using the command `pipenv run python3 results_generator.py` Currently the project is just working via command line interface and is outputting the results to a `results.csv` file and the terminal. More updates are coming on this project soon to add more functionality and a streamlined user interface.
+
+<!-- You can then run the project by using the command `pipenv run streamlit run interface.py`. -->
