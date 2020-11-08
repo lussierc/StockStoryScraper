@@ -17,7 +17,7 @@ def generate_results(stocks, websites):
     articles = analyze_all_articles(stocks, websites)
 
     scored_articles = calc_article_sent_scores(articles)
-    print("\n\nScored Articles:", scored_articles)
+    #print("\n\nScored Articles:", scored_articles)
 
     scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
     # save run date to overall dict for csv purposes
@@ -39,6 +39,7 @@ def calc_article_sent_scores(articles):
         #ovr_text_sent_score
         ovr_text_sent_score = 0
         sent_count = 0
+        print("LEN", len(article['text_sent']))
         for txsent in article['text_sent']:
             sent_count += 1
             print("COMPOUND", txsent['compound'])
@@ -231,7 +232,6 @@ def calc_ovr_stock_article_feelings(scored_articles, scored_stocks):
             stock['overall_stock_articles_feelings'] = 'Negative'
         else:
             stock['overall_stock_articles_feelings'] = 'Undetermined'
-
 
 
         stock['positive_article_count'] = positive_article_count
