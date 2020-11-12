@@ -24,9 +24,9 @@ def get_search_queries(stocks, websites):
     return search_queries, stock_list
 
 
-def run_web_search_scraper(stocks, websites):
+def run_web_search_scraper(stocks, websites, start_date, end_date):
     """Driver function, runs other necesssary fucntions."""
-    googlenews = initalize_google_news()
+    googlenews = initalize_google_news(start_date, end_date)
 
     queries, stock_list = get_search_queries(stocks, websites)
     results = []
@@ -65,7 +65,7 @@ def scrape_google_news_search(googlenews, search_query, current_stock):
     return search_results
 
 
-def initalize_google_news():
+def initalize_google_news(start_date, end_date):
     """Initializes the googlenews object."""
 
     print("initalize_google_news...")
@@ -74,7 +74,7 @@ def initalize_google_news():
     googlenews = GoogleNews(lang="en")
     googlenews = GoogleNews(period="d")
     googlenews = GoogleNews(encode="utf-8")
-    googlenews = GoogleNews(start="11/03/2020", end="11/06/2020")
+    googlenews = GoogleNews(start=start_date, end=end_date)
 
     return googlenews
 

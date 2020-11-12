@@ -1,20 +1,27 @@
 """Determines and saves results."""
+
 import csv
 from sentiment_analyzer import *
 from csv_handler import *
+import bs4
+import requests
+from bs4 import BeautifulSoup
 
 def temp_cml_interface():
     print("** Need to ask user for date range & if they have an existing CSV File.")
     websites = ["www.fool.com", "www.bloomberg.com"]
     print("** Websites being used: ")
     stocks = input("** Enter your stocks, separated by commas: ")
-    generate_results(stocks, websites)
+    start_date = input ("** Enter the START of the date range you want to use for article scraping: ")
+    end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
 
-def generate_results(stocks, websites):
+    generate_results(stocks, websites, start_date, end_date)
+
+def generate_results(stocks, websites, start_date, end_date):
     stocks_list = []
     stocks_list = stocks.split(", ")
 
-    articles = analyze_all_articles(stocks, websites)
+    articles = analyze_all_articles(stocks, websites, start_date, end_date)
 
     scored_articles = calc_article_sent_scores(articles)
     #print("\n\nScored Articles:", scored_articles)
@@ -270,6 +277,12 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
         stock['media_results'] = stock_media_list
 
     return scored_stocks
+
+def gather_stock_price_info():
+    """Gathers new realtime stock price info."""
+
+def gather_previous_results_info():
+    """Will be used to gather previous results from imported CSVs for added analysis."""
 
 def predict_stock_swing():
     """Predicts the overall view of a stock and whether it will continue to rise or fall."""

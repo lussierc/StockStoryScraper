@@ -11,9 +11,9 @@ from vaderSentiment import vaderSentiment
 from search_scraper import *
 
 
-def analyze_all_articles(stocks, websites):
+def analyze_all_articles(stocks, websites, start_date, end_date):
     """Perform sentiment analysis on all articles' titles, descriptions, and texts."""
-    article_dicts = get_article_dicts(stocks, websites)
+    article_dicts = get_article_dicts(stocks, websites, start_date, end_date)
 
     for article in article_dicts:
         # analyze & store title
@@ -42,9 +42,9 @@ def sent_analyze(sentence):
     return sentiment
 
 
-def get_article_dicts(stocks, websites):
+def get_article_dicts(stocks, websites, start_date, end_date):
     """Get all articles in their respective dictionaries."""
-    data = run_web_search_scraper(stocks, websites)
+    data = run_web_search_scraper(stocks, websites, start_date, end_date)
 
     articles = [
         j for i in data for j in i
