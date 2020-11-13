@@ -2,6 +2,8 @@
 
 import csv
 from sentiment_analyzer import *
+from search_scraper import *
+
 from csv_handler import *
 import bs4
 import requests
@@ -12,14 +14,18 @@ def temp_cml_interface():
     websites = ["www.fool.com", "www.bloomberg.com"]
     print("** Websites being used: ")
     stocks = input("** Enter your stocks, separated by commas: ")
+    stock_abbrvs = input("** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: ")
+
     start_date = input ("** Enter the START of the date range you want to use for article scraping: ")
     end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
 
-    generate_results(stocks, websites, start_date, end_date)
+    generate_results(stocks, websites, start_date, end_date, stock_abbrvs)
 
-def generate_results(stocks, websites, start_date, end_date):
+def generate_results(stocks, websites, start_date, end_date, stock_abbrvs):
     stocks_list = []
     stocks_list = stocks.split(", ")
+    abbrv_list = []
+    abbrv_list = stock_abbrvs.split(", ")
 
     articles = analyze_all_articles(stocks, websites, start_date, end_date)
 
@@ -38,6 +44,16 @@ def generate_results(stocks, websites, start_date, end_date):
 
     scored_stocks = calc_ovr_media_rating(scored_articles, scored_stocks)
     print(scored_stocks)
+
+    for abbreviation in abbrv_list:
+        price, previous_close, open_price, avg_volume, volume = get_stock_attributes(abbreviation)
+
+        print('Current Stock Price is : $' + str(price))
+        print('Previous Close was : $' + str(previous_close))
+        print('Open Price of the Day was : $' + str(open_price))
+        print('Current stock volume is : ' + str(volume))
+        print('Average stock volume is : ' + str(avg_volume))
+
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""

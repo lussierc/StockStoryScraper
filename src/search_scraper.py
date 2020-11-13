@@ -121,19 +121,3 @@ def get_stock_attributes(abbreviation):
 
 
     return price, previous_close, open_price, avg_volume, volume
-
-def main():
-    abbreviation = input("Enter stock abbreviation: ")
-    price, previous_close, open_price, bid, ask, days_range, year_long_range, market_cap, avg_volume, volume = get_price(abbreviation)
-    print('Current Stock Price is : $' + str(price))
-    print('Previous Close was : $' + str(previous_close))
-    print('Bid : ' + str(bid))
-    print('Ask : ' + str(ask))
-    print('Day Price Range : $' + str(days_range))
-    print('52 Week Price Range : $' + str(year_long_range))
-    print('Market Cap : ' + str(market_cap))
-    print('Current stock volume is : ' + str(volume))
-    print('Average stock volume is : ' + str(avg_volume))
-
-
-main()
