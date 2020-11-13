@@ -2,6 +2,9 @@
 
 from GoogleNews import GoogleNews
 from newspaper import Article
+import bs4
+import requests
+from bs4 import BeautifulSoup
 
 # pip3 install GoogleNews, pip install newspaper3k
 # pip install -U spacy
@@ -97,3 +100,40 @@ def scrape_article(link):
 def new_article_validator():
     """Ensures an article is new by looking at scraped links."""
     print("placeholder")
+
+
+"""Simple stock price scraper. Gets real-time stock prices."""
+
+
+
+
+def get_stock_attributes(abbreviation):
+    """Gathers real time stock prices."""
+    link = 'https://finance.yahoo.com/quote/' + abbreviation + '?p=' + abbreviation
+    url = requests.get(link)
+    soup = bs4.BeautifulSoup(url.text, features="html.parser")
+
+    price = soup.find_all("div", {'class': 'My(6px) Pos(r) smartphone_Mt(6px)'})[0].find('span').text
+    previous_close = soup.find_all("td", {'class': 'Ta(end) Fw(600) Lh(14px)'})[0].find('span').text
+    open_price = soup.find_all("td", {'class': 'Ta(end) Fw(600) Lh(14px)'})[1].find('span').text
+    volume = soup.find_all("td", {'class': 'Ta(end) Fw(600) Lh(14px)'})[6].find('span').text
+    avg_volume = soup.find_all("td", {'class': 'Ta(end) Fw(600) Lh(14px)'})[7].find('span').text
+
+
+    return price, previous_close, open_price, avg_volume, volume
+
+def main():
+    abbreviation = input("Enter stock abbreviation: ")
+    price, previous_close, open_price, bid, ask, days_range, year_long_range, market_cap, avg_volume, volume = get_price(abbreviation)
+    print('Current Stock Price is : $' + str(price))
+    print('Previous Close was : $' + str(previous_close))
+    print('Bid : ' + str(bid))
+    print('Ask : ' + str(ask))
+    print('Day Price Range : $' + str(days_range))
+    print('52 Week Price Range : $' + str(year_long_range))
+    print('Market Cap : ' + str(market_cap))
+    print('Current stock volume is : ' + str(volume))
+    print('Average stock volume is : ' + str(avg_volume))
+
+
+main()
