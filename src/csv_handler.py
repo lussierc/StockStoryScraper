@@ -14,7 +14,13 @@ def write_data(data):
         dict_writer.writeheader()
         dict_writer.writerows(data)
 
-def read_data(file_name):
+def read_data():
     """Reads a CSV file back in."""
+    csv_file = input("\nEnter your CSV filename of previous articles: ")
+
+    with open(csv_file, "r") as f:
+        reader = csv.DictReader(f)
+        inputted_csv_dist = list(reader)
+
 # verify_new_data()
 # which makes sure there are no duplicate article links
