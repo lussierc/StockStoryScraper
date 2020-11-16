@@ -29,8 +29,12 @@ def generate_results(stocks, websites, start_date, end_date, stock_abbrvs):
 
     articles = analyze_all_articles(stocks, websites, start_date, end_date)
 
+    # IF CSV then do this for new articles, if not do for all
     scored_articles = calc_article_sent_scores(articles)
     #print("\n\nScored Articles:", scored_articles)
+
+    #combine csv and new articles dicts
+    # do below code for csv and new articles, do not save
 
     scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
     # save run date to overall dict for csv purposes
@@ -307,13 +311,7 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
 
     return scored_stocks
 
-def gather_stock_price_info():
-    """Gathers new realtime stock price info."""
-
-def gather_previous_results_info():
-    """Will be used to gather previous results from imported CSVs for added analysis."""
-
-def predict_stock_swing():
+def predict_stock_well_being():
     """Predicts the overall view of a stock and whether it will continue to rise or fall."""
     # takes stock_trifold_rating, ovr_stock_text_sent, calc_recent_stock_sentiment, ovr_stock_feelings as inputs
 
