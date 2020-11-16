@@ -8,8 +8,9 @@ import csv
 # sends the date of last run & stocks/sites to search_scraper so new date range is ran
 # will call verify_new_data
 def write_data(data):
+    write_file = input("\nEnter the CSV filename you wish to write data to: ")
     keys = data[0].keys()
-    with open("results.csv", "w", newline="") as output_file:
+    with open(write_file, "w", newline="") as output_file:
         dict_writer = csv.DictWriter(output_file, keys)
         dict_writer.writeheader()
         dict_writer.writerows(data)
@@ -20,7 +21,8 @@ def read_data():
 
     with open(csv_file, "r") as f:
         reader = csv.DictReader(f)
-        inputted_csv_dist = list(reader)
+        inputted_csv_list = list(reader)
 
+    print("READIN RESULTS ---- ", inputted_csv_list)
 # verify_new_data()
 # which makes sure there are no duplicate article links
