@@ -8,7 +8,16 @@ import csv
 # sends the date of last run & stocks/sites to search_scraper so new date range is ran
 # will call verify_new_data
 def write_data(data):
+    """Writes article data to a CSV file."""
+
+    # eventually will have write_file come in from the interface.
+
     write_file = input("\nEnter the CSV filename you wish to write data to: ")
+
+    if `.csv` not in write_file:
+        write_file = "results.csv"
+        print("You provided an invalid output file name, outputting to the default file (results.csv)!")
+        
     keys = data[0].keys()
     with open(write_file, "w", newline="") as output_file:
         dict_writer = csv.DictWriter(output_file, keys)
