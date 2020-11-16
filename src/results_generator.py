@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 
 def temp_cml_interface():
     print("** Need to ask user for date range & if they have an existing CSV File.")
-    websites = ["www.fool.com", "www.bloomberg.com"]
+    websites = ["www.fool.com"]
     print("** Websites being used: ")
     stocks = input("** Enter your stocks, separated by commas: ")
     stock_abbrvs = input("** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: ")
@@ -46,18 +46,22 @@ def generate_results(stocks, websites, start_date, end_date, stock_abbrvs):
     print(scored_stocks)
 
     i = 0
-    
-    while i < len(stocks_list):
-        for abbreviation in abbrv_list:
-            price, previous_close, open_price, avg_volume, volume = get_stock_attributes(abbreviation)
 
-            print('Current Stock Price is : $' + str(price))
-            print('Previous Close was : $' + str(previous_close))
-            print('Open Price of the Day was : $' + str(open_price))
-            print('Current stock volume is : ' + str(volume))
-            print('Average stock volume is : ' + str(avg_volume))
+    while i < len(scored_stocks):
+        price, previous_close, open_price, avg_volume, volume = get_stock_attributes(abbrv_list[i])
 
-            # append stocks_list(i)
+        print('Current Stock Price is : $' + str(price))
+        print('Previous Close was : $' + str(previous_close))
+        print('Open Price of the Day was : $' + str(open_price))
+        print('Current stock volume is : ' + str(volume))
+        print('Average stock volume is : ' + str(avg_volume))
+
+        print(scored_stocks[i])
+        scored_stocks[i]['current_price'] = price
+        scored_stocks[i]['volume'] = volume
+        scored_stocks[i]['avg_volume'] = avg_volume
+        print(scored_stocks[i])
+
         i += 1
 
 def calc_article_sent_scores(articles):
@@ -291,7 +295,11 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
                 if article['media'] == media and article['stock'] == stock['stock']:
                     article_count += 1
                     media_sent_score += article['ovr_text_sent_score']
-            stock_media_avg_sent_score = media_sent_score / article_count
+
+            try:
+                stock_media_avg_sent_score = media_sent_score / article_count
+            except:
+                stock_media_avg_sent_score = 0
             media_sent_rating = calc_sent_rating(stock_media_avg_sent_score)
             media_dict = {'media': media, 'media_avg_sent_score': stock_media_avg_sent_score, 'article_count': article_count, 'media_sent_rating': media_sent_rating}
             stock_media_list.append(media_dict)
