@@ -7,7 +7,6 @@ import requests
 from bs4 import BeautifulSoup
 
 # pip3 install GoogleNews, pip install newspaper3k
-# pip install -U spacy
 
 def get_search_queries(stocks, websites):
     """Gets search queries to be performed on Google News."""
@@ -27,7 +26,7 @@ def get_search_queries(stocks, websites):
     return search_queries, stock_list
 
 
-def run_web_search_scraper(stocks, websites, start_date, end_date):
+def run_web_search_scraper(stocks, websites, start_date, end_date, inputted_csv_list):
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news(start_date, end_date)
 
@@ -40,12 +39,12 @@ def run_web_search_scraper(stocks, websites, start_date, end_date):
             if stock in search_query:
                 current_stock = stock
         print(search_query, "STOCK", current_stock)
-        results.append(scrape_google_news_search(googlenews, search_query, current_stock))
+        results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list))
 
     return results
 
 
-def scrape_google_news_search(googlenews, search_query, current_stock):
+def scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list):
     """Scrapes a Google News web search using a specifc query."""
 
     googlenews.clear()  # clear past results
@@ -59,7 +58,13 @@ def scrape_google_news_search(googlenews, search_query, current_stock):
 
     for result in search_results:
         link = result['link']
-
+        for article in inputted_csv_list:
+            if article['link'] == link:
+                print("found a dup", article['link'], link)
+                search_results.remove(result)
+                
+    for result in search_results:
+        link = result['link']
         article_text = scrape_article(link)
         result['text'] = article_text
 
