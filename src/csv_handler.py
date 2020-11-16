@@ -13,5 +13,8 @@ def write_data(data):
         dict_writer = csv.DictWriter(output_file, keys)
         dict_writer.writeheader()
         dict_writer.writerows(data)
+
+def read_data(file_name):
+    """Reads a CSV file back in."""
 # verify_new_data()
 # which makes sure there are no duplicate article links

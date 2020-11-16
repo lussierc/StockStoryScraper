@@ -45,15 +45,20 @@ def generate_results(stocks, websites, start_date, end_date, stock_abbrvs):
     scored_stocks = calc_ovr_media_rating(scored_articles, scored_stocks)
     print(scored_stocks)
 
-    for abbreviation in abbrv_list:
-        price, previous_close, open_price, avg_volume, volume = get_stock_attributes(abbreviation)
+    i = 0
+    
+    while i < len(stocks_list):
+        for abbreviation in abbrv_list:
+            price, previous_close, open_price, avg_volume, volume = get_stock_attributes(abbreviation)
 
-        print('Current Stock Price is : $' + str(price))
-        print('Previous Close was : $' + str(previous_close))
-        print('Open Price of the Day was : $' + str(open_price))
-        print('Current stock volume is : ' + str(volume))
-        print('Average stock volume is : ' + str(avg_volume))
+            print('Current Stock Price is : $' + str(price))
+            print('Previous Close was : $' + str(previous_close))
+            print('Open Price of the Day was : $' + str(open_price))
+            print('Current stock volume is : ' + str(volume))
+            print('Average stock volume is : ' + str(avg_volume))
 
+            # append stocks_list(i)
+        i += 1
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
