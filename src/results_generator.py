@@ -31,11 +31,16 @@ def temp_cml_interface():
             stock_abbrvs = input("** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: ")
             start_date = input ("** Enter the START of the date range you want to use for article scraping: ")
             end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
-            articles = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date)
-        else:
-            articles = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date)
-            # TODO automatically gather stocks and stock abbreviations
+            articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date)
+            scored_articles = calc_article_sent_scores(articles)
 
+        else:
+            articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date)
+            scored_articles = articles # since articles are only read in from csv, they are already scored
+            print("we got em arts", articles)
+            print("we got em")
+
+            # TODO automatically gather stocks and stock abbreviations
 
     else:
         websites = ["www.fool.com"]
@@ -43,26 +48,12 @@ def temp_cml_interface():
         stock_abbrvs = input("** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: ")
         start_date = input ("** Enter the START of the date range you want to use for article scraping: ")
         end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
+        # run thru process with only new articles
 
-
-        articles = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date)
-    else:
-        pass
-
-    # websites = ["www.fool.com"]
-    # print("** Websites being used: ")
-    #
-    # stocks = input("** Enter your stocks, separated by commas: ")
-    # stock_abbrvs = input("** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: ")
-    #
-    # start_date = input ("** Enter the START of the date range you want to use for article scraping: ")
-    # end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
-    #
-    # articles = sentiment_analyzer.analyze_all_articles(stocks, websites, start_date, end_date)
 
     # IF CSV then do this for new articles, if not do for all
-    # scored_articles = calc_article_sent_scores(articles)
-    #
+    print(scored_articles)
+    
     # generate_results(stocks, stock_abbrvs, scored_articles)
 
 def generate_results(stocks, stock_abbrvs, scored_articles):
@@ -70,8 +61,6 @@ def generate_results(stocks, stock_abbrvs, scored_articles):
     stocks_list = stocks.split(", ")
     abbrv_list = []
     abbrv_list = stock_abbrvs.split(", ")
-
-
 
     #print("\n\nScored Articles:", scored_articles)
 
@@ -95,53 +84,6 @@ def generate_results(stocks, stock_abbrvs, scored_articles):
 
     while i < len(scored_stocks):
         price, previous_close, open_price, avg_volume, volume = search_scraper.get_stock_attributes(abbrv_list[i])
-
-        print('Current Stock Price is : $' + str(price))
-        print('Previous Close was : $' + str(previous_close))
-        print('Open Price of the Day was : $' + str(open_price))
-        print('Current stock volume is : ' + str(volume))
-        print('Average stock volume is : ' + str(avg_volume))
-
-        print(scored_stocks[i])
-        scored_stocks[i]['current_price'] = price
-        scored_stocks[i]['volume'] = volume
-        scored_stocks[i]['avg_volume'] = avg_volume
-        print(scored_stocks[i])
-
-        i += 1
-
-def generate_all_new_results(stocks, websites, start_date, end_date, stock_abbrvs):
-    stocks_list = []
-    stocks_list = stocks.split(", ")
-    abbrv_list = []
-    abbrv_list = stock_abbrvs.split(", ")
-
-    articles = analyze_all_articles(stocks, websites, start_date, end_date)
-
-    # IF CSV then do this for new articles, if not do for all
-    scored_articles = calc_article_sent_scores(articles)
-    #print("\n\nScored Articles:", scored_articles)
-
-    #combine csv and new articles dicts
-    # do below code for csv and new articles, do not save
-
-    scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
-    # save run date to overall dict for csv purposes
-    scored_stocks = calc_recent_stock_sentiment(scored_articles, scored_stocks)
-
-    scored_stocks = calc_stock_trifold_rating(scored_articles, scored_stocks)
-
-    scored_stocks = calc_ovr_stock_article_feelings(scored_articles, scored_stocks)
-    print("\n\nScored Stocks", scored_stocks)
-    write_data(scored_articles)
-
-    scored_stocks = calc_ovr_media_rating(scored_articles, scored_stocks)
-    print(scored_stocks)
-
-    i = 0
-
-    while i < len(scored_stocks):
-        price, previous_close, open_price, avg_volume, volume = get_stock_attributes(abbrv_list[i])
 
         print('Current Stock Price is : $' + str(price))
         print('Previous Close was : $' + str(previous_close))

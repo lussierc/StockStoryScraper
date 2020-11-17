@@ -11,9 +11,12 @@ from vaderSentiment import vaderSentiment
 from search_scraper import *
 
 
-def analyze_all_articles(stocks, websites, start_date, end_date):
+def analyze_all_articles(article_dicts):
     """Perform sentiment analysis on all articles' titles, descriptions, and texts."""
-    article_dicts = get_article_dicts(stocks, websites, start_date, end_date)
+
+    article_dicts = [
+        j for i in article_dicts for j in i
+    ]  # combine inner and outer list elements (results of individual search queries)
 
     for article in article_dicts:
         # analyze & store title

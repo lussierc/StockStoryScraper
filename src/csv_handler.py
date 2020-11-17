@@ -36,19 +36,19 @@ def read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date):
         reader = csv.DictReader(f)
         inputted_csv_list = list(reader)
 
-    print("READIN RESULTS ---- ", inputted_csv_list)
 
     if scrape_new_dec == 'Y':
         # run everything thru individually
-
+        print("Scrape new contnet")
         # scrape new Articles
-        articles = search_scraper.run_web_search_scraper(stocks, websites, start_date, end_date, inputted_csv_list)
-
+        article_dicts = search_scraper.run_web_search_scraper(stocks, websites, start_date, end_date, inputted_csv_list)
+        articles = sentiment_analyzer.analyze_all_articles(article_dicts)
         # # IF CSV then do this for new articles, if not do for all
         # scored_articles = calc_article_sent_scores(articles)
     else:
         articles = inputted_csv_list
 
-    return articles
+    return articles, inputted_csv_list
+
 # verify_new_data()
 # which makes sure there are no duplicate article links

@@ -62,7 +62,9 @@ def scrape_google_news_search(googlenews, search_query, current_stock, inputted_
             if article['link'] == link:
                 print("found a dup", article['link'], link)
                 search_results.remove(result)
-                
+                print("remove", result)
+
+    print("new results", search_results)
     for result in search_results:
         link = result['link']
         article_text = scrape_article(link)
@@ -105,9 +107,6 @@ def scrape_article(link):
 def new_article_validator():
     """Ensures an article is new by looking at scraped links."""
     print("placeholder")
-
-
-"""Simple stock price scraper. Gets real-time stock prices."""
 
 
 
