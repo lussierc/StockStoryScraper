@@ -41,14 +41,18 @@ def temp_cml_interface():
             print("we got em")
 
             # TODO automatically gather stocks and stock abbreviations
-
     else:
+        # fresh run
         websites = ["www.fool.com"]
         stocks = input("** Enter your stocks, separated by commas: ")
         stock_abbrvs = input("** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: ")
         start_date = input ("** Enter the START of the date range you want to use for article scraping: ")
         end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
         # run thru process with only new articles
+        article_dicts = search_scraper.run_web_search_scraper(stocks, websites, start_date, end_date, inputted_csv_list)
+        articles = sentiment_analyzer.analyze_all_articles(article_dicts)
+        scored_articles = calc_article_sent_scores(articles)
+
 
 
     # IF CSV then do this for new articles, if not do for all
