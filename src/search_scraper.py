@@ -113,12 +113,6 @@ def scrape_article(link):
 
     return text
 
-def new_article_validator():
-    """Ensures an article is new by looking at scraped links."""
-    print("placeholder")
-
-
-
 
 def get_stock_attributes(abbreviation):
     """Gathers real time stock prices."""
