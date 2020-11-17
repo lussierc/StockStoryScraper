@@ -145,22 +145,22 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
 
     i = 0
 
-    # while i < len(scored_stocks):
-    #     price, previous_close, open_price, avg_volume, volume = search_scraper.get_stock_attributes(abbrv_list[i])
-    #
-    #     print('Current Stock Price is : $' + str(price))
-    #     print('Previous Close was : $' + str(previous_close))
-    #     print('Open Price of the Day was : $' + str(open_price))
-    #     print('Current stock volume is : ' + str(volume))
-    #     print('Average stock volume is : ' + str(avg_volume))
-    #
-    #     print(scored_stocks[i])
-    #     scored_stocks[i]['current_price'] = price
-    #     scored_stocks[i]['volume'] = volume
-    #     scored_stocks[i]['avg_volume'] = avg_volume
-    #     print(scored_stocks[i])
-    #
-    #     i += 1
+    while i < len(scored_stocks):
+        price, previous_close, open_price, avg_volume, volume = search_scraper.get_stock_attributes(abbrv_list[i])
+
+        print('Current Stock Price is : $' + str(price))
+        print('Previous Close was : $' + str(previous_close))
+        print('Open Price of the Day was : $' + str(open_price))
+        print('Current stock volume is : ' + str(volume))
+        print('Average stock volume is : ' + str(avg_volume))
+
+        print(scored_stocks[i])
+        scored_stocks[i]['current_price'] = price
+        scored_stocks[i]['volume'] = volume
+        scored_stocks[i]['avg_volume'] = avg_volume
+        print(scored_stocks[i])
+
+        i += 1
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
