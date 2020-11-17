@@ -32,8 +32,8 @@ def temp_cml_interface():
             start_date = input ("** Enter the START of the date range you want to use for article scraping: ")
             end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
             articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date)
-            scored_articles = calc_article_sent_scores(articles)
-
+            new_scored_articles = calc_article_sent_scores(articles)
+            scored_articles = inputted_csv_list + new_scored_articles
         else:
             articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date)
             scored_articles = articles # since articles are only read in from csv, they are already scored
@@ -53,7 +53,7 @@ def temp_cml_interface():
 
     # IF CSV then do this for new articles, if not do for all
     print(scored_articles)
-    
+
     # generate_results(stocks, stock_abbrvs, scored_articles)
 
 def generate_results(stocks, stock_abbrvs, scored_articles):
