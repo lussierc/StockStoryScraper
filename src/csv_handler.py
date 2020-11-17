@@ -23,25 +23,31 @@ def write_data(data):
         write_file = "results.csv"
         print("You provided an invalid output file name, outputting to the default file (results.csv)!")
 
+    for item in data:
+        check_list = isinstance(item, list)
+        if check_list is True:
+            item = item[0]
     keys = data[0].keys()
+
     with open(write_file, "w", newline="") as output_file:
         dict_writer = csv.DictWriter(output_file, keys)
         dict_writer.writeheader()
         dict_writer.writerows(data)
 
-def read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date):
+def read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date, abbrv_list):
     """Reads a CSV file back in."""
 
     with open(csv_file, "r") as f:
         reader = csv.DictReader(f)
         inputted_csv_list = list(reader)
+        print("inputteddddd", inputted_csv_list)
 
 
     if scrape_new_dec == 'Y':
         # run everything thru individually
         print("Scrape new contnet")
         # scrape new Articles
-        article_dicts = search_scraper.run_web_search_scraper(stocks, websites, start_date, end_date, inputted_csv_list)
+        article_dicts = search_scraper.run_web_search_scraper(stocks, abbrv_list, websites, start_date, end_date, inputted_csv_list)
         articles = sentiment_analyzer.analyze_all_articles(article_dicts)
         # # IF CSV then do this for new articles, if not do for all
         # scored_articles = calc_article_sent_scores(articles)

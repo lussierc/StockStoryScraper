@@ -42,6 +42,7 @@ def sent_analyze(sentence):
     sentences = [str(s) for s in result.sents]
     analyzer = vaderSentiment.SentimentIntensityAnalyzer()
     sentiment = [analyzer.polarity_scores(str(s)) for s in sentences]
+    print(sentiment)
     return sentiment
 
 

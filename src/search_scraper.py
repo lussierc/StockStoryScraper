@@ -26,25 +26,32 @@ def get_search_queries(stocks, websites):
     return search_queries, stock_list
 
 
-def run_web_search_scraper(stocks, websites, start_date, end_date, inputted_csv_list):
+def run_web_search_scraper(stocks, abbrvs, websites, start_date, end_date, inputted_csv_list):
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news(start_date, end_date)
 
     queries, stock_list = get_search_queries(stocks, websites)
     results = []
 
+    abbrv_list = abbrvs.split(", ")
+
+
     i = 0
     for search_query in queries:
-        for stock in stock_list:
-            if stock in search_query:
-                current_stock = stock
+        while i < len(stock_list):
+            current_stock = stock_list[i]
+            current_abbrv = abbrv_list[i]
+            i += 1
+        # for stock in stock_list:
+        #     if stock in search_query:
+        #         current_stock = stock
         print(search_query, "STOCK", current_stock)
-        results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list))
+        results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv))
 
     return results
 
 
-def scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list):
+def scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv):
     """Scrapes a Google News web search using a specifc query."""
 
     googlenews.clear()  # clear past results
@@ -71,6 +78,7 @@ def scrape_google_news_search(googlenews, search_query, current_stock, inputted_
         result['text'] = article_text
 
         result['stock'] = current_stock
+        result['abbrv'] = current_abbrv
 
     return search_results
 

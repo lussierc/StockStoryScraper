@@ -31,12 +31,49 @@ def temp_cml_interface():
             stock_abbrvs = input("** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: ")
             start_date = input ("** Enter the START of the date range you want to use for article scraping: ")
             end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
-            articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date)
+            articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date, stock_abbrvs)
             new_scored_articles = calc_article_sent_scores(articles)
             scored_articles = inputted_csv_list + new_scored_articles
+            scored_articles.append(inputted_csv_list)
+            scored_articles.append(new_scored_articles)
+
+            stocks_list = []
+            stocks_list = stocks.split(", ")
+            abbrv_list = []
+            abbrv_list = stock_abbrvs.split(", ")
+
+            for article in scored_articles:
+                check_list = isinstance(article, list)
+                if check_list is True:
+                    article = article[0]
+
+                if article['stock'] in stocks_list:
+                    pass
+                else:
+                    stocks_list.append(article['stock'])
+
+                if article['abbrv'] in abbrv_list:
+                    pass
+                else:
+                    abbrv_list.append(article['stock'])
+
         else:
-            articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date)
+            stock_abbrvs = ""
+            articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date, stock_abbrvs)
             scored_articles = articles # since articles are only read in from csv, they are already scored
+            stocks_list = []
+            abbrv_list = []
+            for article in scored_articles:
+                if article['stock'] in stocks_list:
+                    pass
+                else:
+                    stocks_list.append(article['stock'])
+
+                if article['abbrv'] in abbrv_list:
+                    pass
+                else:
+                    abbrv_list.append(article['stock'])
+
             print("we got em arts", articles)
             print("we got em")
 
@@ -50,22 +87,21 @@ def temp_cml_interface():
         start_date = input ("** Enter the START of the date range you want to use for article scraping: ")
         end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
         # run thru process with only new articles
-        article_dicts = search_scraper.run_web_search_scraper(stocks, websites, start_date, end_date, inputted_csv_list)
+        article_dicts = search_scraper.run_web_search_scraper(stocks, stock_abbrvs, websites, start_date, end_date, inputted_csv_list)
         articles = sentiment_analyzer.analyze_all_articles(article_dicts)
         scored_articles = calc_article_sent_scores(articles)
+        stocks_list = []
+        stocks_list = stocks.split(", ")
+        abbrv_list = []
+        abbrv_list = stock_abbrvs.split(", ")
 
-
-
-    # IF CSV then do this for new articles, if not do for all
+    print("SCORED ARTICLES")
     print(scored_articles)
 
-    # generate_results(stocks, stock_abbrvs, scored_articles)
+    generate_results(stocks_list, abbrv_list, scored_articles)
 
-def generate_results(stocks, stock_abbrvs, scored_articles):
-    stocks_list = []
-    stocks_list = stocks.split(", ")
-    abbrv_list = []
-    abbrv_list = stock_abbrvs.split(", ")
+def generate_results(stocks_list, abbrv_list, scored_articles):
+
 
     scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
     # save run date to overall dict for csv purposes
@@ -131,9 +167,9 @@ def calc_article_sent_scores(articles):
             ovr_desc_sent_score += dsent['compound']
         ovr_desc_sent_score = ovr_desc_sent_score / sent_count
 
-        article['ovr_text_sent_score'] = ovr_text_sent_score
-        article['ovr_title_sent_score'] = ovr_title_sent_score
-        article['ovr_desc_sent_score'] = ovr_desc_sent_score
+        article['ovr_text_sent_score'] = float(ovr_text_sent_score)
+        article['ovr_title_sent_score'] = float(ovr_title_sent_score)
+        article['ovr_desc_sent_score'] = float(ovr_desc_sent_score)
 
         trifold_score, trifold_rating = calc_article_trifold_rating(ovr_text_sent_score, ovr_title_sent_score, ovr_desc_sent_score)
         article['trifold_score'] = trifold_score
@@ -158,19 +194,19 @@ def calc_article_sent_scores(articles):
 
 def calc_sent_rating(sent_score):
     """Calculates the sentiment rating for a given title, description, or text sentiment rating for an article."""
-    if sent_score >= -0.05554 and sent_score <= 0.05554:
+    if float(sent_score) >= -0.05554 and float(sent_score) <= 0.05554:
         rating = "Neutral"
-    elif sent_score <= -.05555 and sent_score >= -.30554:
+    elif float(sent_score) <= -.05555 and float(sent_score) >= -.30554:
         rating = "Somewhat Negative"
-    elif sent_score <= -.30555 and sent_score >= -.70554:
+    elif float(sent_score) <= -.30555 and float(sent_score) >= -.70554:
         rating = "Negative"
-    elif sent_score <= -.70555 and sent_score >= 1.0:
+    elif float(sent_score) <= -.70555 and float(sent_score) >= 1.0:
         rating = "Very Negative"
-    elif sent_score >= .05555 and sent_score <= .30554:
+    elif float(sent_score) >= .05555 and float(sent_score) <= .30554:
         rating = "Somewhat Positive"
-    elif sent_score >= .30555 and sent_score <= .70554:
+    elif float(sent_score) >= .30555 and float(sent_score) <= .70554:
         rating = "Positive"
-    elif sent_score >= .70555 and sent_score <= 1.0:
+    elif float(sent_score) >= .70555 and float(sent_score) <= 1.0:
         rating = "Very Positive"
 
     return rating
@@ -195,11 +231,17 @@ def calc_stock_sentiment(scored_articles, stocks_list):
         stock_sent_score = 0
         for article in scored_articles:
             print("ARTICLE", article)
-            if article['stock'] == stock:
+            check_list = isinstance(article, list)
+            if check_list is True:
+                article = article[0]
+            if article['stock'] is stock:
                 article_count += 1
-                stock_sent_score += article['ovr_text_sent_score']
+                stock_sent_score += float(article['ovr_text_sent_score'])
 
-        avg_stock_sent_score = stock_sent_score / article_count
+        try:
+            avg_stock_sent_score = stock_sent_score / article_count
+        except:
+            avg_stock_sent_score = 0
         stock_sent_dict = {'stock': stock, 'avg_stock_sent_score': avg_stock_sent_score, 'article_count': article_count}
         scored_stocks.append(stock_sent_dict)
 
@@ -218,18 +260,21 @@ def calc_recent_stock_sentiment(scored_articles, scored_stocks):
         day_stock_sent_score = 0
         stock_sent_score = 0
         for article in scored_articles:
+            check_list = isinstance(article, list)
+            if check_list is True:
+                article = article[0]
             if article['stock'] == stock['stock']:
                 if 'day' in article['date']: # see if day is in it because then we know it is less than a week old/recent
                     print("ARTICLE", article)
                     recent_article_count += 1
-                    stock_sent_score += article['ovr_text_sent_score']
+                    stock_sent_score += float(article['ovr_text_sent_score'])
                 elif 'hour' in article['date']:
                     #day
                     day_article_count += 1
-                    day_stock_sent_score += article['ovr_text_sent_score']
+                    day_stock_sent_score += float(article['ovr_text_sent_score'])
                     #recent
                     recent_article_count += 1
-                    stock_sent_score += article['ovr_text_sent_score']
+                    stock_sent_score += float(article['ovr_text_sent_score'])
 
         try:
             rcnt_text_sent_score = stock_sent_score / recent_article_count
@@ -260,13 +305,16 @@ def calc_ovr_stock_article_feelings(scored_articles, scored_stocks):
         negative_article_count = 0
 
         for article in scored_articles:
+            check_list = isinstance(article, list)
+            if check_list is True:
+                article = article[0]
             sent_score = article['ovr_text_sent_score']
             if article['stock'] == stock['stock']:
-                if sent_score > .05:
+                if float(sent_score) > .05:
                     positive_article_count += 1
-                elif sent_score >= -0.05 and sent_score <= 0.05:
+                elif float(sent_score) >= -0.05 and float(sent_score) <= 0.05:
                     neutral_article_count += 1
-                elif sent_score < -.05:
+                elif float(sent_score) < -.05:
                     negative_article_count += 1
                 else:
                     pass
@@ -297,9 +345,12 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
         stock_trifold_rating = 0
         stock_article_count = 0
         for article in scored_articles:
+            check_list = isinstance(article, list)
+            if check_list is True:
+                article = article[0]
             if article['stock'] == stock['stock']:
                 stock_article_count += 1
-                stock_trifold_rating += article['trifold_score']
+                stock_trifold_rating += float(article['trifold_score'])
 
     try:
         ovr_stock_trifold_rating = stock_trifold_rating / stock_article_count
@@ -314,6 +365,9 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
 
     media_list = []
     for article in scored_articles:
+        check_list = isinstance(article, list)
+        if check_list is True:
+            article = article[0]
         media = article['media']
         if media in media_list:
             pass
@@ -327,6 +381,9 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
             article_count = 0
             media_sent_score = 0
             for article in scored_articles:
+                check_list = isinstance(article, list)
+                if check_list is True:
+                    article = article[0]
                 if article['media'] == media and article['stock'] == stock['stock']:
                     article_count += 1
                     media_sent_score += article['ovr_text_sent_score']
