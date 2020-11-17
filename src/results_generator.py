@@ -43,6 +43,7 @@ def temp_cml_interface():
             # TODO automatically gather stocks and stock abbreviations
     else:
         # fresh run
+        inputted_csv_list = [] # empty as not to verify any links for fresh run
         websites = ["www.fool.com"]
         stocks = input("** Enter your stocks, separated by commas: ")
         stock_abbrvs = input("** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: ")
@@ -65,11 +66,6 @@ def generate_results(stocks, stock_abbrvs, scored_articles):
     stocks_list = stocks.split(", ")
     abbrv_list = []
     abbrv_list = stock_abbrvs.split(", ")
-
-    #print("\n\nScored Articles:", scored_articles)
-
-    #combine csv and new articles dicts
-    # do below code for csv and new articles, do not save
 
     scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
     # save run date to overall dict for csv purposes
