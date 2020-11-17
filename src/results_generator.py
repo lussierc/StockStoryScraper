@@ -145,22 +145,22 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
 
     i = 0
 
-    while i < len(scored_stocks):
-        price, previous_close, open_price, avg_volume, volume = search_scraper.get_stock_attributes(abbrv_list[i])
-
-        print('Current Stock Price is : $' + str(price))
-        print('Previous Close was : $' + str(previous_close))
-        print('Open Price of the Day was : $' + str(open_price))
-        print('Current stock volume is : ' + str(volume))
-        print('Average stock volume is : ' + str(avg_volume))
-
-        print(scored_stocks[i])
-        scored_stocks[i]['current_price'] = price
-        scored_stocks[i]['volume'] = volume
-        scored_stocks[i]['avg_volume'] = avg_volume
-        print(scored_stocks[i])
-
-        i += 1
+    # while i < len(scored_stocks):
+    #     price, previous_close, open_price, avg_volume, volume = search_scraper.get_stock_attributes(abbrv_list[i])
+    #
+    #     print('Current Stock Price is : $' + str(price))
+    #     print('Previous Close was : $' + str(previous_close))
+    #     print('Open Price of the Day was : $' + str(open_price))
+    #     print('Current stock volume is : ' + str(volume))
+    #     print('Average stock volume is : ' + str(avg_volume))
+    #
+    #     print(scored_stocks[i])
+    #     scored_stocks[i]['current_price'] = price
+    #     scored_stocks[i]['volume'] = volume
+    #     scored_stocks[i]['avg_volume'] = avg_volume
+    #     print(scored_stocks[i])
+    #
+    #     i += 1
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
@@ -265,14 +265,16 @@ def calc_stock_sentiment(scored_articles, stocks_list):
                 for articles in article:
                     scored_articles.append(articles)
             else:
-                if article['stock'] is stock:
+                if article['stock'] == stock:
                     article_count += 1
                     stock_sent_score += float(article['ovr_text_sent_score'])
 
-        try:
-            avg_stock_sent_score = stock_sent_score / article_count
-        except:
-            avg_stock_sent_score = 0
+
+        # try:
+        print(stock_sent_score, "/", article_count)
+        avg_stock_sent_score = stock_sent_score / article_count
+        # except:
+        #     avg_stock_sent_score = 0
         stock_sent_dict = {'stock': stock, 'avg_stock_sent_score': avg_stock_sent_score, 'article_count': article_count}
         scored_stocks.append(stock_sent_dict)
 
@@ -427,7 +429,7 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
                 else:
                     if article['media'] == media and article['stock'] == stock['stock']:
                         article_count += 1
-                        media_sent_score += article['ovr_text_sent_score']
+                        media_sent_score += float(article['ovr_text_sent_score'])
 
             try:
                 stock_media_avg_sent_score = media_sent_score / article_count
