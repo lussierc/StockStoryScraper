@@ -254,20 +254,17 @@ def calc_stock_sentiment(scored_articles, stocks_list):
     # pass articles and stocks_list
     """Calculates average sentiment score for a stock based on all articles (text) for given stock."""
     scored_stocks = []
-
+    print()
     for stock in stocks_list:
+        print("STOCK", stock)
         article_count = 0
         stock_sent_score = 0
         for article in scored_articles:
-            print("ARTICLE", article)
+            print("ARTICLESTOCK", article['stock'])
             check_list = isinstance(article, list)
-            if check_list is True:
-                for articles in article:
-                    scored_articles.append(articles)
-            else:
-                if article['stock'] == stock:
-                    article_count += 1
-                    stock_sent_score += float(article['ovr_text_sent_score'])
+            if article['stock'] == stock:
+                article_count += 1
+                stock_sent_score += float(article['ovr_text_sent_score'])
 
 
         # try:

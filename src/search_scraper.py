@@ -41,12 +41,13 @@ def run_web_search_scraper(stocks, abbrvs, websites, start_date, end_date, input
         while i < len(stock_list):
             current_stock = stock_list[i]
             current_abbrv = abbrv_list[i]
+            print(search_query, "STOCK", current_stock)
+            results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv))
             i += 1
         # for stock in stock_list:
         #     if stock in search_query:
         #         current_stock = stock
-        print(search_query, "STOCK", current_stock)
-        results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv))
+
 
     return results
 
