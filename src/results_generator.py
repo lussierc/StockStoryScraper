@@ -36,6 +36,7 @@ def temp_cml_interface():
             scored_articles = inputted_csv_list + new_scored_articles
             scored_articles.append(inputted_csv_list)
             scored_articles.append(new_scored_articles)
+            print("NEW SCORED ARTICLES", new_scored_articles)
 
             stocks_list = []
             stocks_list = stocks.split(", ")
@@ -45,17 +46,18 @@ def temp_cml_interface():
             for article in scored_articles:
                 check_list = isinstance(article, list)
                 if check_list is True:
-                    article = article[0]
-
-                if article['stock'] in stocks_list:
-                    pass
+                    for articles in article:
+                        scored_articles.append(articles)
                 else:
-                    stocks_list.append(article['stock'])
+                    if article['stock'] in stocks_list:
+                        pass
+                    else:
+                        stocks_list.append(article['stock'])
 
-                if article['abbrv'] in abbrv_list:
-                    pass
-                else:
-                    abbrv_list.append(article['stock'])
+                    if article['abbrv'] in abbrv_list:
+                        pass
+                    else:
+                        abbrv_list.append(article['stock'])
 
         else:
             stock_abbrvs = ""
@@ -97,6 +99,31 @@ def temp_cml_interface():
 
     print("SCORED ARTICLES")
     print(scored_articles)
+
+    links = []
+    for article in scored_articles:
+        check_list = isinstance(article, list)
+        if check_list is True:
+            for articles in article:
+                scored_articles.append(articles)
+            scored_articles.remove(article)
+        else:
+            if article['link'] in links:
+                print("DUPPP")
+                print("removing...", article['link'])
+                scored_articles.remove(article)
+            else:
+                links.append(article['link'])
+
+    print("FINAL TESTING")
+    links = []
+    for article in scored_articles:
+        if article['link'] in links:
+            print("DUPPP")
+            print("removing...", article['link'])
+            scored_articles.remove(article)
+        else:
+            links.append(article['link'])
 
     generate_results(stocks_list, abbrv_list, scored_articles)
 
@@ -194,6 +221,8 @@ def calc_article_sent_scores(articles):
 
 def calc_sent_rating(sent_score):
     """Calculates the sentiment rating for a given title, description, or text sentiment rating for an article."""
+    print("sent_score", sent_score)
+    rating = "Unknown"
     if float(sent_score) >= -0.05554 and float(sent_score) <= 0.05554:
         rating = "Neutral"
     elif float(sent_score) <= -.05555 and float(sent_score) >= -.30554:
@@ -233,10 +262,12 @@ def calc_stock_sentiment(scored_articles, stocks_list):
             print("ARTICLE", article)
             check_list = isinstance(article, list)
             if check_list is True:
-                article = article[0]
-            if article['stock'] is stock:
-                article_count += 1
-                stock_sent_score += float(article['ovr_text_sent_score'])
+                for articles in article:
+                    scored_articles.append(articles)
+            else:
+                if article['stock'] is stock:
+                    article_count += 1
+                    stock_sent_score += float(article['ovr_text_sent_score'])
 
         try:
             avg_stock_sent_score = stock_sent_score / article_count
@@ -262,19 +293,21 @@ def calc_recent_stock_sentiment(scored_articles, scored_stocks):
         for article in scored_articles:
             check_list = isinstance(article, list)
             if check_list is True:
-                article = article[0]
-            if article['stock'] == stock['stock']:
-                if 'day' in article['date']: # see if day is in it because then we know it is less than a week old/recent
-                    print("ARTICLE", article)
-                    recent_article_count += 1
-                    stock_sent_score += float(article['ovr_text_sent_score'])
-                elif 'hour' in article['date']:
-                    #day
-                    day_article_count += 1
-                    day_stock_sent_score += float(article['ovr_text_sent_score'])
-                    #recent
-                    recent_article_count += 1
-                    stock_sent_score += float(article['ovr_text_sent_score'])
+                for articles in article:
+                    scored_articles.append(articles)
+            else:
+                if article['stock'] == stock['stock']:
+                    if 'day' in article['date']: # see if day is in it because then we know it is less than a week old/recent
+                        print("ARTICLE", article)
+                        recent_article_count += 1
+                        stock_sent_score += float(article['ovr_text_sent_score'])
+                    elif 'hour' in article['date']:
+                        #day
+                        day_article_count += 1
+                        day_stock_sent_score += float(article['ovr_text_sent_score'])
+                        #recent
+                        recent_article_count += 1
+                        stock_sent_score += float(article['ovr_text_sent_score'])
 
         try:
             rcnt_text_sent_score = stock_sent_score / recent_article_count
@@ -307,17 +340,19 @@ def calc_ovr_stock_article_feelings(scored_articles, scored_stocks):
         for article in scored_articles:
             check_list = isinstance(article, list)
             if check_list is True:
-                article = article[0]
-            sent_score = article['ovr_text_sent_score']
-            if article['stock'] == stock['stock']:
-                if float(sent_score) > .05:
-                    positive_article_count += 1
-                elif float(sent_score) >= -0.05 and float(sent_score) <= 0.05:
-                    neutral_article_count += 1
-                elif float(sent_score) < -.05:
-                    negative_article_count += 1
-                else:
-                    pass
+                for articles in article:
+                    scored_articles.append(articles)
+            else:
+                sent_score = article['ovr_text_sent_score']
+                if article['stock'] == stock['stock']:
+                    if float(sent_score) > .05:
+                        positive_article_count += 1
+                    elif float(sent_score) >= -0.05 and float(sent_score) <= 0.05:
+                        neutral_article_count += 1
+                    elif float(sent_score) < -.05:
+                        negative_article_count += 1
+                    else:
+                        pass
 
         count_list = []
         count_list.append(positive_article_count)
@@ -347,10 +382,12 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
         for article in scored_articles:
             check_list = isinstance(article, list)
             if check_list is True:
-                article = article[0]
-            if article['stock'] == stock['stock']:
-                stock_article_count += 1
-                stock_trifold_rating += float(article['trifold_score'])
+                for articles in article:
+                    scored_articles.append(articles)
+            else:
+                if article['stock'] == stock['stock']:
+                    stock_article_count += 1
+                    stock_trifold_rating += float(article['trifold_score'])
 
     try:
         ovr_stock_trifold_rating = stock_trifold_rating / stock_article_count
@@ -367,12 +404,14 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
     for article in scored_articles:
         check_list = isinstance(article, list)
         if check_list is True:
-            article = article[0]
-        media = article['media']
-        if media in media_list:
-            pass
+            for articles in article:
+                scored_articles.append(articles)
         else:
-            media_list.append(media)
+            media = article['media']
+            if media in media_list:
+                pass
+            else:
+                media_list.append(media)
     print("MEDIA", media_list)
 
     for stock in scored_stocks:
@@ -383,10 +422,12 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
             for article in scored_articles:
                 check_list = isinstance(article, list)
                 if check_list is True:
-                    article = article[0]
-                if article['media'] == media and article['stock'] == stock['stock']:
-                    article_count += 1
-                    media_sent_score += article['ovr_text_sent_score']
+                    for articles in article:
+                        scored_articles.append(articles)
+                else:
+                    if article['media'] == media and article['stock'] == stock['stock']:
+                        article_count += 1
+                        media_sent_score += article['ovr_text_sent_score']
 
             try:
                 stock_media_avg_sent_score = media_sent_score / article_count

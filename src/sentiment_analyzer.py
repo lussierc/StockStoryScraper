@@ -50,8 +50,6 @@ def get_article_dicts(stocks, websites, start_date, end_date):
     """Get all articles in their respective dictionaries."""
     data = run_web_search_scraper(stocks, websites, start_date, end_date)
 
-    articles = [
-        j for i in data for j in i
-    ]  # combine inner and outer list elements (results of individual search queries)
+    articles = [j for i in data for j in i]  # combine inner and outer list elements (results of individual search queries)
 
     return articles
