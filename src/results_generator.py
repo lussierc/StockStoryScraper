@@ -143,6 +143,9 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
 
         i += 1
 
+    fin_scored_stocks = predict_stock_well_being(scored_stocks)
+    print(fin_scored_stocks)
+
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
     print("Calcuting text score....")
@@ -314,21 +317,16 @@ def calc_ovr_stock_article_feelings(scored_articles, scored_stocks):
         negative_article_count = 0
 
         for article in scored_articles:
-            check_list = isinstance(article, list)
-            if check_list is True:
-                for articles in article:
-                    scored_articles.append(articles)
-            else:
-                sent_score = article['ovr_text_sent_score']
-                if article['stock'] == stock['stock']:
-                    if float(sent_score) > .05:
-                        positive_article_count += 1
-                    elif float(sent_score) >= -0.05 and float(sent_score) <= 0.05:
-                        neutral_article_count += 1
-                    elif float(sent_score) < -.05:
-                        negative_article_count += 1
-                    else:
-                        pass
+            sent_score = article['ovr_text_sent_score']
+            if article['stock'] == stock['stock']:
+                if float(sent_score) > .05:
+                    positive_article_count += 1
+                elif float(sent_score) >= -0.05 and float(sent_score) <= 0.05:
+                    neutral_article_count += 1
+                elif float(sent_score) < -.05:
+                    negative_article_count += 1
+                else:
+                    pass
 
         count_list = []
         count_list.append(positive_article_count)
@@ -415,8 +413,47 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
 
     return scored_stocks
 
-def predict_stock_well_being():
+def predict_stock_well_being(scored_stocks):
     """Predicts the overall view of a stock and whether it will continue to rise or fall."""
+    # CURRENTLY BASIC - more updates to come
     # takes stock_trifold_rating, ovr_stock_text_sent, calc_recent_stock_sentiment, ovr_stock_feelings as inputs
+    for stock in scored_stocks:
+        wght_rcnt_text = .25 * (float(stock['rcnt_text_sent_score']) * 100) #.25
+        wght_avg_text = .25 * (float(stock['avg_stock_sent_score']) * 100) #.25
+        wght_trifold = .20 * (float(stock['ovr_stock_trifold_rating']) * 100) #.20
+
+        if stock['overall_stock_articles_feelings'] == 'Positive': #.20
+            weight_feelings = 20
+        elif stock['overall_stock_articles_feelings'] == 'Neutral':
+            weight_feelings = 10
+        elif stock['overall_stock_articles_feelings'] == 'Negative':
+            weight_feelings = 0
+        elif stock_sentiments == 'Undertermined':
+            weight_feelings = 0
+            print("*!!* Stock Sentiment is Undetermined.")
+        else: pass
+
+        volume = int(stock['volume'].replace(',', ''))
+        print(volume)
+        avg_volume = int(stock['avg_volume'].replace(',', ''))
+        print(type(avg_volume))
+
+        if volume > avg_volume:
+            volume_wght = 10
+        elif avg_volume > volume:
+            volume_wght = 0
+        elif volume == avg_volume:
+            volume_wght = 7.5
+        else:
+            volume_wght = 5
+
+        print("wgh_rcnt", wght_rcnt_text)
+        print("wgh_avg", wght_avg_text)
+        print("wght_trifold", wght_trifold)
+        print("weight_feelings", weight_feelings)
+        print("volume_wght", volume_wght)
+
+        stock_well_being_prediction = wght_rcnt_text + wght_avg_text + weight_feelings + wght_trifold + volume_wght
+        print("STOCK WELL BEING PREDICTION for stock,", stock['stock'], "= ", stock_well_being_prediction)
 
 temp_cml_interface()
