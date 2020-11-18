@@ -457,3 +457,7 @@ def predict_stock_well_being(scored_stocks):
         print("STOCK WELL BEING PREDICTION for stock,", stock['stock'], "= ", stock_well_being_prediction)
 
 temp_cml_interface()
+
+def predict_historical_stock_well_being():
+    """Given an input file of scored stocks over time, generate/predict the overall stock well being rating more accurately given more data."""
+    # to be implemented later
