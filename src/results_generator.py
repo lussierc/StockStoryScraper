@@ -19,7 +19,7 @@ def temp_cml_interface():
     start_date = ""
     end_date = ""
 
-    read_in_dec = input("Do you want to read in a CSV file Y or N")
+    read_in_dec = input("*  Do you want to read in a CSV file Y or N: ")
 
 
     if read_in_dec == 'Y':
@@ -34,9 +34,9 @@ def temp_cml_interface():
             articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date, stock_abbrvs)
             new_scored_articles = calc_article_sent_scores(articles)
             scored_articles = []
-            scored_articles.append(inputted_csv_list)
-            scored_articles.append(new_scored_articles)
-            print("NEW SCORED ARTICLES", new_scored_articles)
+            scored_articles = inputted_csv_list + new_scored_articles
+            # scored_articles.append(inputted_csv_list)
+            # scored_articles.append(new_scored_articles)
 
             stocks_list = []
             stocks_list = stocks.split(", ")
