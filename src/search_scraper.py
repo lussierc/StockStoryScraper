@@ -9,14 +9,16 @@ import datetime
 
 # pip3 install GoogleNews, pip install newspaper3k
 
+
 def get_search_queries(stocks, websites):
     """Gets search queries to be performed on Google News."""
     search_queries = []  # list to hold created search queries
 
-
     for stock in stocks:
         for website in websites:
-            website = "site:https://" + website  # add necessary site portion of query for website
+            website = (
+                "site:https://" + website
+            )  # add necessary site portion of query for website
             # print(website)
             query = stock + " " + website  # create query
             print("Created a query: ", query)
@@ -26,7 +28,9 @@ def get_search_queries(stocks, websites):
     return search_queries
 
 
-def run_web_search_scraper(stocks, abbrvs, websites, start_date, end_date, inputted_csv_list):
+def run_web_search_scraper(
+    stocks, abbrvs, websites, start_date, end_date, inputted_csv_list
+):
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news(start_date, end_date)
 
@@ -43,13 +47,23 @@ def run_web_search_scraper(stocks, abbrvs, websites, start_date, end_date, input
             if current_stock in search_query:
                 current_abbrv = abbrv_list[i]
                 print(search_query, "STOCK", current_stock, "... ABRV", current_abbrv)
-                results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv))
+                results.append(
+                    scrape_google_news_search(
+                        googlenews,
+                        search_query,
+                        current_stock,
+                        inputted_csv_list,
+                        current_abbrv,
+                    )
+                )
                 i += 1
 
     return results
 
 
-def scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv):
+def scrape_google_news_search(
+    googlenews, search_query, current_stock, inputted_csv_list, current_abbrv
+):
     """Scrapes a Google News web search using a specifc query."""
 
     googlenews.clear()  # clear past results
@@ -62,20 +76,20 @@ def scrape_google_news_search(googlenews, search_query, current_stock, inputted_
     search_results = googlenews.result()
 
     for result in search_results:
-        link = result['link']
+        link = result["link"]
         for article in inputted_csv_list:
-            if article['link'] == link:
-                print("found a dup", article['link'], link)
+            if article["link"] == link:
+                print("found a dup", article["link"], link)
                 search_results.remove(result)
                 print("remove", result)
 
     for result in search_results:
-        link = result['link']
+        link = result["link"]
         article_text = scrape_article(link)
-        result['text'] = article_text
+        result["text"] = article_text
 
-        result['stock'] = current_stock
-        result['abbrv'] = current_abbrv
+        result["stock"] = current_stock
+        result["abbrv"] = current_abbrv
 
     return search_results
 
@@ -112,15 +126,26 @@ def scrape_article(link):
 
 def get_stock_attributes(abbreviation):
     """Gathers real time stock prices."""
-    link = 'https://finance.yahoo.com/quote/' + abbreviation + '?p=' + abbreviation
+    link = "https://finance.yahoo.com/quote/" + abbreviation + "?p=" + abbreviation
     url = requests.get(link)
     soup = bs4.BeautifulSoup(url.text, features="html.parser")
 
-    price = soup.find_all("div", {'class': 'My(6px) Pos(r) smartphone_Mt(6px)'})[0].find('span').text
-    previous_close = soup.find_all("td", {'class': 'Ta(end) Fw(600) Lh(14px)'})[0].find('span').text
-    open_price = soup.find_all("td", {'class': 'Ta(end) Fw(600) Lh(14px)'})[1].find('span').text
-    volume = soup.find_all("td", {'class': 'Ta(end) Fw(600) Lh(14px)'})[6].find('span').text
-    avg_volume = soup.find_all("td", {'class': 'Ta(end) Fw(600) Lh(14px)'})[7].find('span').text
-
+    price = (
+        soup.find_all("div", {"class": "My(6px) Pos(r) smartphone_Mt(6px)"})[0]
+        .find("span")
+        .text
+    )
+    previous_close = (
+        soup.find_all("td", {"class": "Ta(end) Fw(600) Lh(14px)"})[0].find("span").text
+    )
+    open_price = (
+        soup.find_all("td", {"class": "Ta(end) Fw(600) Lh(14px)"})[1].find("span").text
+    )
+    volume = (
+        soup.find_all("td", {"class": "Ta(end) Fw(600) Lh(14px)"})[6].find("span").text
+    )
+    avg_volume = (
+        soup.find_all("td", {"class": "Ta(end) Fw(600) Lh(14px)"})[7].find("span").text
+    )
 
     return price, previous_close, open_price, avg_volume, volume

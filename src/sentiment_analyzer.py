@@ -7,12 +7,17 @@ from vaderSentiment import vaderSentiment
 
 # pip install spacy vaderSentimentå
 
+
 def analyze_all_articles(article_dicts):
     """Perform sentiment analysis on all articles' titles, descriptions, and texts."""
 
-    article_dicts = [j for i in article_dicts for j in i]  # combine inner and outer list elements (results of individual search queries)
+    article_dicts = [
+        j for i in article_dicts for j in i
+    ]  # combine inner and outer list elements (results of individual search queries)
 
-    print("Performing sentiment analysis on given article titles, descriptions, and texts....")
+    print(
+        "Performing sentiment analysis on given article titles, descriptions, and texts...."
+    )
     for article in article_dicts:
         # analyze & store title
         title_sent = sent_analyze(article["title"])
