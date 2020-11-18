@@ -12,40 +12,49 @@ def get_search_queries(stocks, websites):
     """Gets search queries to be performed on Google News."""
     search_queries = []  # list to hold created search queries
 
-    stock_list = stocks.split(", ")
 
-    for stock in stock_list:
+    for stock in stocks:
         for website in websites:
             website = "site:https://" + website  # add necessary site portion of query for website
             # print(website)
             query = stock + " " + website  # create query
+            print("Created a query: ", query)
             # print(query)
             search_queries.append(query)  # store created query
 
-    return search_queries, stock_list
+    return search_queries
 
 
 def run_web_search_scraper(stocks, abbrvs, websites, start_date, end_date, inputted_csv_list):
     """Driver function, runs other necesssary fucntions."""
     googlenews = initalize_google_news(start_date, end_date)
 
-    queries, stock_list = get_search_queries(stocks, websites)
-    results = []
-
+    stock_list = stocks.split(", ")
     abbrv_list = abbrvs.split(", ")
 
+    queries = get_search_queries(stock_list, websites)
+    results = []
 
     i = 0
+
     for search_query in queries:
-        while i < len(stock_list):
-            current_stock = stock_list[i]
-            current_abbrv = abbrv_list[i]
-            print(search_query, "STOCK", current_stock)
-            results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv))
-            i += 1
-        # for stock in stock_list:
-        #     if stock in search_query:
-        #         current_stock = stock
+        for current_stock in stock_list:
+            if current_stock in search_query:
+                current_abbrv = abbrv_list[i]
+                print(search_query, "STOCK", current_stock, "... ABRV", current_abbrv)
+                results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv))
+                i += 1
+
+
+        # if current_stock in search_query:
+        # current_stock = stock_list[i]
+        # current_abbrv = abbrv_list[i]
+        # print(search_query, "STOCK", current_stock)
+        # results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv))
+        # i += 1
+        # # for stock in stock_list:
+        # #     if stock in search_query:
+        # #         current_stock = stock
 
 
     return results

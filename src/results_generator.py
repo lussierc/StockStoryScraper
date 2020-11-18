@@ -44,20 +44,14 @@ def temp_cml_interface():
             abbrv_list = stock_abbrvs.split(", ")
 
             for article in scored_articles:
-                check_list = isinstance(article, list)
-                if check_list is True:
-                    for articles in article:
-                        scored_articles.append(articles)
+                if article['stock'] not in stocks_list:
+                    stocks_list.append(article['stock'])
                 else:
-                    if article['stock'] in stocks_list:
-                        pass
-                    else:
-                        stocks_list.append(article['stock'])
-
-                    if article['abbrv'] in abbrv_list:
-                        pass
-                    else:
-                        abbrv_list.append(article['stock'])
+                    pass
+                if article['abbrv'] not in abbrv_list:
+                    abbrv_list.append(article['abbrv'])
+                else:
+                    pass
 
         else:
             stock_abbrvs = ""
@@ -74,7 +68,7 @@ def temp_cml_interface():
                 if article['abbrv'] in abbrv_list:
                     pass
                 else:
-                    abbrv_list.append(article['stock'])
+                    abbrv_list.append(article['abbrv'])
 
             # TODO automatically gather stocks and stock abbreviations
     else:
@@ -130,22 +124,24 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
 
     i = 0
 
-    # while i < len(scored_stocks):
-    #     price, previous_close, open_price, avg_volume, volume = search_scraper.get_stock_attributes(abbrv_list[i])
-    #
-    #     print('Current Stock Price is : $' + str(price))
-    #     print('Previous Close was : $' + str(previous_close))
-    #     print('Open Price of the Day was : $' + str(open_price))
-    #     print('Current stock volume is : ' + str(volume))
-    #     print('Average stock volume is : ' + str(avg_volume))
-    #
-    #     print(scored_stocks[i])
-    #     scored_stocks[i]['current_price'] = price
-    #     scored_stocks[i]['volume'] = volume
-    #     scored_stocks[i]['avg_volume'] = avg_volume
-    #     print(scored_stocks[i])
-    #
-    #     i += 1
+    print("ABBRV", abbrv_list)
+    while i < len(scored_stocks):
+        print(abbrv_list[i])
+        price, previous_close, open_price, avg_volume, volume = search_scraper.get_stock_attributes(abbrv_list[i])
+
+        print('Current Stock Price is : $' + str(price))
+        print('Previous Close was : $' + str(previous_close))
+        print('Open Price of the Day was : $' + str(open_price))
+        print('Current stock volume is : ' + str(volume))
+        print('Average stock volume is : ' + str(avg_volume))
+
+        print(scored_stocks[i])
+        scored_stocks[i]['current_price'] = price
+        scored_stocks[i]['volume'] = volume
+        scored_stocks[i]['avg_volume'] = avg_volume
+        print(scored_stocks[i])
+
+        i += 1
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
