@@ -5,6 +5,7 @@ from newspaper import Article
 import bs4
 import requests
 from bs4 import BeautifulSoup
+import datetime
 
 # pip3 install GoogleNews, pip install newspaper3k
 
@@ -45,18 +46,6 @@ def run_web_search_scraper(stocks, abbrvs, websites, start_date, end_date, input
                 results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv))
                 i += 1
 
-
-        # if current_stock in search_query:
-        # current_stock = stock_list[i]
-        # current_abbrv = abbrv_list[i]
-        # print(search_query, "STOCK", current_stock)
-        # results.append(scrape_google_news_search(googlenews, search_query, current_stock, inputted_csv_list, current_abbrv))
-        # i += 1
-        # # for stock in stock_list:
-        # #     if stock in search_query:
-        # #         current_stock = stock
-
-
     return results
 
 
@@ -96,11 +85,11 @@ def initalize_google_news(start_date, end_date):
 
     print("initalize_google_news...")
 
-    googlenews = GoogleNews()  # create googlenews object
-    googlenews = GoogleNews(lang="en")
-    googlenews = GoogleNews(period="d")
-    googlenews = GoogleNews(encode="utf-8")
-    googlenews = GoogleNews(start=start_date, end=end_date)
+    googlenews = GoogleNews(encode="utf-8")  # create googlenews object
+    googlenews.setlang("en")
+    googlenews.setperiod("d")
+    googlenews.setencode("utf-8")
+    googlenews.setTimeRange(start_date, end_date)
 
     return googlenews
 
