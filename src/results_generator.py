@@ -456,6 +456,24 @@ def predict_stock_well_being(scored_stocks):
         stock_well_being_prediction = wght_rcnt_text + wght_avg_text + weight_feelings + wght_trifold + volume_wght
         print("STOCK WELL BEING PREDICTION for stock,", stock['stock'], "= ", stock_well_being_prediction)
 
+
+        stock['stock_well_being_prediction'] = stock_well_being_prediction
+        # will need to finetune these calculations
+        if stock_well_being_prediction < 15.5555 or stock_well_being_prediction < 0:
+            stock['stock_well_being_prediction_feelings'] = "Poor Wellbeing"
+        if stock_well_being_prediction > 15.5555 and stock_well_being_prediction < 40.55555:
+            stock['stock_well_being_prediction_feelings'] = "Moderate Wellbeing"
+        elif stock_well_being_prediction > 40.55555 and stock_well_being_prediction_feelings < 65.555:
+            stock['stock_well_being_prediction_feelings'] = "Good Wellbeing"
+        elif stock_well_being_prediction > 65.555 and stock_well_being_prediction_feelings < 100.555:
+            stock['stock_well_being_prediction_feelings'] = "Extremely Good Wellbeing"
+
+
+    return scored_stocks
+
+
+
+
 temp_cml_interface()
 
 def predict_historical_stock_well_being():
