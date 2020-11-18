@@ -13,7 +13,6 @@ def get_search_queries(stocks, websites):
     search_queries = []  # list to hold created search queries
 
     stock_list = stocks.split(", ")
-    print(stock_list)
 
     for stock in stock_list:
         for website in websites:
@@ -72,7 +71,6 @@ def scrape_google_news_search(googlenews, search_query, current_stock, inputted_
                 search_results.remove(result)
                 print("remove", result)
 
-    print("new results", search_results)
     for result in search_results:
         link = result['link']
         article_text = scrape_article(link)

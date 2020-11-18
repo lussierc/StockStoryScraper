@@ -14,19 +14,22 @@ import search_scraper
 
 def write_data(data):
     """Writes article data to a CSV file."""
-
     # eventually will have write_file come in from the interface.
-
     write_file = input("\nEnter the CSV filename you wish to write data to: ")
 
     if '.csv' not in write_file:
         write_file = "results.csv"
-        print("You provided an invalid output file name, outputting to the default file (results.csv)!")
+        print("*!!* You provided an invalid output file name, outputting to the default file (results.csv)!")
+
+    print("Writing data to your chosen CSV file....")
 
     for item in data:
         check_list = isinstance(item, list)
         if check_list is True:
-            item = item[0]
+            for articles in item:
+                data.append(articles)
+            data.remove(item)
+
     keys = data[0].keys()
 
     with open(write_file, "w", newline="") as output_file:
@@ -40,18 +43,19 @@ def read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date, 
     with open(csv_file, "r") as f:
         reader = csv.DictReader(f)
         inputted_csv_list = list(reader)
-        print("inputteddddd", inputted_csv_list)
+        print("INPUTTED DATA", inputted_csv_list)
 
 
     if scrape_new_dec == 'Y':
         # run everything thru individually
-        print("Scrape new contnet")
+        print("Scraping new content in addition to your CSV content....")
         # scrape new Articles
         article_dicts = search_scraper.run_web_search_scraper(stocks, abbrv_list, websites, start_date, end_date, inputted_csv_list)
         articles = sentiment_analyzer.analyze_all_articles(article_dicts)
         # # IF CSV then do this for new articles, if not do for all
         # scored_articles = calc_article_sent_scores(articles)
     else:
+        print("Your CSV file was read in successfully...")
         articles = inputted_csv_list
 
     return articles, inputted_csv_list

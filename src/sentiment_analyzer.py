@@ -5,11 +5,7 @@ import spacy, string, en_core_web_sm
 import pandas as pd
 from vaderSentiment import vaderSentiment
 
-# pip install spacy vaderSentiment
-
-# import other project files
-from search_scraper import *
-
+# pip install spacy vaderSentimentå
 
 def analyze_all_articles(article_dicts):
     """Perform sentiment analysis on all articles' titles, descriptions, and texts."""

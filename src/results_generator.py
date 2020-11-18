@@ -23,8 +23,8 @@ def temp_cml_interface():
 
 
     if read_in_dec == 'Y':
-        csv_file = input("\nEnter your CSV filename of previous articles: ")
-        scrape_new_dec = input("Enter Y if you wish to scrape new articles. Enter N if you wish to just use your inputted CSV articles.")
+        csv_file = input("\n** Enter your CSV filename of previous articles: ")
+        scrape_new_dec = input("** Enter Y if you wish to scrape new articles. Enter N if you wish to just use your inputted CSV articles: ")
         if scrape_new_dec == 'Y':
             websites = ["www.fool.com"]
             stocks = input("** Enter your stocks, separated by commas: ")
@@ -33,7 +33,7 @@ def temp_cml_interface():
             end_date = input ("** Enter the END of the date range you want to use for article scraping: ")
             articles, inputted_csv_list = csv_handler.read_data(csv_file, scrape_new_dec, stocks, websites, start_date, end_date, stock_abbrvs)
             new_scored_articles = calc_article_sent_scores(articles)
-            scored_articles = inputted_csv_list + new_scored_articles
+            scored_articles = []
             scored_articles.append(inputted_csv_list)
             scored_articles.append(new_scored_articles)
             print("NEW SCORED ARTICLES", new_scored_articles)
@@ -76,9 +76,6 @@ def temp_cml_interface():
                 else:
                     abbrv_list.append(article['stock'])
 
-            print("we got em arts", articles)
-            print("we got em")
-
             # TODO automatically gather stocks and stock abbreviations
     else:
         # fresh run
@@ -106,24 +103,12 @@ def temp_cml_interface():
         if check_list is True:
             for articles in article:
                 scored_articles.append(articles)
-            scored_articles.remove(article)
         else:
             if article['link'] in links:
-                print("DUPPP")
-                print("removing...", article['link'])
+                print("*!!* Duplicate article - removing...", article['link'])
                 scored_articles.remove(article)
             else:
                 links.append(article['link'])
-
-    print("FINAL TESTING")
-    links = []
-    for article in scored_articles:
-        if article['link'] in links:
-            print("DUPPP")
-            print("removing...", article['link'])
-            scored_articles.remove(article)
-        else:
-            links.append(article['link'])
 
     generate_results(stocks_list, abbrv_list, scored_articles)
 
@@ -145,22 +130,22 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
 
     i = 0
 
-    while i < len(scored_stocks):
-        price, previous_close, open_price, avg_volume, volume = search_scraper.get_stock_attributes(abbrv_list[i])
-
-        print('Current Stock Price is : $' + str(price))
-        print('Previous Close was : $' + str(previous_close))
-        print('Open Price of the Day was : $' + str(open_price))
-        print('Current stock volume is : ' + str(volume))
-        print('Average stock volume is : ' + str(avg_volume))
-
-        print(scored_stocks[i])
-        scored_stocks[i]['current_price'] = price
-        scored_stocks[i]['volume'] = volume
-        scored_stocks[i]['avg_volume'] = avg_volume
-        print(scored_stocks[i])
-
-        i += 1
+    # while i < len(scored_stocks):
+    #     price, previous_close, open_price, avg_volume, volume = search_scraper.get_stock_attributes(abbrv_list[i])
+    #
+    #     print('Current Stock Price is : $' + str(price))
+    #     print('Previous Close was : $' + str(previous_close))
+    #     print('Open Price of the Day was : $' + str(open_price))
+    #     print('Current stock volume is : ' + str(volume))
+    #     print('Average stock volume is : ' + str(avg_volume))
+    #
+    #     print(scored_stocks[i])
+    #     scored_stocks[i]['current_price'] = price
+    #     scored_stocks[i]['volume'] = volume
+    #     scored_stocks[i]['avg_volume'] = avg_volume
+    #     print(scored_stocks[i])
+    #
+    #     i += 1
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
@@ -169,10 +154,8 @@ def calc_article_sent_scores(articles):
         #ovr_text_sent_score
         ovr_text_sent_score = 0
         sent_count = 0
-        print("LEN", len(article['text_sent']))
         for txsent in article['text_sent']:
             sent_count += 1
-            print("COMPOUND", txsent['compound'])
             ovr_text_sent_score += txsent['compound']
         ovr_text_sent_score = ovr_text_sent_score / sent_count
 
@@ -181,7 +164,6 @@ def calc_article_sent_scores(articles):
         sent_count = 0
         for tisent in article['title_sent']:
             sent_count += 1
-            print("COMPOUND", tisent['compound'])
             ovr_title_sent_score += tisent['compound']
         ovr_title_sent_score = ovr_title_sent_score / sent_count
 
@@ -190,7 +172,6 @@ def calc_article_sent_scores(articles):
         sent_count = 0
         for dsent in article['desc_sent']:
             sent_count += 1
-            print("COMPOUND", dsent['compound'])
             ovr_desc_sent_score += dsent['compound']
         ovr_desc_sent_score = ovr_desc_sent_score / sent_count
 
@@ -221,7 +202,6 @@ def calc_article_sent_scores(articles):
 
 def calc_sent_rating(sent_score):
     """Calculates the sentiment rating for a given title, description, or text sentiment rating for an article."""
-    print("sent_score", sent_score)
     rating = "Unknown"
     if float(sent_score) >= -0.05554 and float(sent_score) <= 0.05554:
         rating = "Neutral"
@@ -254,17 +234,19 @@ def calc_stock_sentiment(scored_articles, stocks_list):
     # pass articles and stocks_list
     """Calculates average sentiment score for a stock based on all articles (text) for given stock."""
     scored_stocks = []
-    print()
     for stock in stocks_list:
-        print("STOCK", stock)
         article_count = 0
         stock_sent_score = 0
         for article in scored_articles:
-            print("ARTICLESTOCK", article['stock'])
             check_list = isinstance(article, list)
-            if article['stock'] == stock:
-                article_count += 1
-                stock_sent_score += float(article['ovr_text_sent_score'])
+            if check_list is True:
+                for articles in article:
+                    scored_articles.append(articles)
+            else:
+
+                if article['stock'] == stock:
+                    article_count += 1
+                    stock_sent_score += float(article['ovr_text_sent_score'])
 
 
         # try:
@@ -297,7 +279,6 @@ def calc_recent_stock_sentiment(scored_articles, scored_stocks):
             else:
                 if article['stock'] == stock['stock']:
                     if 'day' in article['date']: # see if day is in it because then we know it is less than a week old/recent
-                        print("ARTICLE", article)
                         recent_article_count += 1
                         stock_sent_score += float(article['ovr_text_sent_score'])
                     elif 'hour' in article['date']:
@@ -411,7 +392,6 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
                 pass
             else:
                 media_list.append(media)
-    print("MEDIA", media_list)
 
     for stock in scored_stocks:
         stock_media_list = []
