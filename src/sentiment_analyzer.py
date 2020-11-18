@@ -14,10 +14,9 @@ from search_scraper import *
 def analyze_all_articles(article_dicts):
     """Perform sentiment analysis on all articles' titles, descriptions, and texts."""
 
-    article_dicts = [
-        j for i in article_dicts for j in i
-    ]  # combine inner and outer list elements (results of individual search queries)
+    article_dicts = [j for i in article_dicts for j in i]  # combine inner and outer list elements (results of individual search queries)
 
+    print("Performing sentiment analysis on given article titles, descriptions, and texts....")
     for article in article_dicts:
         # analyze & store title
         title_sent = sent_analyze(article["title"])
@@ -42,14 +41,5 @@ def sent_analyze(sentence):
     sentences = [str(s) for s in result.sents]
     analyzer = vaderSentiment.SentimentIntensityAnalyzer()
     sentiment = [analyzer.polarity_scores(str(s)) for s in sentences]
-    print(sentiment)
+
     return sentiment
-
-
-def get_article_dicts(stocks, websites, start_date, end_date):
-    """Get all articles in their respective dictionaries."""
-    data = run_web_search_scraper(stocks, websites, start_date, end_date)
-
-    articles = [j for i in data for j in i]  # combine inner and outer list elements (results of individual search queries)
-
-    return articles
