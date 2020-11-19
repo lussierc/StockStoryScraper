@@ -10,9 +10,20 @@ import sentiment_analyzer
 import csv_handler
 import search_scraper
 
+class color:
+    PURPLE = "\033[95m"
+    CYAN = "\033[96m"
+    DARKCYAN = "\033[36m"
+    BLUE = "\033[94m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    RED = "\033[91m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+    END = "\033[0m"
 
-def temp_cml_interface():
-    """A temporary command line interface to be used until the Streamlit interface is implemented."""
+def cml_interface():
+    """A command line interface that can be used instead of the Streamlit UI if chosen."""
 
     # declare necessary variables:
     websites = []
