@@ -37,25 +37,25 @@ def cml_interface():
 
     print("\n\n-------------------------------------------\n" + color.BOLD + color.GREEN + "| Welcome to the StockTextMining Program! |" + color.END + color.END + "\n-------------------------------------------\n\n")
 
-    read_in_dec = input(color.BOLD + color.UNDERLINE + "{*} Do you want to read in a CSV file Y or N: " + color.END + color.END)
+    read_in_dec = input(color.BOLD + color.UNDERLINE + "{*} Do you want to read in a CSV file Y or N:" + color.END + color.END + "  ")
 
     if read_in_dec == "Y":
-        csv_file = input("\n** Enter your CSV filename of previous articles: ")
-        scrape_new_dec = input(
-            "** Enter Y if you wish to scrape new articles. Enter N if you wish to just use your inputted CSV articles: "
+        csv_file = input(color.BOLD + color.UNDERLINE + "\n{**} Enter your CSV filename of previous articles:" + color.END + color.END + "  ")
+        scrape_new_dec = input(color.BOLD + color.UNDERLINE +
+            "{***} Enter Y if you wish to scrape new articles. Enter N if you wish to just use your inputted CSV articles:" + color.END + color.END + "  "
         )
         if scrape_new_dec == "Y":
             # run with old csv and new articles
             websites = ["www.fool.com"]
-            stocks = input("** Enter your stocks, separated by commas: ")
-            stock_abbrvs = input(
-                "** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: "
+            stocks = input(color.BOLD + color.UNDERLINE + color.RED + "\n{***} Enter your stocks, separated by commas:" + color.END + color.END + color.END + "  ")
+            stock_abbrvs = input(color.BOLD + color.UNDERLINE + color.BLUE +
+                "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:" + color.END + color.END + color.END + "  "
             )
-            start_date = input(
-                "** Enter the START of the date range you want to use for article scraping: "
+            start_date = input(color.BOLD + color.UNDERLINE +
+                "\n {****} Enter the START of the Date Range you want to use for article scraping:" + color.END + color.END + "  "
             )
-            end_date = input(
-                "** Enter the END of the date range you want to use for article scraping: "
+            end_date = input( color.BOLD + color.UNDERLINE +
+                "{****} Enter the END of the Date Range you want to use for article scraping: " + color.END + color.END + "  "
             )
 
             articles, inputted_csv_list = csv_handler.read_data(
