@@ -35,7 +35,9 @@ def cml_interface():
     start_date = ""
     end_date = ""
 
-    read_in_dec = input("*  Do you want to read in a CSV file Y or N: ")
+    print("\n\n-------------------------------------------\n" + color.BOLD + color.GREEN + "| Welcome to the StockTextMining Program! |" + color.END + color.END + "\n-------------------------------------------\n\n")
+
+    read_in_dec = input(color.BOLD + color.UNDERLINE + "{*} Do you want to read in a CSV file Y or N: " + color.END + color.END)
 
     if read_in_dec == "Y":
         csv_file = input("\n** Enter your CSV filename of previous articles: ")
@@ -536,4 +538,4 @@ def predict_historical_stock_well_being():
     # to be implemented later
 
 
-temp_cml_interface()  # run the project
+cml_interface()  # run the project
