@@ -378,7 +378,8 @@ def calc_ovr_stock_article_feelings(scored_articles, scored_stocks):
         stock["positive_article_count"] = positive_article_count
         stock["neutral_article_count"] = neutral_article_count
         stock["negative_article_count"] = negative_article_count
-        return scored_stocks
+
+    return scored_stocks
 
 
 def calc_stock_trifold_rating(scored_articles, scored_stocks):
@@ -387,15 +388,15 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
         stock_trifold_rating = 0
         stock_article_count = 0
         for article in scored_articles:
-            if article["stock"] == stock["stock"]:
+            if article["stock"] in stock["stock"]:
                 stock_article_count += 1
                 stock_trifold_rating += float(article["trifold_score"])
 
-    try:
-        ovr_stock_trifold_rating = stock_trifold_rating / stock_article_count
-    except:
-        ovr_stock_trifold_rating = 0
-    stock["ovr_stock_trifold_rating"] = ovr_stock_trifold_rating
+        try:
+            ovr_stock_trifold_rating = stock_trifold_rating / stock_article_count
+        except:
+            ovr_stock_trifold_rating = 0
+        stock["ovr_stock_trifold_rating"] = ovr_stock_trifold_rating
 
     return scored_stocks
 
@@ -443,11 +444,13 @@ def predict_stock_well_being(scored_stocks):
     # CURRENTLY BASIC - more updates to come
     # takes stock_trifold_rating, ovr_stock_text_sent, calc_recent_stock_sentiment, ovr_stock_feelings as inputs
     for stock in scored_stocks:
+        print(stock)
+
         wght_rcnt_text = 0.25 * (float(stock["rcnt_text_sent_score"]) * 100)  # .25
         wght_avg_text = 0.25 * (float(stock["avg_stock_sent_score"]) * 100)  # .25
-        wght_trifold = 0.20 * (float(stock["ovr_stock_trifold_rating"]) * 100)  # .20
+        print("is this an issue", stock["ovr_stock_trifold_rating"])
+        wght_trifold = 0.20 * (stock["ovr_stock_trifold_rating"] * 100)  # .20
         #wght_trifold = 0
-        print(stock)
         if stock["overall_stock_articles_feelings"] == "Positive":  # .20
             weight_feelings = 20
         elif stock["overall_stock_articles_feelings"] == "Neutral":
