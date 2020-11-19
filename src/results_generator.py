@@ -4,6 +4,7 @@
 import bs4
 import requests
 from bs4 import BeautifulSoup
+from prettytable import PrettyTable
 
 # other files:
 import sentiment_analyzer
@@ -190,7 +191,52 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
 
     fin_scored_stocks = predict_stock_well_being(scored_stocks)
 
-    print("Scored Stocks --- ", fin_scored_stocks)
+    table = PrettyTable()
+    table.field_names = [
+        "Stock",
+        "avg_stock_sent_score",
+        "article_count",
+        "recent_article_count",
+        "rcnt_text_sent_score",
+        "ovr_stock_trifold_rating",
+        "overall_stock_articles_feelings",
+        "positive_article_count",
+        "neutral_article_count",
+        "negative_article_count",
+        "current_price",
+        "volume",
+        "avg_volume",
+        "stock_well_being_prediction",
+        "stock_well_being_prediction_feelings",
+    ]
+
+    for stock_dict in fin_scored_stocks:
+        table.add_row(
+            [
+                stock_dict["stock"],
+                stock_dict["avg_stock_sent_score"],
+                stock_dict["article_count"],
+                stock_dict["recent_article_count"],
+                stock_dict["rcnt_text_sent_score"],
+                stock_dict["ovr_stock_trifold_rating"],
+                stock_dict["overall_stock_articles_feelings"],
+                stock_dict["positive_article_count"],
+                stock_dict["neutral_article_count"],
+                stock_dict["negative_article_count"],
+                stock_dict["current_price"],
+                stock_dict["volume"],
+                stock_dict["avg_volume"],
+                stock_dict["stock_well_being_prediction"],
+                stock_dict["stock_well_being_prediction_feelings"],
+
+            ]
+        )
+
+    print(table)
+    
+    # will need to ask user if they want to get media results for the stocks inside the CML, not a UI issue
+
+    #print("Scored Stocks --- ", fin_scored_stocks)
 
 
 def calc_article_sent_scores(articles):
