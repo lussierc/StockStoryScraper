@@ -5,16 +5,19 @@ import spacy, string, en_core_web_sm
 import pandas as pd
 from vaderSentiment import vaderSentiment
 
-# pip install spacy vaderSentiment
-
-# import other project files
-from search_scraper import *
+# pip install spacy vaderSentimentå
 
 
-def analyze_all_articles(stocks, websites):
+def analyze_all_articles(article_dicts):
     """Perform sentiment analysis on all articles' titles, descriptions, and texts."""
-    article_dicts = get_article_dicts(stocks, websites)
 
+    article_dicts = [
+        j for i in article_dicts for j in i
+    ]  # combine inner and outer list elements (results of individual search queries)
+
+    print(
+        "Performing sentiment analysis on given article titles, descriptions, and texts...."
+    )
     for article in article_dicts:
         # analyze & store title
         title_sent = sent_analyze(article["title"])
@@ -39,15 +42,5 @@ def sent_analyze(sentence):
     sentences = [str(s) for s in result.sents]
     analyzer = vaderSentiment.SentimentIntensityAnalyzer()
     sentiment = [analyzer.polarity_scores(str(s)) for s in sentences]
+
     return sentiment
-
-
-def get_article_dicts(stocks, websites):
-    """Get all articles in their respective dictionaries."""
-    data = run_web_search_scraper(stocks, websites)
-
-    articles = [
-        j for i in data for j in i
-    ]  # combine inner and outer list elements (results of individual search queries)
-
-    return articles
