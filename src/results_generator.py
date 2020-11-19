@@ -112,15 +112,15 @@ def cml_interface():
         # fresh run:
         inputted_csv_list = []  # empty as not to verify any links for fresh run
         websites = ["www.fool.com"]
-        stocks = input("** Enter your stocks, separated by commas: ")
-        stock_abbrvs = input(
-            "** Enter your stock abbreviations, separated by commas, in the same order you entered the names above: "
+        stocks = input(color.BOLD + color.UNDERLINE + color.RED + "\n{***} Enter your stocks, separated by commas:" + color.END + color.END + color.END + "  ")
+        stock_abbrvs = input(color.BOLD + color.UNDERLINE + color.BLUE +
+            "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:" + color.END + color.END + color.END + "  "
         )
-        start_date = input(
-            "** Enter the START of the date range you want to use for article scraping: "
+        start_date = input(color.BOLD + color.UNDERLINE +
+            "\n {****} Enter the START of the Date Range you want to use for article scraping:" + color.END + color.END + "  "
         )
-        end_date = input(
-            "** Enter the END of the date range you want to use for article scraping: "
+        end_date = input( color.BOLD + color.UNDERLINE +
+            "{****} Enter the END of the Date Range you want to use for article scraping: " + color.END + color.END + "  "
         )
         # run thru process with only new articles
         article_dicts = search_scraper.run_web_search_scraper(
@@ -128,9 +128,7 @@ def cml_interface():
         )
         articles = sentiment_analyzer.analyze_all_articles(article_dicts)
         scored_articles = calc_article_sent_scores(articles)
-        stocks_list = []
         stocks_list = stocks.split(", ")
-        abbrv_list = []
         abbrv_list = stock_abbrvs.split(", ")
 
     print("SCORED ARTICLES")
