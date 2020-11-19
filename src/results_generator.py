@@ -446,7 +446,8 @@ def predict_stock_well_being(scored_stocks):
         wght_rcnt_text = 0.25 * (float(stock["rcnt_text_sent_score"]) * 100)  # .25
         wght_avg_text = 0.25 * (float(stock["avg_stock_sent_score"]) * 100)  # .25
         wght_trifold = 0.20 * (float(stock["ovr_stock_trifold_rating"]) * 100)  # .20
-
+        #wght_trifold = 0
+        print(stock)
         if stock["overall_stock_articles_feelings"] == "Positive":  # .20
             weight_feelings = 20
         elif stock["overall_stock_articles_feelings"] == "Neutral":
@@ -504,12 +505,12 @@ def predict_stock_well_being(scored_stocks):
             stock["stock_well_being_prediction_feelings"] = "Moderate Wellbeing"
         elif (
             stock_well_being_prediction > 40.55555
-            and stock_well_being_prediction_feelings < 65.555
+            and stock_well_being_prediction < 65.555
         ):
             stock["stock_well_being_prediction_feelings"] = "Good Wellbeing"
         elif (
             stock_well_being_prediction > 65.555
-            and stock_well_being_prediction_feelings < 100.555
+            and stock_well_being_prediction < 100.555
         ):
             stock["stock_well_being_prediction_feelings"] = "Extremely Good Wellbeing"
 
