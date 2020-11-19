@@ -145,8 +145,9 @@ def cml_interface():
         else:
             links.append(article["link"])
 
-    generate_results(stocks_list, abbrv_list, scored_articles)
+    fin_scored_stocks = generate_results(stocks_list, abbrv_list, scored_articles)
 
+    print_cml_stock_table(fin_scored_stocks) # print the table
 
 def generate_results(stocks_list, abbrv_list, scored_articles):
     """Driver function to generate results with."""
@@ -191,6 +192,15 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
 
     fin_scored_stocks = predict_stock_well_being(scored_stocks)
 
+    return fin_scored_stocks
+
+    # will need to ask user if they want to get media results for the stocks inside the CML, not a UI issue
+
+    #print("Scored Stocks --- ", fin_scored_stocks)
+
+def print_cml_stock_table(fin_scored_stocks):
+    """Given completely scored stocks, print a table of major attributes."""
+
     table = PrettyTable()
     table.field_names = [
         "Stock",
@@ -233,11 +243,6 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
         )
 
     print(table)
-    
-    # will need to ask user if they want to get media results for the stocks inside the CML, not a UI issue
-
-    #print("Scored Stocks --- ", fin_scored_stocks)
-
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
