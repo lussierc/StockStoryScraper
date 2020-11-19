@@ -21,7 +21,6 @@ def get_search_queries(stocks, websites):
             )  # add necessary site portion of query for website
             # print(website)
             query = stock + " " + website  # create query
-            print("Created a query: ", query)
             # print(query)
             search_queries.append(query)  # store created query
 
@@ -46,7 +45,7 @@ def run_web_search_scraper(
         for current_stock in stock_list:
             if current_stock in search_query:
                 current_abbrv = abbrv_list[i]
-                print(search_query, "STOCK", current_stock, "... ABRV", current_abbrv)
+                print("RUNNING QUERY --", search_query, "STOCK", current_stock, "... ABRV", current_abbrv)
                 results.append(
                     scrape_google_news_search(
                         googlenews,
@@ -79,9 +78,7 @@ def scrape_google_news_search(
         link = result["link"]
         for article in inputted_csv_list:
             if article["link"] == link:
-                print("found a dup", article["link"], link)
                 search_results.remove(result)
-                print("remove", result)
 
     for result in search_results:
         link = result["link"]

@@ -132,9 +132,6 @@ def cml_interface():
         stocks_list = stocks.split(", ")
         abbrv_list = stock_abbrvs.split(", ")
 
-    print("SCORED ARTICLES")
-    print(scored_articles)
-
     # find duplicate links and remove them
     links = []
     for article in scored_articles:
@@ -162,12 +159,10 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
     csv_handler.write_data(scored_articles)
 
     scored_stocks = calc_ovr_media_rating(scored_articles, scored_stocks)
-    print(scored_stocks)
 
     # get stock price/attribute information
     i = 0
     while i < len(scored_stocks):
-        print(abbrv_list[i])
         (
             price,
             previous_close,
@@ -176,17 +171,15 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
             volume,
         ) = search_scraper.get_stock_attributes(abbrv_list[i])
 
-        print("Current Stock Price is : $" + str(price))
-        print("Previous Close was : $" + str(previous_close))
-        print("Open Price of the Day was : $" + str(open_price))
-        print("Current stock volume is : " + str(volume))
-        print("Average stock volume is : " + str(avg_volume))
+        # print("Current Stock Price is : $" + str(price))
+        # print("Previous Close was : $" + str(previous_close))
+        # print("Open Price of the Day was : $" + str(open_price))
+        # print("Current stock volume is : " + str(volume))
+        # print("Average stock volume is : " + str(avg_volume))
 
-        print(scored_stocks[i])
         scored_stocks[i]["current_price"] = price
         scored_stocks[i]["volume"] = volume
         scored_stocks[i]["avg_volume"] = avg_volume
-        print(scored_stocks[i])
 
         i += 1
 
@@ -345,7 +338,6 @@ def calc_stock_sentiment(scored_articles, stocks_list):
             if article["stock"] == stock:
                 article_count += 1
                 stock_sent_score += float(article["ovr_text_sent_score"])
-        print(stock_sent_score, "/", article_count)
         avg_stock_sent_score = stock_sent_score / article_count
 
         stock_sent_dict = {
@@ -506,13 +498,10 @@ def predict_stock_well_being(scored_stocks):
     # CURRENTLY BASIC - more updates to come
     # takes stock_trifold_rating, ovr_stock_text_sent, calc_recent_stock_sentiment, ovr_stock_feelings as inputs
     for stock in scored_stocks:
-        print(stock)
-
         wght_rcnt_text = 0.25 * (float(stock["rcnt_text_sent_score"]) * 100)  # .25
         wght_avg_text = 0.25 * (float(stock["avg_stock_sent_score"]) * 100)  # .25
-        print("is this an issue", stock["ovr_stock_trifold_rating"])
         wght_trifold = 0.20 * (stock["ovr_stock_trifold_rating"] * 100)  # .20
-        #wght_trifold = 0
+
         if stock["overall_stock_articles_feelings"] == "Positive":  # .20
             weight_feelings = 20
         elif stock["overall_stock_articles_feelings"] == "Neutral":
@@ -526,9 +515,7 @@ def predict_stock_well_being(scored_stocks):
             pass
 
         volume = int(stock["volume"].replace(",", ""))
-        print(volume)
         avg_volume = int(stock["avg_volume"].replace(",", ""))
-        print(type(avg_volume))
 
         if volume > avg_volume:
             volume_wght = 10
@@ -539,11 +526,11 @@ def predict_stock_well_being(scored_stocks):
         else:
             volume_wght = 5
 
-        print("wgh_rcnt", wght_rcnt_text)
-        print("wgh_avg", wght_avg_text)
-        print("wght_trifold", wght_trifold)
-        print("weight_feelings", weight_feelings)
-        print("volume_wght", volume_wght)
+        # print("wgh_rcnt", wght_rcnt_text)
+        # print("wgh_avg", wght_avg_text)
+        # print("wght_trifold", wght_trifold)
+        # print("weight_feelings", weight_feelings)
+        # print("volume_wght", volume_wght)
 
         stock_well_being_prediction = (
             wght_rcnt_text
@@ -552,12 +539,12 @@ def predict_stock_well_being(scored_stocks):
             + wght_trifold
             + volume_wght
         )
-        print(
-            "STOCK WELL BEING PREDICTION for stock,",
-            stock["stock"],
-            "= ",
-            stock_well_being_prediction,
-        )
+        # print(
+        #     "STOCK WELL BEING PREDICTION for stock,",
+        #     stock["stock"],
+        #     "= ",
+        #     stock_well_being_prediction,
+        # )
 
         stock["stock_well_being_prediction"] = stock_well_being_prediction
         # will need to finetune these calculations

@@ -32,7 +32,6 @@ def read_data(
     with open(csv_file, "r") as f:
         reader = csv.DictReader(f)
         inputted_csv_list = list(reader)
-        print("INPUTTED DATA", inputted_csv_list)
 
     if scrape_new_dec == "Y":
         # run everything thru individually
