@@ -11,7 +11,10 @@ import sentiment_analyzer
 import csv_handler
 import search_scraper
 
+
 class color:
+    """Defines different colors and text formatting settings to be used for CML output printing."""
+
     PURPLE = "\033[95m"
     CYAN = "\033[96m"
     DARKCYAN = "\033[36m"
@@ -23,8 +26,11 @@ class color:
     UNDERLINE = "\033[4m"
     END = "\033[0m"
 
+
 def cml_interface():
     """A command line interface that can be used instead of the Streamlit UI if chosen."""
+
+    # HAVE USERS ENTER WEBSITES or CHOOSE USING 1,2,3 CML
 
     # declare necessary variables:
     websites = []
@@ -36,27 +42,80 @@ def cml_interface():
     start_date = ""
     end_date = ""
 
-    print("\n\n-------------------------------------------\n" + color.BOLD + color.GREEN + "| Welcome to the StockTextMining Program! |" + color.END + color.END + "\n-------------------------------------------\n\n")
+    print(
+        "\n\n-------------------------------------------\n"
+        + color.BOLD
+        + color.GREEN
+        + "| Welcome to the StockTextMining Program! |"
+        + color.END
+        + color.END
+        + "\n-------------------------------------------\n\n"
+    )
 
-    read_in_dec = input(color.BOLD + color.UNDERLINE + "{*} Do you want to read in a CSV file Y or N:" + color.END + color.END + "  ")
+    read_in_dec = input(
+        color.BOLD
+        + color.UNDERLINE
+        + "{*} Do you want to read in a CSV file Y or N:"
+        + color.END
+        + color.END
+        + "  "
+    )
 
     if read_in_dec == "Y":
-        csv_file = input(color.BOLD + color.UNDERLINE + "\n{**} Enter your CSV filename of previous articles:" + color.END + color.END + "  ")
-        scrape_new_dec = input(color.BOLD + color.UNDERLINE +
-            "{***} Enter Y if you wish to scrape new articles. Enter N if you wish to just use your inputted CSV articles:" + color.END + color.END + "  "
+        csv_file = input(
+            color.BOLD
+            + color.UNDERLINE
+            + "\n{**} Enter your CSV filename of previous articles:"
+            + color.END
+            + color.END
+            + "  "
+        )
+        scrape_new_dec = input(
+            color.BOLD
+            + color.UNDERLINE
+            + "{***} Enter Y if you wish to scrape new articles. Enter N if you wish to just use your inputted CSV articles:"
+            + color.END
+            + color.END
+            + "  "
         )
         if scrape_new_dec == "Y":
             # run with old csv and new articles
             websites = ["www.fool.com"]
-            stocks = input(color.BOLD + color.UNDERLINE + color.RED + "\n{***} Enter your stocks, separated by commas:" + color.END + color.END + color.END + "  ")
-            stock_abbrvs = input(color.BOLD + color.UNDERLINE + color.BLUE +
-                "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:" + color.END + color.END + color.END + "  "
+            stocks = input(
+                color.BOLD
+                + color.UNDERLINE
+                + color.RED
+                + "\n{***} Enter your stocks, separated by commas:"
+                + color.END
+                + color.END
+                + color.END
+                + "  "
             )
-            start_date = input(color.BOLD + color.UNDERLINE +
-                "\n {****} Enter the START of the Date Range you want to use for article scraping:" + color.END + color.END + "  "
+            stock_abbrvs = input(
+                color.BOLD
+                + color.UNDERLINE
+                + color.BLUE
+                + "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:"
+                + color.END
+                + color.END
+                + color.END
+                + "  "
             )
-            end_date = input( color.BOLD + color.UNDERLINE +
-                "{****} Enter the END of the Date Range you want to use for article scraping: " + color.END + color.END + "  "
+            start_date = input(
+                color.BOLD
+                + color.UNDERLINE
+                + "\n {****} Enter the START of the Date Range you want to use for article scraping:"
+                + color.END
+                + color.END
+                + "  "
+            )
+            end_date = input(
+                color.BOLD
+                + color.UNDERLINE
+                + "{****} Enter the END of the Date Range you want to use for article scraping: "
+                + color.END
+                + color.END
+                + "  "
             )
 
             articles, inputted_csv_list = csv_handler.read_data(
@@ -113,15 +172,41 @@ def cml_interface():
         # fresh run:
         inputted_csv_list = []  # empty as not to verify any links for fresh run
         websites = ["www.fool.com"]
-        stocks = input(color.BOLD + color.UNDERLINE + color.RED + "\n{***} Enter your stocks, separated by commas:" + color.END + color.END + color.END + "  ")
-        stock_abbrvs = input(color.BOLD + color.UNDERLINE + color.BLUE +
-            "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:" + color.END + color.END + color.END + "  "
+        stocks = input(
+            color.BOLD
+            + color.UNDERLINE
+            + color.RED
+            + "\n{***} Enter your stocks, separated by commas:"
+            + color.END
+            + color.END
+            + color.END
+            + "  "
         )
-        start_date = input(color.BOLD + color.UNDERLINE +
-            "\n {****} Enter the START of the Date Range you want to use for article scraping:" + color.END + color.END + "  "
+        stock_abbrvs = input(
+            color.BOLD
+            + color.UNDERLINE
+            + color.BLUE
+            + "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:"
+            + color.END
+            + color.END
+            + color.END
+            + "  "
         )
-        end_date = input( color.BOLD + color.UNDERLINE +
-            "{****} Enter the END of the Date Range you want to use for article scraping: " + color.END + color.END + "  "
+        start_date = input(
+            color.BOLD
+            + color.UNDERLINE
+            + "\n {****} Enter the START of the Date Range you want to use for article scraping:"
+            + color.END
+            + color.END
+            + "  "
+        )
+        end_date = input(
+            color.BOLD
+            + color.UNDERLINE
+            + "{****} Enter the END of the Date Range you want to use for article scraping: "
+            + color.END
+            + color.END
+            + "  "
         )
         # run thru process with only new articles
         article_dicts = search_scraper.run_web_search_scraper(
@@ -144,7 +229,8 @@ def cml_interface():
 
     fin_scored_stocks = generate_results(stocks_list, abbrv_list, scored_articles)
 
-    print_cml_stock_table(fin_scored_stocks) # print the table
+    print_cml_stock_table(fin_scored_stocks)  # print the table
+
 
 def generate_results(stocks_list, abbrv_list, scored_articles):
     """Driver function to generate results with."""
@@ -171,11 +257,7 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
             volume,
         ) = search_scraper.get_stock_attributes(abbrv_list[i])
 
-        # print("Current Stock Price is : $" + str(price))
-        # print("Previous Close was : $" + str(previous_close))
-        # print("Open Price of the Day was : $" + str(open_price))
-        # print("Current stock volume is : " + str(volume))
-        # print("Average stock volume is : " + str(avg_volume))
+        # ^^^ I should print this out in a results_table
 
         scored_stocks[i]["current_price"] = price
         scored_stocks[i]["volume"] = volume
@@ -189,7 +271,6 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
 
     # will need to ask user if they want to get media results for the stocks inside the CML, not a UI issue
 
-    #print("Scored Stocks --- ", fin_scored_stocks)
 
 def print_cml_stock_table(fin_scored_stocks):
     """Given completely scored stocks, print a table of major attributes."""
@@ -231,11 +312,11 @@ def print_cml_stock_table(fin_scored_stocks):
                 stock_dict["avg_volume"],
                 stock_dict["stock_well_being_prediction"],
                 stock_dict["stock_well_being_prediction_feelings"],
-
             ]
         )
 
     print(table)
+
 
 def calc_article_sent_scores(articles):
     """Averages all sentence scores together, if multiple, and produces one averaged score for a body of text."""
