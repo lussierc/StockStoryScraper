@@ -328,7 +328,6 @@ def calc_article_trifold_rating(
 
 
 def calc_stock_sentiment(scored_articles, stocks_list):
-    # pass articles and stocks_list
     """Calculates average sentiment score for a stock based on all articles (text) for given stock."""
     scored_stocks = []
     for stock in stocks_list:
@@ -351,11 +350,7 @@ def calc_stock_sentiment(scored_articles, stocks_list):
 
 
 def calc_recent_stock_sentiment(scored_articles, scored_stocks):
-    # pass articles, stocks, and stock_sentiments{}
     """Calculates average sentiment score for a stock based the most recent articles (within last 7 days)."""
-    # must go by date
-    # if article[date] == '1 week ago'
-    # average score
 
     for stock in scored_stocks:
         recent_article_count = 0
@@ -495,8 +490,10 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
 
 def predict_stock_well_being(scored_stocks):
     """Predicts the overall view of a stock and whether it will continue to rise or fall."""
-    # CURRENTLY BASIC - more updates to come
+
+    # CURRENTLY BASIC FUNCTION/CALCULATION - more updates to come in future PRs
     # takes stock_trifold_rating, ovr_stock_text_sent, calc_recent_stock_sentiment, ovr_stock_feelings as inputs
+
     for stock in scored_stocks:
         wght_rcnt_text = 0.25 * (float(stock["rcnt_text_sent_score"]) * 100)  # .25
         wght_avg_text = 0.25 * (float(stock["avg_stock_sent_score"]) * 100)  # .25
@@ -526,12 +523,6 @@ def predict_stock_well_being(scored_stocks):
         else:
             volume_wght = 5
 
-        # print("wgh_rcnt", wght_rcnt_text)
-        # print("wgh_avg", wght_avg_text)
-        # print("wght_trifold", wght_trifold)
-        # print("weight_feelings", weight_feelings)
-        # print("volume_wght", volume_wght)
-
         stock_well_being_prediction = (
             wght_rcnt_text
             + wght_avg_text
@@ -539,12 +530,6 @@ def predict_stock_well_being(scored_stocks):
             + wght_trifold
             + volume_wght
         )
-        # print(
-        #     "STOCK WELL BEING PREDICTION for stock,",
-        #     stock["stock"],
-        #     "= ",
-        #     stock_well_being_prediction,
-        # )
 
         stock["stock_well_being_prediction"] = stock_well_being_prediction
         # will need to finetune these calculations
