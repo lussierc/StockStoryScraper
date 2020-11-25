@@ -27,26 +27,21 @@ class color:
     END = "\033[0m"
 
 def run_project():
-    run_dec = ""
-    while run_dec != "C" or run_dec != "U":
-        run_dec = input(
-            color.BOLD
-            + color.UNDERLINE
-            + "{*} Enter C to run Command Line Interface or U to run the User Interface:"
-            + color.END
-            + color.END
-            + "  "
-        )
+    run_dec = input(
+        color.BOLD
+        + color.UNDERLINE
+        + "{*} Enter C to run Command Line Interface or U to run the User Interface:"
+        + color.END
+        + color.END
+        + "  "
+    )
 
-    if read_in_dec == "C":
+    if run_dec == "C":
         cml_interface()
-    elif read_in_dec == "U":
+    elif run_dec == "U":
         print("Will run the UI to be implemented in the near future.")
     else:
         cml_interface()
-
-
-
 
 
 def cml_interface():
