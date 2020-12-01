@@ -40,10 +40,8 @@ def run_web_search_scraper(
     results = []
 
     i = 0
-
-    for search_query in queries:
-        i = 0
-        for current_stock in stock_list:
+    for current_stock in stock_list:
+        for search_query in queries:
             if current_stock in search_query:
                 current_abbrv = abbrv_list[i]
                 print("RUNNING QUERY --", search_query, "STOCK", current_stock, "... ABRV", current_abbrv)
@@ -56,7 +54,7 @@ def run_web_search_scraper(
                         current_abbrv,
                     )
                 )
-                i += 1
+        i += 1
 
     return results
 
