@@ -42,6 +42,7 @@ def run_web_search_scraper(
     i = 0
 
     for search_query in queries:
+        i = 0
         for current_stock in stock_list:
             if current_stock in search_query:
                 current_abbrv = abbrv_list[i]

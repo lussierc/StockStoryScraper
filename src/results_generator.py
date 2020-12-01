@@ -41,6 +41,7 @@ def run_project():
     elif run_dec == "U":
         print("Will run the UI to be implemented in the near future.")
     else:
+        print(color.RED + color.BOLD + "{!!} Invalid option chosen! Running the CML..." + color.END + color.END)
         cml_interface()
 
 
@@ -65,6 +66,8 @@ def cml_interface():
         + color.GREEN
         + "| Welcome to the StockTextMining Program! |"
         + color.END
+        + "\n|                                         |"
+        + "\n|    You are running the CML version!     |"
         + color.END
         + "\n-------------------------------------------\n\n"
     )
@@ -144,6 +147,7 @@ def cml_interface():
                 end_date,
                 stock_abbrvs,
             )
+
             new_scored_articles = calc_article_sent_scores(articles)
 
             scored_articles = inputted_csv_list + new_scored_articles
@@ -188,7 +192,7 @@ def cml_interface():
     else:
         # fresh run:
         inputted_csv_list = []  # empty as not to verify any links for fresh run
-        websites = ["www.fool.com"]
+        websites = ["www.fool.com", "www.bloomberg.com"]
         stocks = input(
             color.BOLD
             + color.UNDERLINE
@@ -283,7 +287,7 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
         i += 1
 
     fin_scored_stocks = predict_stock_well_being(scored_stocks)
-
+    print("FINALIZED SCORED STOCKS", fin_scored_stocks)
     return fin_scored_stocks
 
     # will need to ask user if they want to get media results for the stocks inside the CML, not a UI issue
