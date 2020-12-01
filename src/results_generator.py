@@ -100,11 +100,23 @@ def cml_interface():
         )
         if scrape_new_dec == "Y":
             # run with old csv and new articles
+            websites = []
             print("\n\n" + color.BOLD + color.UNDERLINE + "Choose your websites for news article scraping:" + color.END + color.END + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal")
             website_choices = input(color.BOLD + color.UNDERLINE + color.GREEN + "{***} Enter the numbers corresponding to the website, separated by commas: " + color.END + color.END + color.END)
             website_numbers = website_choices.split(", ")
 
-            websites = ["www.fool.com"]
+            for number in website_numbers:
+                if int(number) == 1:
+                    websites.append("www.fool.com")
+                elif int(number) == 2:
+                    websites.append("finance.yahoo.com")
+                elif int(number) == 3:
+                    websites.append("www.bloomberg.com")
+                elif int(number) == 4:
+                    websites.append("www.marketwatch.com")
+                elif int(number) == 5:
+                    websites.append("www.wsj.com")
+
             stocks = input(
                 color.BOLD
                 + color.UNDERLINE
@@ -196,11 +208,27 @@ def cml_interface():
     else:
         # fresh run:
         inputted_csv_list = []  # empty as not to verify any links for fresh run
+        # websites = ["www.fool.com", "finance.yahoo.com", "www.bloomberg.com", "www.marketwatch.com", "www.wsj.com"]
+        websites = []
         print("\n\n" + color.BOLD + color.UNDERLINE + "Choose your websites for news article scraping:" + color.END + color.END + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal")
         website_choices = input(color.BOLD + color.UNDERLINE + color.GREEN + "{***} Enter the numbers corresponding to the website, separated by commas: " + color.END + color.END + color.END)
         website_numbers = website_choices.split(", ")
 
-        websites = ["www.fool.com", "www.bloomberg.com"]
+        for number in website_numbers:
+            if int(number) == 1:
+                websites.append("www.fool.com")
+            elif int(number) == 2:
+                websites.append("finance.yahoo.com")
+            elif int(number) == 3:
+                websites.append("www.bloomberg.com")
+            elif int(number) == 4:
+                websites.append("www.marketwatch.com")
+            elif int(number) == 5:
+                websites.append("www.wsj.com")
+
+
+
+
         stocks = input(
             color.BOLD
             + color.UNDERLINE
