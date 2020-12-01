@@ -44,7 +44,14 @@ def run_web_search_scraper(
         for search_query in queries:
             if current_stock in search_query:
                 current_abbrv = abbrv_list[i]
-                print("RUNNING QUERY --", search_query, "STOCK", current_stock, "... ABRV", current_abbrv)
+                print(
+                    "RUNNING QUERY --",
+                    search_query,
+                    "STOCK",
+                    current_stock,
+                    "... ABRV",
+                    current_abbrv,
+                )
                 results.append(
                     scrape_google_news_search(
                         googlenews,

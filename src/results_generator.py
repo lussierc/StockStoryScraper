@@ -26,6 +26,7 @@ class color:
     UNDERLINE = "\033[4m"
     END = "\033[0m"
 
+
 def run_project():
     run_dec = input(
         color.BOLD
@@ -41,7 +42,13 @@ def run_project():
     elif run_dec == "U":
         print("Will run the UI to be implemented in the near future.")
     else:
-        print(color.RED + color.BOLD + "{!!} Invalid option chosen! Running the CML..." + color.END + color.END)
+        print(
+            color.RED
+            + color.BOLD
+            + "{!!} Invalid option chosen! Running the CML..."
+            + color.END
+            + color.END
+        )
         cml_interface()
 
 
@@ -101,8 +108,24 @@ def cml_interface():
         if scrape_new_dec == "Y":
             # run with old csv and new articles
             websites = []
-            print("\n\n" + color.BOLD + color.UNDERLINE + "Choose your websites for news article scraping:" + color.END + color.END + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal")
-            website_choices = input(color.BOLD + color.UNDERLINE + color.GREEN + "{***} Enter the numbers corresponding to the website, separated by commas: " + color.END + color.END + color.END)
+            print(
+                "\n\n"
+                + color.BOLD
+                + color.UNDERLINE
+                + "Choose your websites for news article scraping:"
+                + color.END
+                + color.END
+                + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal"
+            )
+            website_choices = input(
+                color.BOLD
+                + color.UNDERLINE
+                + color.GREEN
+                + "{***} Enter the numbers corresponding to the website, separated by commas: "
+                + color.END
+                + color.END
+                + color.END
+            )
             website_numbers = website_choices.split(", ")
 
             for number in website_numbers:
@@ -210,8 +233,24 @@ def cml_interface():
         inputted_csv_list = []  # empty as not to verify any links for fresh run
         # websites = ["www.fool.com", "finance.yahoo.com", "www.bloomberg.com", "www.marketwatch.com", "www.wsj.com"]
         websites = []
-        print("\n\n" + color.BOLD + color.UNDERLINE + "Choose your websites for news article scraping:" + color.END + color.END + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal")
-        website_choices = input(color.BOLD + color.UNDERLINE + color.GREEN + "{***} Enter the numbers corresponding to the website, separated by commas: " + color.END + color.END + color.END)
+        print(
+            "\n\n"
+            + color.BOLD
+            + color.UNDERLINE
+            + "Choose your websites for news article scraping:"
+            + color.END
+            + color.END
+            + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal"
+        )
+        website_choices = input(
+            color.BOLD
+            + color.UNDERLINE
+            + color.GREEN
+            + "{***} Enter the numbers corresponding to the website, separated by commas: "
+            + color.END
+            + color.END
+            + color.END
+        )
         website_numbers = website_choices.split(", ")
 
         for number in website_numbers:
@@ -225,9 +264,6 @@ def cml_interface():
                 websites.append("www.marketwatch.com")
             elif int(number) == 5:
                 websites.append("www.wsj.com")
-
-
-
 
         stocks = input(
             color.BOLD

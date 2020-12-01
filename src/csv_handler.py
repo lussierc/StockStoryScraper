@@ -12,7 +12,9 @@ def write_data(data):
 
     if ".csv" not in write_file:
         write_file = "results.csv"
-        print("*!!* You provided an invalid output file name, outputting to the default file (results.csv)!")
+        print(
+            "*!!* You provided an invalid output file name, outputting to the default file (results.csv)!"
+        )
 
     print("Writing data to your chosen CSV file....")
 
