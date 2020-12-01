@@ -9,7 +9,7 @@ from sentiment_analyzer import *
 st.title("StockTextMining")
 
 # if run with old file call csv_handler
-# if new file send her over to results_generator 
+# if new file send her over to results_generator
 st.markdown("#### Enter Stock Names:")
 stocks_input = st.text_input(
     "Enter Stock Names Separated by Commas (EX: Apple, Draftkings):"
@@ -50,7 +50,7 @@ print("\n\n\nDATADOGS:", data)
 graph_list = []
 
 for stock in stocks_list:
-    dict = {'stock': stock, 'title_pos': 0, 'title_neg': 0}
+    dict = {"stock": stock, "title_pos": 0, "title_neg": 0}
     for i in range(len(data)):
         article = data[i]
         if stock == article["stock"]:

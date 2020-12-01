@@ -12,7 +12,9 @@ def write_data(data):
 
     if ".csv" not in write_file:
         write_file = "results.csv"
-        print("*!!* You provided an invalid output file name, outputting to the default file (results.csv)!")
+        print(
+            "*!!* You provided an invalid output file name, outputting to the default file (results.csv)!"
+        )
 
     print("Writing data to your chosen CSV file....")
 
@@ -32,7 +34,6 @@ def read_data(
     with open(csv_file, "r") as f:
         reader = csv.DictReader(f)
         inputted_csv_list = list(reader)
-        print("INPUTTED DATA", inputted_csv_list)
 
     if scrape_new_dec == "Y":
         # run everything thru individually

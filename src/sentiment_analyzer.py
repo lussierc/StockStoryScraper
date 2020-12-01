@@ -5,7 +5,7 @@ import spacy, string, en_core_web_sm
 import pandas as pd
 from vaderSentiment import vaderSentiment
 
-# pip install spacy vaderSentimentå
+# pip install spacy vaderSentiment
 
 
 def analyze_all_articles(article_dicts):
