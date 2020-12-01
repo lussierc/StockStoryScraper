@@ -100,6 +100,10 @@ def cml_interface():
         )
         if scrape_new_dec == "Y":
             # run with old csv and new articles
+            print("\n\n" + color.BOLD + color.UNDERLINE + "Choose your websites for news article scraping:" + color.END + color.END + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal")
+            website_choices = input(color.BOLD + color.UNDERLINE + color.GREEN + "{***} Enter the numbers corresponding to the website, separated by commas: " + color.END + color.END + color.END)
+            website_numbers = website_choices.split(", ")
+
             websites = ["www.fool.com"]
             stocks = input(
                 color.BOLD
@@ -192,6 +196,10 @@ def cml_interface():
     else:
         # fresh run:
         inputted_csv_list = []  # empty as not to verify any links for fresh run
+        print("\n\n" + color.BOLD + color.UNDERLINE + "Choose your websites for news article scraping:" + color.END + color.END + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal")
+        website_choices = input(color.BOLD + color.UNDERLINE + color.GREEN + "{***} Enter the numbers corresponding to the website, separated by commas: " + color.END + color.END + color.END)
+        website_numbers = website_choices.split(", ")
+
         websites = ["www.fool.com", "www.bloomberg.com"]
         stocks = input(
             color.BOLD
