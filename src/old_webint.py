@@ -18,7 +18,6 @@ stocks_input = st.text_input(
 stocks_list = []
 stocks_list = stocks_input.split(", ")
 
-
 st.markdown("#### Choose Websites To Search Given Stocks With:")
 WSJ = st.checkbox("www.wsj.com")
 mfool = st.checkbox("www.fool.com")
