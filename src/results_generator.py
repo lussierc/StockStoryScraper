@@ -3,6 +3,7 @@
 # libraries:
 import bs4
 import requests
+import os
 from bs4 import BeautifulSoup
 from prettytable import PrettyTable
 
@@ -10,6 +11,7 @@ from prettytable import PrettyTable
 import sentiment_analyzer
 import csv_handler
 import search_scraper
+import web_interface
 
 
 class color:
@@ -40,6 +42,7 @@ def run_project():
     if run_dec == "C":
         cml_interface()
     elif run_dec == "U":
+        os.system("streamlit run web_interface.py")
         print("Will run the UI to be implemented in the near future.")
     else:
         print(
