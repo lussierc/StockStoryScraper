@@ -8,13 +8,13 @@ import search_scraper
 def write_data(data):
     """Writes article data to a CSV file."""
     # eventually will have write_file come in from the interface.
-    write_file = input("\nEnter the CSV filename you wish to write data to: ")
+    # write_file = input("\nEnter the CSV filename you wish to write data to: ")
 
-    if ".csv" not in write_file:
-        write_file = "results.csv"
-        print(
-            "*!!* You provided an invalid output file name, outputting to the default file (results.csv)!"
-        )
+    # if ".csv" not in write_file:
+    write_file = "results.csv"
+        # print(
+        #     "*!!* You provided an invalid output file name, outputting to the default file (results.csv)!"
+        # )
 
     print("Writing data to your chosen CSV file....")
 

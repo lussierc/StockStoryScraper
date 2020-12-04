@@ -11,7 +11,7 @@ from prettytable import PrettyTable
 import sentiment_analyzer
 import csv_handler
 import search_scraper
-import web_interface
+#import web_interface
 
 
 class color:
@@ -42,7 +42,7 @@ def run_project():
     if run_dec == "C":
         cml_interface()
     elif run_dec == "U":
-        os.system("streamlit run web_interface.py")
+        #os.system("streamlit run web_interface.py")
         print("Will run the UI to be implemented in the near future.")
     else:
         print(
@@ -734,6 +734,3 @@ def predict_stock_well_being(scored_stocks):
 def predict_historical_stock_well_being():
     """Given an input file of scored stocks over time, generate/predict the overall stock well being rating more accurately given more data."""
     # to be implemented later
-
-
-run_project()  # run the project
