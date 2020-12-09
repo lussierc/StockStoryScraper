@@ -4,6 +4,7 @@ import pandas as pd
 from PIL import Image
 import csv_handler
 import results_generator
+
 def app():
     st.title('Import a CSV')
     st.write('Welcome to the CSV importer!')
