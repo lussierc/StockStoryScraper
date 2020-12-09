@@ -1,0 +1,7 @@
+#Mac Specefic
+.DS_Store/*
+.idea/*
+
+#App Specefic
+*.csv
+
