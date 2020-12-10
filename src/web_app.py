@@ -47,7 +47,7 @@ def page_dashboard(state):
         display_csv(state)
 
 
-def display_csv(state):
+def read_csv(state):
     websites = []
     scored_articles = []
     stocks_list = []
@@ -93,17 +93,22 @@ def display_csv(state):
         else:
             links.append(article["link"])
 
-    fin_scored_stocks = results_generator.generate_results(stocks_list, abbrv_list, scored_articles)
+    state.scored_articles = scored_articles
+    state.stocks_list = stocks_list
+    state.abbrv_list = abbrv_list
+    state.fin_scored_stocks = results_generator.generate_results(stocks_list, abbrv_list, scored_articles)
 
+
+def display_csv(state):
     st.markdown("## View Summary Info for all Stocks:")
     if st.checkbox('See All Stocks Overview'):
-        df = pd.DataFrame(fin_scored_stocks, index = stocks_list).T
+        df = pd.DataFrame(state.fin_scored_stocks, index = state.stocks_list).T
         st.bar_chart(df)  # display dataframe/graph that vizualizes commit info
 
     #checkboxes for the price, checkbox for stock well being, checkbox for sents, checkbox for media
 
     st.markdown('## See Individual Stock Graphs/Info')
-    for stock in fin_scored_stocks:
+    for stock in state.fin_scored_stocks:
 
         st.markdown("### View Content For Stock:")
 
@@ -163,6 +168,12 @@ def page_settings(state):
     if st.checkbox("Read in Previous CSV", state.cb_csvread):
         state.cb_csvread = True
         state.csv_file = st.text_input("Enter CSV Filename", state.csv_file or "")
+        if st.button("Read in CSV", state.bt_csv):
+            state.bt_csv = True
+            read_csv(state)
+        if state.bt_csv == True:
+            st.write("Go to the dashboard to view your data.")
+
     elif st.checkbox("Fresh Run", state.cb_freshrun):
         state.cb_freshrun = True
 

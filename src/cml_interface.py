@@ -231,7 +231,7 @@ def read_old_csv():
                 pass
 
     else:
-        # read in old articles, perform no new scraping or sent analysis
+        # OLD ARTICLES ONLY
         articles, inputted_csv_list = csv_handler.read_data(
             csv_file,
             scrape_new_dec,
