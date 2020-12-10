@@ -165,11 +165,30 @@ def display_data(state):
 
                 ################### MEDIA #############################
                 if st.checkbox('View Media Specific Ratings'):
+                    media_results = stock['media_results']
+                    media_list = []
                     for media in stock['media_results']:
-                        st.markdown("### Media Source: " + media['media'])
-                        st.markdown("#### The Average Sentiment Rating for this media source was " + str(media['media_sent_rating']))
-                        st.markdown(" - Numerical Score: " + str(media['media_avg_sent_score']))
-                        st.markdown(" - Article Count for this Media Source: " + str(media['article_count']))
+                        media_list.append(media['media'])
+
+                    df_media = pd.DataFrame.from_records(media_results,  index=media_list).T
+
+                    columns = st.multiselect(
+                        label="Enter the names of specific contributors below:", options=df_media.columns
+                    )  # allow users to display specific contributor information on dataframe graph
+
+                    df_media = df_media.iloc[1] # only use the avg_sentiment
+                    if not columns: # if nothing is selected show all media
+                        st.bar_chart(df_media)
+                    else:
+                        st.bar_chart(df_media[columns])  # display dataframe/graph that vizualizes info
+
+                    if st.checkbox('View More In Depth Media-Specific Information'):
+
+                        for media in stock['media_results']:
+                            st.markdown("### Media Source: " + media['media'])
+                            st.markdown("#### The Average Sentiment Rating for this media source was " + str(media['media_sent_rating']))
+                            st.markdown(" - Numerical Score: " + str(media['media_avg_sent_score']))
+                            st.markdown(" - Article Count for this Media Source: " + str(media['article_count']))
                 ################################################
 
                 st.markdown("### The Overall Stock Trifold Feelings were " + str(stock['ovr_stock_trifold_feelings']))

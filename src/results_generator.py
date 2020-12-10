@@ -337,6 +337,10 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
             except:
                 stock_media_avg_sent_score = 0
             media_sent_rating = calc_sent_rating(stock_media_avg_sent_score)
+
+            if not media:
+                media = "Unknown Source"
+                
             media_dict = {
                 "media": media,
                 "media_avg_sent_score": stock_media_avg_sent_score,
