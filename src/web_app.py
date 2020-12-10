@@ -103,8 +103,7 @@ def read_csv(state):
     state.scored_articles = scored_articles
     state.stocks_list = stocks_list
     state.abbrv_list = abbrv_list
-    state.write_file = ""
-    state.fin_scored_stocks = results_generator.run_results_generator(stocks_list, abbrv_list, scored_articles, state.write_file)
+    state.fin_scored_stocks = results_generator.generate_results(stocks_list, abbrv_list, scored_articles, state.write_file)
 
 def fresh_run(state):
     inputted_csv_list = []
@@ -190,6 +189,7 @@ def page_settings(state):
     if st.checkbox("Read in Previous CSV", state.cb_csvread):
         state.cb_csvread = True
         state.csv_file = st.text_input("Enter CSV Filename", state.csv_file or "")
+        state.write_file = ""
         if st.button("Read in CSV", state.bt_csv):
             state.bt_csv = True
             read_csv(state)
