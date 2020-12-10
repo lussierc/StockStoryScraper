@@ -238,6 +238,7 @@ def calc_recent_stock_sentiment(scored_articles, scored_stocks):
             rcnt_text_sent_score = 0
         stock["recent_article_count"] = recent_article_count
         stock["rcnt_text_sent_score"] = rcnt_text_sent_score
+        stock["rcnt_text_sent_rating"] = calc_sent_rating(rcnt_text_sent_score)
 
         try:
             day_text_sent_score = day_stock_sent_score / day_article_count
@@ -245,6 +246,8 @@ def calc_recent_stock_sentiment(scored_articles, scored_stocks):
             day_text_sent_score = 0
         stock["day_article_count"] = day_article_count
         stock["day_stock_sent_score"] = day_stock_sent_score
+        stock["day_stock_sent_rating"] = calc_sent_rating(day_stock_sent_score)
+
 
     return scored_stocks
 
@@ -340,7 +343,7 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
 
             if not media:
                 media = "Unknown Source"
-                
+
             media_dict = {
                 "media": media,
                 "media_avg_sent_score": stock_media_avg_sent_score,

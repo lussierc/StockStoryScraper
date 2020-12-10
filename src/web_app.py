@@ -151,17 +151,24 @@ def display_data(state):
             if st.checkbox('View Sentiment Information for ' + stock['stock']):
                 st.markdown('### The Average Stock Sentiment Score was ' + str(stock['avg_stock_sent_feelings']) + ".")
 
-                st.markdown("- Numerical Score:" + str(stock['avg_stock_sent_score']))
-                st.markdown(' - Number of Articles Used For Score: ' + str(stock['article_count']))
+                st.markdown("- *Numerical Sentiment Score: *" + str(stock['avg_stock_sent_score']))
+                st.markdown(' - *Number of Articles Used For Score:* ' + str(stock['article_count']))
 
                 st.write("### View Specific Sentiment Info:")
-                if st.checkbox('View Recent Sentiment Info'):
-                    # within this give the option for looking at the graph or textual
-                    st.markdown("### Recent Sentiment:")
-                    st.markdown("#### The sentiment with the last week was " + str(stock['rcnt_text_sent_score']))
-                    st.markdown(" - The number of recent articles contributing to this score was " + str(stock['recent_article_count']))
-                    st.markdown("#### The sentiment from articles scraped in the last day was " + str(stock['day_stock_sent_score']))
-                    st.markdown(" - There were " + str(stock['day_article_count']) + " articles scraped in the last day that contributed to this.")
+
+                ################### RECENT #############################
+                if int(stock['recent_article_count']) != 0: # if there are no recent articles, don't give the option to view them
+                    if st.checkbox('View Recent Sentiment Info'):
+                        # within this give the option for looking at the graph or textual
+                        st.markdown("### Recent Sentiment:")
+
+                        st.markdown("#### The sentiment with the last week was " + str(stock['rcnt_text_sent_rating']) + ".")
+                        st.markdown(' - *Numerical Sentiment Score: *' + str(stock['rcnt_text_sent_score']))
+                        st.markdown(" - *Number of Recent Articles Used For Score:* " + str(stock['recent_article_count']))
+
+                        st.markdown("#### The sentiment from articles scraped in the last day was " + str(stock['day_stock_sent_rating']))
+                        st.markdown(' - *Numerical Sentiment Score: *' + str(stock['day_stock_sent_score']))
+                        st.markdown(" - *Number of Recent Articles Used For Score:* " + str(stock['day_article_count']))
 
                 ################### MEDIA #############################
                 if st.checkbox('View Media Specific Ratings'):
@@ -173,11 +180,11 @@ def display_data(state):
                     df_media = pd.DataFrame.from_records(media_results,  index=media_list).T
 
                     columns = st.multiselect(
-                        label="Enter the names of specific contributors below:", options=df_media.columns
+                        label="Enter the names of specific media sources below:", options=df_media.columns
                     )  # allow users to display specific contributor information on dataframe graph
 
                     df_media = df_media.iloc[1] # only use the avg_sentiment
-                    if not columns: # if nothing is selected show all media
+                    if not columns: # if nothing is selected show all media!
                         st.bar_chart(df_media)
                     else:
                         st.bar_chart(df_media[columns])  # display dataframe/graph that vizualizes info
