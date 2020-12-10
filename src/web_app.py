@@ -47,7 +47,7 @@ def page_dashboard(state):
 
 
     if state.cb_csvread == True:
-        st.write("we will read in ur csv now")
+        st.write("Your CSV file of previously scraped articles has been properly imported! View the results below!")
         display_data(state)
     elif state.cb_freshrun == True:
         st.write("Here is your newly scraped data:")
@@ -124,13 +124,15 @@ def display_data(state):
     st.markdown("## View Summary Info for all Stocks:")
     if st.checkbox('See All Stocks Overview'):
         df = pd.DataFrame(state.fin_scored_stocks, index = state.stocks_list).T
-        st.bar_chart(df)  # display dataframe/graph that vizualizes commit info
+        st.write(df)
+        if st.checkbox('See Graphical Representation'):
+            st.bar_chart(df)  # display dataframe/graph that vizualizes info
+
+    st.write("---")
 
     #checkboxes for the price, checkbox for stock well being, checkbox for sents, checkbox for media
-    st.write(state.fin_scored_stocks)
     st.markdown('## See Individual Stock Graphs/Info')
     for stock in state.fin_scored_stocks:
-
         st.markdown("### View Content For Stock:")
 
         if st.checkbox(stock['stock']):
@@ -147,22 +149,19 @@ def display_data(state):
             st.markdown("#### The tool rates this stock as having this level of well being: " + stock['stock_well_being_prediction_feelings'])
 
             if st.checkbox('View Sentiment Information for ' + stock['stock']):
-                st.markdown('### Average Stock Sentiment Score:' + str(stock['avg_stock_sent_score']))
-                st.markdown('#### # of Articles:')
-                st.write(stock['article_count'])
+                st.markdown('### The Average Stock Sentiment Score was ' + str(stock['avg_stock_sent_feelings']) + ".")
+
+                st.markdown("- Numerical Score:" + str(stock['avg_stock_sent_score']))
+                st.markdown(' - Number of Articles Used For Score: ' + str(stock['article_count']))
 
                 st.write("### View Specific Sentiment Info:")
                 if st.checkbox('View Recent Sentiment Info'):
                     # within this give the option for looking at the graph or textual
                     st.markdown("### Recent Sentiment:")
-                    st.markdown("#### Within the last week:")
-                    st.write(stock['rcnt_text_sent_score'])
-                    st.markdown("Number of articles within this time frame:")
-                    st.write(stock['recent_article_count'])
-                    st.markdown("#### Within the last day:")
-                    st.write(stock['day_stock_sent_score'])
-                    st.markdown("Number of articles scraped/analyzed for the last day:")
-                    st.write(stock['day_article_count'])
+                    st.markdown("#### The sentiment with the last week was " + str(stock['rcnt_text_sent_score']))
+                    st.markdown(" - The number of recent articles contributing to this score was " + str(stock['recent_article_count']))
+                    st.markdown("#### The sentiment from articles scraped in the last day was " + str(stock['day_stock_sent_score']))
+                    st.markdown(" - There were " + str(stock['day_article_count']) + " articles scraped in the last day that contributed to this.")
 
                 if st.checkbox('View Media Specific Ratings'):
                     for media in stock['media_results']:
@@ -176,9 +175,12 @@ def display_data(state):
 
                         st.markdown("#### Article Count:")
                         st.write(media['article_count'])
-                st.markdown("### Overall Stock Trifold Rating")
-                st.markdown("Average rating of all article sentiment ratings for the title, description/summary, and text.")
-                st.write(stock['ovr_stock_trifold_rating'])
+
+                st.markdown("### The Overall Stock Trifold Feelings were " + str(stock['ovr_stock_trifold_feelings']))
+                st.markdown(" - *Numerical Overall Stock Trifold Rating:* " + str(stock['ovr_stock_trifold_rating']))
+                st.markdown(" - *** This rating is the: Average rating of all article sentiment ratings for the title, description/summary, and text.")
+
+        st.write("---")
 
 def page_settings(state):
     st.title(":wrench: Fresh Run")
