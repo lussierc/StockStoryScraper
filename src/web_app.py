@@ -4,6 +4,10 @@ import results_generator
 import pandas as pd
 from PIL import Image
 from streamlit.hashing import _CodeHasher
+# other files:
+import sentiment_analyzer
+import csv_handler
+import search_scraper
 
 try:
     # Before Streamlit 0.65
@@ -44,7 +48,10 @@ def page_dashboard(state):
 
     if state.cb_csvread == True:
         st.write("we will read in ur csv now")
-        display_csv(state)
+        display_data(state)
+    elif state.cb_freshrun == True:
+        st.write("Here is your newly scraped data:")
+        display_data(state)
 
 
 def read_csv(state):
@@ -98,8 +105,22 @@ def read_csv(state):
     state.abbrv_list = abbrv_list
     state.fin_scored_stocks = results_generator.generate_results(stocks_list, abbrv_list, scored_articles)
 
+def fresh_run(state):
+    inputted_csv_list = []
 
-def display_csv(state):
+    # run thru process with only new articles
+    article_dicts = search_scraper.run_web_search_scraper(
+      state.stocks, state.abbrvs, state.websites, state.start_date, state.end_date, inputted_csv_list
+    )
+    articles = sentiment_analyzer.analyze_all_articles(article_dicts)
+    state.scored_articles = results_generator.calc_article_sent_scores(articles)
+    state.stocks_list = state.stocks.split(", ")
+    state.abbrv_list = state.abbrvs.split(", ")
+    state.fin_scored_stocks = results_generator.run_results_generator(
+        state.scored_articles, state.stocks_list, state.abbrv_list
+    )
+
+def display_data(state):
     st.markdown("## View Summary Info for all Stocks:")
     if st.checkbox('See All Stocks Overview'):
         df = pd.DataFrame(state.fin_scored_stocks, index = state.stocks_list).T
@@ -187,7 +208,6 @@ def page_settings(state):
         # state.radio = st.radio("Set radio value.", options, options.index(state.radio) if state.radio else 0)
         #state.foolbox = st.checkbox("Set checkbox value.", state.foolbox)
 
-
         state.websites = []
         if st.checkbox("Motley Fool", state.cb_motfool):
             state.cb_motfool = True
@@ -204,6 +224,15 @@ def page_settings(state):
         if st.checkbox("Wall Street Journal", state.cb_wsj):
             state.cb_wsj = True
             state.websites.append("www.wsj.com")
+
+
+
+        if st.button("Run the Scraping Tool", state.bt_fresh):
+            state.bt_fresh = True
+            fresh_run(state)
+        if state.bt_fresh == True:
+            st.write("Go to the dashboard to view your newly scraped data.")
+
     # if st.checkbox("Set checkbox2 value."):
     #     state.websites.append("Yahoo")
 
