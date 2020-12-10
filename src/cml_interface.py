@@ -24,15 +24,7 @@ def run_cml():
 
     # HAVE USERS ENTER WEBSITES or CHOOSE USING 1,2,3 CML
 
-    # declare necessary variables:
-    websites = []
-    scored_articles = []
-    stocks_list = []
-    abbrv_list = []
-    stocks = ""
-    stock_abbrvs = ""
-    start_date = ""
-    end_date = ""
+
 
     print(
         "\n\n-------------------------------------------\n"
@@ -55,150 +47,90 @@ def run_cml():
         + "  "
     )
 
-    if read_in_dec == "Y":
-        csv_file = input(
-            color.BOLD
-            + color.UNDERLINE
-            + "\n{**} Enter your CSV filename of previous articles:"
-            + color.END
-            + color.END
-            + "  "
-        )
-        scrape_new_dec = input(
-            color.BOLD
-            + color.UNDERLINE
-            + "{***} Enter Y if you wish to scrape new articles. Enter N if you wish to just use your inputted CSV articles:"
-            + color.END
-            + color.END
-            + "  "
-        )
-        if scrape_new_dec == "Y":
-            # run with old csv and new articles
-            websites = []
-            print(
-                "\n\n"
-                + color.BOLD
-                + color.UNDERLINE
-                + "Choose your websites for news article scraping:"
-                + color.END
-                + color.END
-                + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal"
-            )
-            website_choices = input(
-                color.BOLD
-                + color.UNDERLINE
-                + color.GREEN
-                + "{***} Enter the numbers corresponding to the website, separated by commas: "
-                + color.END
-                + color.END
-                + color.END
-            )
-            website_numbers = website_choices.split(", ")
-
-            for number in website_numbers:
-                if int(number) == 1:
-                    websites.append("www.fool.com")
-                elif int(number) == 2:
-                    websites.append("finance.yahoo.com")
-                elif int(number) == 3:
-                    websites.append("www.bloomberg.com")
-                elif int(number) == 4:
-                    websites.append("www.marketwatch.com")
-                elif int(number) == 5:
-                    websites.append("www.wsj.com")
-
-            stocks = input(
-                color.BOLD
-                + color.UNDERLINE
-                + color.RED
-                + "\n{***} Enter your stocks, separated by commas:"
-                + color.END
-                + color.END
-                + color.END
-                + "  "
-            )
-            stock_abbrvs = input(
-                color.BOLD
-                + color.UNDERLINE
-                + color.BLUE
-                + "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:"
-                + color.END
-                + color.END
-                + color.END
-                + "  "
-            )
-            start_date = input(
-                color.BOLD
-                + color.UNDERLINE
-                + "\n {****} Enter the START of the Date Range you want to use for article scraping:"
-                + color.END
-                + color.END
-                + "  "
-            )
-            end_date = input(
-                color.BOLD
-                + color.UNDERLINE
-                + "{****} Enter the END of the Date Range you want to use for article scraping: "
-                + color.END
-                + color.END
-                + "  "
-            )
-
-            articles, inputted_csv_list = csv_handler.read_data(
-                csv_file,
-                scrape_new_dec,
-                stocks,
-                websites,
-                start_date,
-                end_date,
-                stock_abbrvs,
-            )
-
-            new_scored_articles = results_generator.calc_article_sent_scores(articles)
-
-            scored_articles = inputted_csv_list + new_scored_articles
-
-            stocks_list = stocks.split(", ")
-            abbrv_list = stock_abbrvs.split(", ")
-
-            for article in scored_articles:
-                if article["stock"] not in stocks_list:
-                    stocks_list.append(article["stock"])
-                else:
-                    pass
-                if article["abbrv"] not in abbrv_list:
-                    abbrv_list.append(article["abbrv"])
-                else:
-                    pass
-
-        else:
-            # read in old articles, perform no new scraping or sent analysis
-            articles, inputted_csv_list = csv_handler.read_data(
-                csv_file,
-                scrape_new_dec,
-                stocks,
-                websites,
-                start_date,
-                end_date,
-                stock_abbrvs,
-            )
-            scored_articles = articles  # since articles are only read in from csv, they are already scored
-            for article in scored_articles:
-                if article["stock"] in stocks_list:
-                    pass
-                else:
-                    stocks_list.append(article["stock"])
-
-                if article["abbrv"] in abbrv_list:
-                    pass
-                else:
-                    abbrv_list.append(article["abbrv"])
-
-            # TODO automatically gather stocks and stock abbreviations
+    if read_in_dec == 'Y':
+        scored_articles, stocks_list, abbrv_list = read_old_csv()
     else:
-        # fresh run:
-        inputted_csv_list = []  # empty as not to verify any links for fresh run
-        # websites = ["www.fool.com", "finance.yahoo.com", "www.bloomberg.com", "www.marketwatch.com", "www.wsj.com"]
+        scored_articles, stocks_list, abbrv_list = fresh_run()
+
+    fin_scored_stocks = results_generator.run_results_generator(scored_articles, stocks_list, abbrv_list)
+
+    print_cml_stock_table(fin_scored_stocks)  # print the table
+
+
+def print_cml_stock_table(fin_scored_stocks):
+    """Given completely scored stocks, print a table of major attributes."""
+
+    table = PrettyTable()
+    table.field_names = [
+        "Stock",
+        "avg_stock_sent_score",
+        "article_count",
+        "recent_article_count",
+        "rcnt_text_sent_score",
+        "ovr_stock_trifold_rating",
+        "overall_stock_articles_feelings",
+        "positive_article_count",
+        "neutral_article_count",
+        "negative_article_count",
+        "current_price",
+        "volume",
+        "avg_volume",
+        "stock_well_being_prediction",
+        "stock_well_being_prediction_feelings",
+    ]
+
+    for stock_dict in fin_scored_stocks:
+        table.add_row(
+            [
+                stock_dict["stock"],
+                stock_dict["avg_stock_sent_score"],
+                stock_dict["article_count"],
+                stock_dict["recent_article_count"],
+                stock_dict["rcnt_text_sent_score"],
+                stock_dict["ovr_stock_trifold_rating"],
+                stock_dict["overall_stock_articles_feelings"],
+                stock_dict["positive_article_count"],
+                stock_dict["neutral_article_count"],
+                stock_dict["negative_article_count"],
+                stock_dict["current_price"],
+                stock_dict["volume"],
+                stock_dict["avg_volume"],
+                stock_dict["stock_well_being_prediction"],
+                stock_dict["stock_well_being_prediction_feelings"],
+            ]
+        )
+
+    print(table)
+
+def read_old_csv():
+    # declare necessary variables:
+    websites = []
+    scored_articles = []
+    stocks_list = []
+    abbrv_list = []
+    stocks = ""
+    stock_abbrvs = ""
+    start_date = ""
+    end_date = ""
+
+    csv_file = input(
+        color.BOLD
+        + color.UNDERLINE
+        + "\n{**} Enter your CSV filename of previous articles:"
+        + color.END
+        + color.END
+        + "  "
+    )
+    scrape_new_dec = input(
+        color.BOLD
+        + color.UNDERLINE
+        + "{***} Enter Y if you wish to scrape new articles. Enter N if you wish to just use your inputted CSV articles:"
+        + color.END
+        + color.END
+        + "  "
+    )
+    if scrape_new_dec == "Y":
+        # run with old csv and new articles
         websites = []
         print(
             "\n\n"
@@ -268,60 +200,149 @@ def run_cml():
             + color.END
             + "  "
         )
-        # run thru process with only new articles
-        article_dicts = search_scraper.run_web_search_scraper(
-            stocks, stock_abbrvs, websites, start_date, end_date, inputted_csv_list
+
+        articles, inputted_csv_list = csv_handler.read_data(
+            csv_file,
+            scrape_new_dec,
+            stocks,
+            websites,
+            start_date,
+            end_date,
+            stock_abbrvs,
         )
-        articles = sentiment_analyzer.analyze_all_articles(article_dicts)
-        scored_articles = results_generator.calc_article_sent_scores(articles)
+
+        new_scored_articles = results_generator.calc_article_sent_scores(articles)
+
+        scored_articles = inputted_csv_list + new_scored_articles
+
         stocks_list = stocks.split(", ")
         abbrv_list = stock_abbrvs.split(", ")
 
-    fin_scored_stocks = results_generator.run_results_generator(scored_articles, stocks_list, abbrv_list)
-    print_cml_stock_table(fin_scored_stocks)  # print the table
+        for article in scored_articles:
+            if article["stock"] not in stocks_list:
+                stocks_list.append(article["stock"])
+            else:
+                pass
+            if article["abbrv"] not in abbrv_list:
+                abbrv_list.append(article["abbrv"])
+            else:
+                pass
 
-
-def print_cml_stock_table(fin_scored_stocks):
-    """Given completely scored stocks, print a table of major attributes."""
-
-    table = PrettyTable()
-    table.field_names = [
-        "Stock",
-        "avg_stock_sent_score",
-        "article_count",
-        "recent_article_count",
-        "rcnt_text_sent_score",
-        "ovr_stock_trifold_rating",
-        "overall_stock_articles_feelings",
-        "positive_article_count",
-        "neutral_article_count",
-        "negative_article_count",
-        "current_price",
-        "volume",
-        "avg_volume",
-        "stock_well_being_prediction",
-        "stock_well_being_prediction_feelings",
-    ]
-
-    for stock_dict in fin_scored_stocks:
-        table.add_row(
-            [
-                stock_dict["stock"],
-                stock_dict["avg_stock_sent_score"],
-                stock_dict["article_count"],
-                stock_dict["recent_article_count"],
-                stock_dict["rcnt_text_sent_score"],
-                stock_dict["ovr_stock_trifold_rating"],
-                stock_dict["overall_stock_articles_feelings"],
-                stock_dict["positive_article_count"],
-                stock_dict["neutral_article_count"],
-                stock_dict["negative_article_count"],
-                stock_dict["current_price"],
-                stock_dict["volume"],
-                stock_dict["avg_volume"],
-                stock_dict["stock_well_being_prediction"],
-                stock_dict["stock_well_being_prediction_feelings"],
-            ]
+    else:
+        # read in old articles, perform no new scraping or sent analysis
+        articles, inputted_csv_list = csv_handler.read_data(
+            csv_file,
+            scrape_new_dec,
+            stocks,
+            websites,
+            start_date,
+            end_date,
+            stock_abbrvs,
         )
 
-    print(table)
+        scored_articles = articles  # since articles are only read in from csv, they are already scored
+        for article in scored_articles:
+            if article["stock"] in stocks_list:
+                pass
+            else:
+                stocks_list.append(article["stock"])
+
+            if article["abbrv"] in abbrv_list:
+                pass
+            else:
+                abbrv_list.append(article["abbrv"])
+
+        # TODO automatically gather stocks and stock abbreviations
+    return scored_articles, stocks_list, abbrv_list
+
+def fresh_run():
+    # declare necessary variables:
+    websites = []
+    inputted_csv_list = []
+
+    scored_articles = []
+    stocks_list = []
+    abbrv_list = []
+    stocks = ""
+    stock_abbrvs = ""
+    start_date = ""
+    end_date = ""
+
+    print(
+        "\n\n"
+        + color.BOLD
+        + color.UNDERLINE
+        + "Choose your websites for news article scraping:"
+        + color.END
+        + color.END
+        + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal"
+    )
+    website_choices = input(
+        color.BOLD
+        + color.UNDERLINE
+        + color.GREEN
+        + "{***} Enter the numbers corresponding to the website, separated by commas: "
+        + color.END
+        + color.END
+        + color.END
+    )
+    website_numbers = website_choices.split(", ")
+
+    for number in website_numbers:
+        if int(number) == 1:
+            websites.append("www.fool.com")
+        elif int(number) == 2:
+            websites.append("finance.yahoo.com")
+        elif int(number) == 3:
+            websites.append("www.bloomberg.com")
+        elif int(number) == 4:
+            websites.append("www.marketwatch.com")
+        elif int(number) == 5:
+            websites.append("www.wsj.com")
+
+    stocks = input(
+        color.BOLD
+        + color.UNDERLINE
+        + color.RED
+        + "\n{***} Enter your stocks, separated by commas:"
+        + color.END
+        + color.END
+        + color.END
+        + "  "
+    )
+    stock_abbrvs = input(
+        color.BOLD
+        + color.UNDERLINE
+        + color.BLUE
+        + "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:"
+        + color.END
+        + color.END
+        + color.END
+        + "  "
+    )
+    start_date = input(
+        color.BOLD
+        + color.UNDERLINE
+        + "\n {****} Enter the START of the Date Range you want to use for article scraping:"
+        + color.END
+        + color.END
+        + "  "
+    )
+    end_date = input(
+        color.BOLD
+        + color.UNDERLINE
+        + "{****} Enter the END of the Date Range you want to use for article scraping: "
+        + color.END
+        + color.END
+        + "  "
+    )
+    # run thru process with only new articles
+    article_dicts = search_scraper.run_web_search_scraper(
+        stocks, stock_abbrvs, websites, start_date, end_date, inputted_csv_list
+    )
+    articles = sentiment_analyzer.analyze_all_articles(article_dicts)
+    scored_articles = results_generator.calc_article_sent_scores(articles)
+    stocks_list = stocks.split(", ")
+    abbrv_list = stock_abbrvs.split(", ")
+
+    return scored_articles, stocks_list, abbrv_list
