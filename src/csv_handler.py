@@ -11,7 +11,7 @@ def write_data(data):
     # write_file = input("\nEnter the CSV filename you wish to write data to: ")
 
     # if ".csv" not in write_file:
-    write_file = "results.csv"
+    write_file = "results2.csv"
         # print(
         #     "*!!* You provided an invalid output file name, outputting to the default file (results.csv)!"
         # )
