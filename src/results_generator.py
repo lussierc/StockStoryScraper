@@ -196,10 +196,12 @@ def calc_stock_sentiment(scored_articles, stocks_list):
                 article_count += 1
                 stock_sent_score += float(article["ovr_text_sent_score"])
         avg_stock_sent_score = stock_sent_score / article_count
+        avg_stock_sent_feelings = calc_sent_rating(avg_stock_sent_score)
 
         stock_sent_dict = {
             "stock": stock,
             "avg_stock_sent_score": avg_stock_sent_score,
+            "avg_stock_sent_feelings": avg_stock_sent_feelings,
             "article_count": article_count,
         }
         scored_stocks.append(stock_sent_dict)
@@ -304,6 +306,7 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
         except:
             ovr_stock_trifold_rating = 0
         stock["ovr_stock_trifold_rating"] = ovr_stock_trifold_rating
+        stock['ovr_stock_trifold_feelings'] = calc_sent_rating(ovr_stock_trifold_rating)
 
     return scored_stocks
 
@@ -410,6 +413,7 @@ def predict_stock_well_being(scored_stocks):
             stock["stock_well_being_prediction_feelings"] = "Extremely Good Wellbeing"
 
     return scored_stocks
+
 
 
 def predict_historical_stock_well_being():

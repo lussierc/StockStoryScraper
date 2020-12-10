@@ -127,7 +127,7 @@ def display_data(state):
         st.bar_chart(df)  # display dataframe/graph that vizualizes commit info
 
     #checkboxes for the price, checkbox for stock well being, checkbox for sents, checkbox for media
-
+    st.write(state.fin_scored_stocks)
     st.markdown('## See Individual Stock Graphs/Info')
     for stock in state.fin_scored_stocks:
 
@@ -147,8 +147,7 @@ def display_data(state):
             st.markdown("#### The tool rates this stock as having this level of well being: " + stock['stock_well_being_prediction_feelings'])
 
             if st.checkbox('View Sentiment Information for ' + stock['stock']):
-                st.markdown('### Average Stock Sentiment Score:')
-                st.write(stock['avg_stock_sent_score'])
+                st.markdown('### Average Stock Sentiment Score:' + str(stock['avg_stock_sent_score']))
                 st.markdown('#### # of Articles:')
                 st.write(stock['article_count'])
 
