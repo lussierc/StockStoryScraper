@@ -42,5 +42,9 @@ def app():
     if st.checkbox('www.wsj.com'):
         websites.append("www.wsj.com")
 
-    user_stock_input_dict["Websites"] = websites
-    st.write(user_stock_input_dict)
+
+    if st.button("Run Tool with Inputted Options"):
+        user_stock_input_dict["Websites"] = websites
+
+        st.write("RUNNING")
+        st.write(user_stock_input_dict)
