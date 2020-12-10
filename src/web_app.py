@@ -103,7 +103,8 @@ def read_csv(state):
     state.scored_articles = scored_articles
     state.stocks_list = stocks_list
     state.abbrv_list = abbrv_list
-    state.fin_scored_stocks = results_generator.generate_results(stocks_list, abbrv_list, scored_articles)
+    state.write_file = ""
+    state.fin_scored_stocks = results_generator.run_results_generator(stocks_list, abbrv_list, scored_articles, state.write_file)
 
 def fresh_run(state):
     inputted_csv_list = []
@@ -117,7 +118,7 @@ def fresh_run(state):
     state.stocks_list = state.stocks.split(", ")
     state.abbrv_list = state.abbrvs.split(", ")
     state.fin_scored_stocks = results_generator.run_results_generator(
-        state.scored_articles, state.stocks_list, state.abbrv_list
+        state.scored_articles, state.stocks_list, state.abbrv_list, state.write_file
     )
 
 def display_data(state):
@@ -225,6 +226,7 @@ def page_settings(state):
             state.cb_wsj = True
             state.websites.append("www.wsj.com")
 
+        state.write_file = st.text_input("Enter a CSV to save your result to:", state.write_file or "")
 
 
         if st.button("Run the Scraping Tool", state.bt_fresh):

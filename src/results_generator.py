@@ -29,7 +29,7 @@ class color:
     END = "\033[0m"
 
 
-def run_results_generator(scored_articles, stocks_list, abbrv_list):
+def run_results_generator(scored_articles, stocks_list, abbrv_list, write_file):
     # find duplicate links and remove them
     links = []
     for article in scored_articles:
@@ -40,11 +40,11 @@ def run_results_generator(scored_articles, stocks_list, abbrv_list):
         else:
             links.append(article["link"])
 
-    fin_scored_stocks = generate_results(stocks_list, abbrv_list, scored_articles)
+    fin_scored_stocks = generate_results(stocks_list, abbrv_list, scored_articles, write_file)
 
     return fin_scored_stocks
 
-def generate_results(stocks_list, abbrv_list, scored_articles):
+def generate_results(stocks_list, abbrv_list, scored_articles, write_file):
     """Driver function to generate results with."""
 
     scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
@@ -54,7 +54,16 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
     scored_stocks = calc_stock_trifold_rating(scored_articles, scored_stocks)
 
     scored_stocks = calc_ovr_stock_article_feelings(scored_articles, scored_stocks)
-    csv_handler.write_data(scored_articles)
+
+    # write data
+    if write_file == "":
+        pass
+    elif '.csv' in write_file:
+        print("VALID CSV")
+        csv_handler.write_data(scored_articles, write_file)
+    else:
+        write_file = "my_results.csv"
+        csv_handler.write_data(scored_articles, write_file)
 
     scored_stocks = calc_ovr_media_rating(scored_articles, scored_stocks)
 

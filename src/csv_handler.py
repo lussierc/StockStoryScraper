@@ -5,16 +5,8 @@ import sentiment_analyzer
 import search_scraper
 
 
-def write_data(data):
+def write_data(data, write_file):
     """Writes article data to a CSV file."""
-    # eventually will have write_file come in from the interface.
-    # write_file = input("\nEnter the CSV filename you wish to write data to: ")
-
-    # if ".csv" not in write_file:
-    write_file = "results2.csv"
-        # print(
-        #     "*!!* You provided an invalid output file name, outputting to the default file (results.csv)!"
-        # )
 
     print("Writing data to your chosen CSV file....")
 

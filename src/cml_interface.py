@@ -48,11 +48,12 @@ def run_cml():
 
     if read_in_dec == "Y":
         scored_articles, stocks_list, abbrv_list = read_old_csv()
+        write_file = ""
     else:
-        scored_articles, stocks_list, abbrv_list = fresh_run()
+        scored_articles, stocks_list, abbrv_list, write_file = fresh_run()
 
     fin_scored_stocks = results_generator.run_results_generator(
-        scored_articles, stocks_list, abbrv_list
+        scored_articles, stocks_list, abbrv_list, write_file
     )
 
     print_cml_stock_table(fin_scored_stocks)  # print the table
@@ -340,6 +341,15 @@ def fresh_run():
         + "  "
     )
 
+    write_file = input(
+        color.BOLD
+        + color.UNDERLINE
+        + "{****} Enter a CSV file name to write your data to (if you wish): "
+        + color.END
+        + color.END
+        + "  "
+    )
+
     # run thru process with only new articles
     article_dicts = search_scraper.run_web_search_scraper(
         stocks, stock_abbrvs, websites, start_date, end_date, inputted_csv_list
@@ -349,4 +359,4 @@ def fresh_run():
     stocks_list = stocks.split(", ")
     abbrv_list = stock_abbrvs.split(", ")
 
-    return scored_articles, stocks_list, abbrv_list
+    return scored_articles, stocks_list, abbrv_list, write_file
