@@ -137,18 +137,16 @@ def display_data(state):
 
         if st.checkbox(stock['stock']):
             st.markdown("### Price Information:")
-            st.markdown("#### Current Price at Time of Scrape:")
-            st.write(stock['current_price'])
-            st.markdown("#### Current Volume at Time of Scrape:")
-            st.write(stock['volume'])
-            st.markdown("#### Average Volume at Time of Scrape:")
-            st.write(stock['avg_volume'])
+            st.markdown("#### *Current Price at Time of Scrape:* $" + str(stock['current_price']))
+            st.markdown("#### *Current Volume at Time of Scrape:* " + str(stock['volume']))
+            st.markdown("#### *Average Volume at Time of Scrape:* " + str(stock['avg_volume']))
+            st.markdown("#### *1-Year Target Price (from Yahoo! Finance)*: $" + str(stock["yr_target"]))
 
-            st.markdown("### Stock Well Being Prediction:")
-            st.write(stock['stock_well_being_prediction'])
-            st.markdown("#### The tool rates this stock as having this level of well being: " + stock['stock_well_being_prediction_feelings'])
+            st.markdown("### The Overall Well-Being of this stock seems to be of a " + str(stock['stock_well_being_prediction_feelings']) + ".")
 
-            if st.checkbox('View Sentiment Information for ' + stock['stock']):
+            st.markdown(" - *Numerical Stock Well Being Rating (from 0-100%):* " + str(stock['stock_well_being_prediction']) +"%")
+
+            if st.checkbox('View More Specific Stock Sentiment Information for: ' + stock['stock']):
                 st.markdown('### The Average Stock Sentiment Score was ' + str(stock['avg_stock_sent_feelings']) + ".")
 
                 st.markdown("- *Numerical Sentiment Score: *" + str(stock['avg_stock_sent_score']))
