@@ -4,6 +4,7 @@ import csv_handler
 import search_scraper
 import sentiment_analyzer
 
+
 class color:
     """Defines different colors and text formatting settings to be used for CML output printing."""
 
@@ -23,8 +24,6 @@ def run_cml():
     """A command line interface that can be used instead of the Streamlit UI if chosen."""
 
     # HAVE USERS ENTER WEBSITES or CHOOSE USING 1,2,3 CML
-
-
 
     print(
         "\n\n-------------------------------------------\n"
@@ -47,12 +46,14 @@ def run_cml():
         + "  "
     )
 
-    if read_in_dec == 'Y':
+    if read_in_dec == "Y":
         scored_articles, stocks_list, abbrv_list = read_old_csv()
     else:
         scored_articles, stocks_list, abbrv_list = fresh_run()
 
-    fin_scored_stocks = results_generator.run_results_generator(scored_articles, stocks_list, abbrv_list)
+    fin_scored_stocks = results_generator.run_results_generator(
+        scored_articles, stocks_list, abbrv_list
+    )
 
     print_cml_stock_table(fin_scored_stocks)  # print the table
 
@@ -101,6 +102,7 @@ def print_cml_stock_table(fin_scored_stocks):
         )
 
     print(table)
+
 
 def read_old_csv():
     # declare necessary variables:
@@ -255,6 +257,7 @@ def read_old_csv():
         # TODO automatically gather stocks and stock abbreviations
     return scored_articles, stocks_list, abbrv_list
 
+
 def fresh_run():
     # declare necessary variables:
     websites = []
@@ -336,6 +339,7 @@ def fresh_run():
         + color.END
         + "  "
     )
+
     # run thru process with only new articles
     article_dicts = search_scraper.run_web_search_scraper(
         stocks, stock_abbrvs, websites, start_date, end_date, inputted_csv_list
