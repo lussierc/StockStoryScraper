@@ -163,18 +163,14 @@ def display_data(state):
                     st.markdown("#### The sentiment from articles scraped in the last day was " + str(stock['day_stock_sent_score']))
                     st.markdown(" - There were " + str(stock['day_article_count']) + " articles scraped in the last day that contributed to this.")
 
+                ################### MEDIA #############################
                 if st.checkbox('View Media Specific Ratings'):
                     for media in stock['media_results']:
                         st.markdown("### Media Source: " + media['media'])
-
-                        st.markdown("#### Media Average Sent Score:")
-                        st.write(media['media_avg_sent_score'])
-
-                        st.markdown("For this media source, the sentiment was rated overall as:")
-                        st.write(media['media_sent_rating'])
-
-                        st.markdown("#### Article Count:")
-                        st.write(media['article_count'])
+                        st.markdown("#### The Average Sentiment Rating for this media source was " + str(media['media_sent_rating']))
+                        st.markdown(" - Numerical Score: " + str(media['media_avg_sent_score']))
+                        st.markdown(" - Article Count for this Media Source: " + str(media['article_count']))
+                ################################################
 
                 st.markdown("### The Overall Stock Trifold Feelings were " + str(stock['ovr_stock_trifold_feelings']))
                 st.markdown(" - *Numerical Overall Stock Trifold Rating:* " + str(stock['ovr_stock_trifold_rating']))
