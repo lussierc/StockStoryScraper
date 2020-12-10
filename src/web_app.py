@@ -146,7 +146,7 @@ def display_data(state):
             st.write(stock['stock_well_being_prediction'])
             st.markdown("#### The tool rates this stock as having this level of well being: " + stock['stock_well_being_prediction_feelings'])
 
-            if st.checkbox('View Sentiment Information'):
+            if st.checkbox('View Sentiment Information for ' + stock['stock']):
                 st.markdown('### Average Stock Sentiment Score:')
                 st.write(stock['avg_stock_sent_score'])
                 st.markdown('#### # of Articles:')
