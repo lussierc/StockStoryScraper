@@ -150,5 +150,8 @@ def get_stock_attributes(abbreviation):
     avg_volume = (
         soup.find_all("td", {"class": "Ta(end) Fw(600) Lh(14px)"})[7].find("span").text
     )
+    yr_target = (
+        soup.find_all("td", {"class": "Ta(end) Fw(600) Lh(14px)"})[15].find("span").text
+    )
 
-    return price, previous_close, open_price, avg_volume, volume
+    return price, previous_close, open_price, avg_volume, volume, yr_target

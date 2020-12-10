@@ -76,6 +76,7 @@ def generate_results(stocks_list, abbrv_list, scored_articles, write_file):
             open_price,
             avg_volume,
             volume,
+            yr_target,
         ) = search_scraper.get_stock_attributes(abbrv_list[i])
 
         # ^^^ I should print this out in a results_table
@@ -83,6 +84,7 @@ def generate_results(stocks_list, abbrv_list, scored_articles, write_file):
         scored_stocks[i]["current_price"] = price
         scored_stocks[i]["volume"] = volume
         scored_stocks[i]["avg_volume"] = avg_volume
+        scored_stocks[i]["yr_target"] = yr_target
 
         i += 1
 
