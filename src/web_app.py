@@ -89,7 +89,7 @@ def read_csv(state):
         else:
             abbrv_list.append(article["abbrv"])
 
-    st.markdown('CSV has successfully been read in!')
+    st.markdown('PLEASE WAIT! Reading in your CSV now!')
         # find duplicate links and remove them
 
 
@@ -115,7 +115,18 @@ def fresh_run(state):
       state.stocks, state.abbrvs, state.websites, state.start_date, state.end_date, inputted_csv_list
     )
     articles = sentiment_analyzer.analyze_all_articles(article_dicts)
-    state.scored_articles = results_generator.calc_article_sent_scores(articles)
+    scored_articles = results_generator.calc_article_sent_scores(articles)
+
+    seen = set()
+    result = []
+    for dic in scored_articles:
+        key = (dic['link'], dic['title'])
+        if key in seen:
+            continue
+        result.append(dic)
+        seen.add(key)
+
+    state.scored_articles = result
     state.stocks_list = state.stocks.split(", ")
     state.abbrv_list = state.abbrvs.split(", ")
     state.fin_scored_stocks = results_generator.run_results_generator(

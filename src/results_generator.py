@@ -44,17 +44,40 @@ def run_results_generator(scored_articles, stocks_list, abbrv_list, write_file):
 
     return fin_scored_stocks
 
+def remove_dup_articles(scored_articles):
+    result = []
+    seen = set()
+    result = []
+    for dic in scored_articles:
+        key = (dic['link'], dic['title'])
+        if key in seen:
+            continue
+        result.append(dic)
+        seen.add(key)
+    scored_articles = result
+    return scored_articles
+
 def generate_results(stocks_list, abbrv_list, scored_articles, write_file):
     """Driver function to generate results with."""
-    [i for n, i in enumerate(scored_articles) if i not in scored_articles[n + 1:]]
+    [i for n, i in enumerate(scored_articles) if i not in     scored_articles[n + 1:]]
 
-    scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
+    no_dup = []
+    seen = set()
+    result = []
+    for dic in scored_articles:
+        key = (dic['link'], dic['title'])
+        if key in seen:
+            continue
+        no_dup.append(dic)
+        seen.add(key)
+
+    scored_stocks = calc_stock_sentiment(no_dup, stocks_list)
     # save run date to overall dict for csv purposes
-    scored_stocks = calc_recent_stock_sentiment(scored_articles, scored_stocks)
+    scored_stocks = calc_recent_stock_sentiment(no_dup, scored_stocks)
 
-    scored_stocks = calc_stock_trifold_rating(scored_articles, scored_stocks)
+    scored_stocks = calc_stock_trifold_rating(no_dup, scored_stocks)
 
-    scored_stocks = calc_ovr_stock_article_feelings(scored_articles, scored_stocks)
+    scored_stocks = calc_ovr_stock_article_feelings(no_dup, scored_stocks)
 
     # write data
     if write_file == "":
