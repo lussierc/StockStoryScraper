@@ -37,8 +37,17 @@ def main():
     state.sync()
 
 def page_home(state):
-    st.title("WELCOME TO STOCKTEXTMINING")
-    st.write("Welcome to the homepage lets go!")
+    st.title("Welcome to StockStoryScraper (SSS)")
+
+    st.markdown("## Tool Overview:")
+    st.markdown("The StockStoryScraper allows users to scrape news stories on their favorite stocks and then see what the general sentiment for these articles is. It saves investors, both new and old, time in terms of analyzing stock news. Now, you no longer need to spend numerous hours searching for articles about stocks online and then reading them to see what the thoughts/sentiment are. The tool will find the articles for you and analyze them to see if they are positive, negative, or neutral. By using the SSS tool, users can make more informed investing decisions.")
+
+    st.markdown("## Using the Tool:")
+    st.markdown("Using the tool is simple once you are in the Web Interface! To run the tool, go to the `Run Settings` page.\nYou will then be presented with two options for running the tool:")
+    st.markdown("- `Previous CSV`: You can choose to read in a CSV of scraped articles that would be previously exported by the tool during a fresh run. \n - `Fresh Run`: You can run the tool with no previous data, entering your stocks and their respective ticker symbols, among other information.")
+    st.markdown("After filling out the data fields for your chosen option, you can than click the button below to run the tool. After this, wait until the tool prompts you to `Go to the Dashboard to view your data`. Once prompted, you can then go to the Dashboard page and view your data.")
+    st.markdown("Within the Dashboard, you can then view information for all the stocks at once, or look at individual stocks and more specific information (pertaining to individual articles).")
+
 
 def page_dashboard(state):
     st.title(":chart_with_upwards_trend: Dashboard page")
@@ -210,10 +219,10 @@ def display_data(state):
                 ################################################
 
                 if st.checkbox('View all Articles for: ' + stock['stock']):
-                    st.write(state.scored_articles)
+                    st.markdown("#### Choose Specific Articles to View:")
                     for article in state.scored_articles:
                         if article['stock'] == stock['stock']:
-                            if st.checkbox(stock['stock']+ " - View article: " + article['title']):
+                            if st.checkbox("View article: " + article['title']):
                                 st.write(article)
 
                 st.markdown("### The Overall Stock Trifold Feelings were " + str(stock['ovr_stock_trifold_feelings']))
