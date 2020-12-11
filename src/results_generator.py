@@ -409,35 +409,39 @@ def predict_stock_well_being(scored_stocks):
         print("YR" + (stock["yr_target"]))
         print("CR" + (stock["current_price"]))
 
-        if float(stock["yr_target"]) == float(stock["current_price"]):
-            per = 100.0
-        elif float(stock["yr_target"]) > float(stock["current_price"]):
-            try:
-                per = (
-                    abs(float(stock["yr_target"]) - float(stock["current_price"]))
-                    / float(stock["current_price"])
-                ) * 100.0
-            except ZeroDivisionError:
-                per = 0
+        if stock["yr_target"] != 'N/A':
+            if float(stock["yr_target"]) == float(stock["current_price"]):
+                per = 100.0
+            elif float(stock["yr_target"]) > float(stock["current_price"]):
+                try:
+                    per = (
+                        abs(float(stock["yr_target"]) - float(stock["current_price"]))
+                        / float(stock["current_price"])
+                    ) * 100.0
+                except ZeroDivisionError:
+                    per = 0
 
-            print("per", per)
-            if per >= 15:
-                weight_yr_per = 20
-            elif per >= 10:
-                weight_yr_per = 15
-            elif per >= 5:
-                weight_yr_per = 10
-            else:
-                weight_yr_per = 7.5
-        elif float(stock["yr_target"]) < float(stock["current_price"]):
-            try:
-                per = (
-                    abs(float(stock["yr_target"]) - float(stock["current_price"]))
-                    / float(stock["current_price"])
-                ) * 100.0
-            except ZeroDivisionError:
-                per = 0
-            weight_yr_per = 5
+                print("per", per)
+                if per >= 15:
+                    weight_yr_per = 20
+                elif per >= 10:
+                    weight_yr_per = 15
+                elif per >= 5:
+                    weight_yr_per = 10
+                else:
+                    weight_yr_per = 7.5
+            elif float(stock["yr_target"]) < float(stock["current_price"]):
+                try:
+                    per = (
+                        abs(float(stock["yr_target"]) - float(stock["current_price"]))
+                        / float(stock["current_price"])
+                    ) * 100.0
+                except ZeroDivisionError:
+                    per = 0
+                weight_yr_per = 5
+        else:
+            weight_yr_per = 10
+
 
         print("wght", weight_yr_per)
 

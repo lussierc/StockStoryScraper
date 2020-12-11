@@ -31,6 +31,8 @@ def run_project():
     if run_dec == "C":
         cml_interface.run_cml()
     elif run_dec == "U":
+        print("If in DOCKER: http://localhost:8501")
+        
         os.system("streamlit run web_app.py")
         print("Will run the UI to be implemented in the near future.")
     else:
