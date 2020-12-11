@@ -4,7 +4,7 @@ Scrapes new articles from highly rated stock news websites thru Google News, ana
 
 Fall 2020 Independent Study - Allegheny College.
 
-![SSS Logo](sss.png)
+![SSS Logo](images/sss.png)
 
 ## Tool Overview
 
