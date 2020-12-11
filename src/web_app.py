@@ -153,8 +153,27 @@ def display_data(state):
     if st.checkbox('See All Stocks Overview'):
         df = pd.DataFrame(state.fin_scored_stocks, index = state.stocks_list).T
         st.write(df)
-        if st.checkbox('See Graphical Representation'):
-            st.bar_chart(df)  # display dataframe/graph that vizualizes info
+        st.markdown("### See Expanded Overview For All Stocks:")
+        if st.checkbox('See Expanded Overview for All Stocks'):
+            st.markdown("#### Graphical Representation:")
+            st.markdown("*Hover over specific columns to get a closer look.*")
+            df_all_stock_info = pd.DataFrame.from_records(state.fin_scored_stocks,  index=state.stocks_list).T
+
+            columns = st.multiselect(
+                label="Enter the names of stocks you scraped below:", options=df_all_stock_info.columns
+            )  # allow users to display specific contributor information on dataframe graph
+
+            df_all_stock_info = df_all_stock_info
+
+            if not columns: # if nothing is selected show all media!
+                st.bar_chart(df_all_stock_info)
+                st.markdown("#### Data Table:")
+                st.write(df_all_stock_info)
+            else:
+                st.bar_chart(df_all_stock_info[columns])  # display dataframe/graph that vizualizes info
+                st.markdown("#### Data Table:")
+                st.write(df_all_stock_info[columns])  # display dataframe/graph that vizualizes info
+
 
     st.write("---")
 
