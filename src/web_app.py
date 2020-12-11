@@ -149,11 +149,46 @@ def fresh_run(state):
     )
 
 def display_data(state):
-    st.markdown("## View Summary Info for all Stocks:")
+    st.markdown("## View An Overview of Your Analyzed Stock Data:")
     if st.checkbox('See All Stocks Overview'):
-        df = pd.DataFrame(state.fin_scored_stocks, index = state.stocks_list).T
-        st.write(df)
-        st.markdown("### See Expanded Overview For All Stocks:")
+        st.markdown("### Graphical Sentiment Representation:")
+        st.markdown("*Hover over specific columns to get a closer look.*")
+        df_all_stock_ovr = pd.DataFrame.from_records(state.fin_scored_stocks,  index=state.stocks_list).T
+
+        all_ovr_clm = st.multiselect(
+            label="Enter the names of stocks scraped below:", options=df_all_stock_ovr.columns
+        )  # allow users to display specific contributor information on dataframe graph
+
+        df_all_sent = df_all_stock_ovr.iloc[[1, 10]]
+
+        if not all_ovr_clm: # if nothing is selected show all media!
+            st.bar_chart(df_all_sent)
+            if st.checkbox("View Data Table"):
+                st.markdown("#### Sentiment Data Table:")
+                st.write(df_all_sent)
+        else:
+            st.bar_chart(df_all_sent[all_ovr_clm])  # display dataframe/graph that vizualizes info
+            if st.checkbox("View Data Table"):
+                st.markdown("#### Sentiment Data Table:")
+                st.write(df_all_sent[all_ovr_clm])
+
+        st.markdown("### Graphical Price & Well-Being Representation:")
+        st.markdown("*Hover over specific columns to get a closer look.*")
+        df_all_stock_ovr = df_all_stock_ovr.iloc[[float(17), float(20), float(21)]]
+
+        if not all_ovr_clm: # if nothing is selected show all media!
+            st.bar_chart(df_all_stock_ovr)
+            if st.checkbox("View Price & Well-Being Data Table"):
+                st.markdown("#### Price & Well-Being Data Table:")
+                st.write(df_all_stock_ovr)
+        else:
+            st.bar_chart(df_all_stock_ovr[all_ovr_clm])  # display dataframe/graph that vizualizes info
+            if st.checkbox("View Price & Well-Being Data Table"):
+                st.markdown("#### Price & Well-Being Data Table:")
+                st.write(df_all_stock_ovr[all_ovr_clm])  # display dataframe/graph that vizualizes info
+
+
+        st.markdown("### Expanded Overview For All Stocks:")
         if st.checkbox('See Expanded Overview for All Stocks'):
             st.markdown("#### Graphical Representation:")
             st.markdown("*Hover over specific columns to get a closer look.*")
