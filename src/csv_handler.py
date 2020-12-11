@@ -5,25 +5,17 @@ import sentiment_analyzer
 import search_scraper
 
 
-def write_data(data):
+def write_data(data, write_file):
     """Writes article data to a CSV file."""
-    # eventually will have write_file come in from the interface.
-    write_file = input("\nEnter the CSV filename you wish to write data to: ")
-
-    if ".csv" not in write_file:
-        write_file = "results.csv"
-        print(
-            "*!!* You provided an invalid output file name, outputting to the default file (results.csv)!"
-        )
 
     print("Writing data to your chosen CSV file....")
 
-    keys = data[0].keys()
+    keys = data[0].keys()  # gets key values to write as CSV header
 
     with open(write_file, "w", newline="") as output_file:
         dict_writer = csv.DictWriter(output_file, keys)
-        dict_writer.writeheader()
-        dict_writer.writerows(data)
+        dict_writer.writeheader()  # write header
+        dict_writer.writerows(data)  # write the data
 
 
 def read_data(
@@ -32,8 +24,8 @@ def read_data(
     """Reads a CSV file back in."""
 
     with open(csv_file, "r") as f:
-        reader = csv.DictReader(f)
-        inputted_csv_list = list(reader)
+        reader = csv.DictReader(f)  # read in csv file as dict
+        inputted_csv_list = list(reader)  # make it a list of dicts
 
     if scrape_new_dec == "Y":
         # run everything thru individually

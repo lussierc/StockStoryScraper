@@ -11,7 +11,8 @@ from prettytable import PrettyTable
 import sentiment_analyzer
 import csv_handler
 import search_scraper
-import web_interface
+
+# import web_interface
 
 
 class color:
@@ -29,290 +30,7 @@ class color:
     END = "\033[0m"
 
 
-def run_project():
-    run_dec = input(
-        color.BOLD
-        + color.UNDERLINE
-        + "{*} Enter C to run Command Line Interface or U to run the User Interface:"
-        + color.END
-        + color.END
-        + "  "
-    )
-
-    if run_dec == "C":
-        cml_interface()
-    elif run_dec == "U":
-        os.system("streamlit run web_interface.py")
-        print("Will run the UI to be implemented in the near future.")
-    else:
-        print(
-            color.RED
-            + color.BOLD
-            + "{!!} Invalid option chosen! Running the CML..."
-            + color.END
-            + color.END
-        )
-        cml_interface()
-
-
-def cml_interface():
-    """A command line interface that can be used instead of the Streamlit UI if chosen."""
-
-    # HAVE USERS ENTER WEBSITES or CHOOSE USING 1,2,3 CML
-
-    # declare necessary variables:
-    websites = []
-    scored_articles = []
-    stocks_list = []
-    abbrv_list = []
-    stocks = ""
-    stock_abbrvs = ""
-    start_date = ""
-    end_date = ""
-
-    print(
-        "\n\n-------------------------------------------\n"
-        + color.BOLD
-        + color.GREEN
-        + "| Welcome to the StockTextMining Program! |"
-        + color.END
-        + "\n|                                         |"
-        + "\n|    You are running the CML version!     |"
-        + color.END
-        + "\n-------------------------------------------\n\n"
-    )
-
-    read_in_dec = input(
-        color.BOLD
-        + color.UNDERLINE
-        + "{*} Do you want to read in a CSV file Y or N:"
-        + color.END
-        + color.END
-        + "  "
-    )
-
-    if read_in_dec == "Y":
-        csv_file = input(
-            color.BOLD
-            + color.UNDERLINE
-            + "\n{**} Enter your CSV filename of previous articles:"
-            + color.END
-            + color.END
-            + "  "
-        )
-        scrape_new_dec = input(
-            color.BOLD
-            + color.UNDERLINE
-            + "{***} Enter Y if you wish to scrape new articles. Enter N if you wish to just use your inputted CSV articles:"
-            + color.END
-            + color.END
-            + "  "
-        )
-        if scrape_new_dec == "Y":
-            # run with old csv and new articles
-            websites = []
-            print(
-                "\n\n"
-                + color.BOLD
-                + color.UNDERLINE
-                + "Choose your websites for news article scraping:"
-                + color.END
-                + color.END
-                + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal"
-            )
-            website_choices = input(
-                color.BOLD
-                + color.UNDERLINE
-                + color.GREEN
-                + "{***} Enter the numbers corresponding to the website, separated by commas: "
-                + color.END
-                + color.END
-                + color.END
-            )
-            website_numbers = website_choices.split(", ")
-
-            for number in website_numbers:
-                if int(number) == 1:
-                    websites.append("www.fool.com")
-                elif int(number) == 2:
-                    websites.append("finance.yahoo.com")
-                elif int(number) == 3:
-                    websites.append("www.bloomberg.com")
-                elif int(number) == 4:
-                    websites.append("www.marketwatch.com")
-                elif int(number) == 5:
-                    websites.append("www.wsj.com")
-
-            stocks = input(
-                color.BOLD
-                + color.UNDERLINE
-                + color.RED
-                + "\n{***} Enter your stocks, separated by commas:"
-                + color.END
-                + color.END
-                + color.END
-                + "  "
-            )
-            stock_abbrvs = input(
-                color.BOLD
-                + color.UNDERLINE
-                + color.BLUE
-                + "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:"
-                + color.END
-                + color.END
-                + color.END
-                + "  "
-            )
-            start_date = input(
-                color.BOLD
-                + color.UNDERLINE
-                + "\n {****} Enter the START of the Date Range you want to use for article scraping:"
-                + color.END
-                + color.END
-                + "  "
-            )
-            end_date = input(
-                color.BOLD
-                + color.UNDERLINE
-                + "{****} Enter the END of the Date Range you want to use for article scraping: "
-                + color.END
-                + color.END
-                + "  "
-            )
-
-            articles, inputted_csv_list = csv_handler.read_data(
-                csv_file,
-                scrape_new_dec,
-                stocks,
-                websites,
-                start_date,
-                end_date,
-                stock_abbrvs,
-            )
-
-            new_scored_articles = calc_article_sent_scores(articles)
-
-            scored_articles = inputted_csv_list + new_scored_articles
-
-            stocks_list = stocks.split(", ")
-            abbrv_list = stock_abbrvs.split(", ")
-
-            for article in scored_articles:
-                if article["stock"] not in stocks_list:
-                    stocks_list.append(article["stock"])
-                else:
-                    pass
-                if article["abbrv"] not in abbrv_list:
-                    abbrv_list.append(article["abbrv"])
-                else:
-                    pass
-
-        else:
-            # read in old articles, perform no new scraping or sent analysis
-            articles, inputted_csv_list = csv_handler.read_data(
-                csv_file,
-                scrape_new_dec,
-                stocks,
-                websites,
-                start_date,
-                end_date,
-                stock_abbrvs,
-            )
-            scored_articles = articles  # since articles are only read in from csv, they are already scored
-            for article in scored_articles:
-                if article["stock"] in stocks_list:
-                    pass
-                else:
-                    stocks_list.append(article["stock"])
-
-                if article["abbrv"] in abbrv_list:
-                    pass
-                else:
-                    abbrv_list.append(article["abbrv"])
-
-            # TODO automatically gather stocks and stock abbreviations
-    else:
-        # fresh run:
-        inputted_csv_list = []  # empty as not to verify any links for fresh run
-        # websites = ["www.fool.com", "finance.yahoo.com", "www.bloomberg.com", "www.marketwatch.com", "www.wsj.com"]
-        websites = []
-        print(
-            "\n\n"
-            + color.BOLD
-            + color.UNDERLINE
-            + "Choose your websites for news article scraping:"
-            + color.END
-            + color.END
-            + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal"
-        )
-        website_choices = input(
-            color.BOLD
-            + color.UNDERLINE
-            + color.GREEN
-            + "{***} Enter the numbers corresponding to the website, separated by commas: "
-            + color.END
-            + color.END
-            + color.END
-        )
-        website_numbers = website_choices.split(", ")
-
-        for number in website_numbers:
-            if int(number) == 1:
-                websites.append("www.fool.com")
-            elif int(number) == 2:
-                websites.append("finance.yahoo.com")
-            elif int(number) == 3:
-                websites.append("www.bloomberg.com")
-            elif int(number) == 4:
-                websites.append("www.marketwatch.com")
-            elif int(number) == 5:
-                websites.append("www.wsj.com")
-
-        stocks = input(
-            color.BOLD
-            + color.UNDERLINE
-            + color.RED
-            + "\n{***} Enter your stocks, separated by commas:"
-            + color.END
-            + color.END
-            + color.END
-            + "  "
-        )
-        stock_abbrvs = input(
-            color.BOLD
-            + color.UNDERLINE
-            + color.BLUE
-            + "{***} Enter your stock abbreviations, separated by commas, in the same order you entered the names above:"
-            + color.END
-            + color.END
-            + color.END
-            + "  "
-        )
-        start_date = input(
-            color.BOLD
-            + color.UNDERLINE
-            + "\n {****} Enter the START of the Date Range you want to use for article scraping:"
-            + color.END
-            + color.END
-            + "  "
-        )
-        end_date = input(
-            color.BOLD
-            + color.UNDERLINE
-            + "{****} Enter the END of the Date Range you want to use for article scraping: "
-            + color.END
-            + color.END
-            + "  "
-        )
-        # run thru process with only new articles
-        article_dicts = search_scraper.run_web_search_scraper(
-            stocks, stock_abbrvs, websites, start_date, end_date, inputted_csv_list
-        )
-        articles = sentiment_analyzer.analyze_all_articles(article_dicts)
-        scored_articles = calc_article_sent_scores(articles)
-        stocks_list = stocks.split(", ")
-        abbrv_list = stock_abbrvs.split(", ")
-
+def run_results_generator(scored_articles, stocks_list, abbrv_list, write_file):
     # find duplicate links and remove them
     links = []
     for article in scored_articles:
@@ -323,22 +41,58 @@ def cml_interface():
         else:
             links.append(article["link"])
 
-    fin_scored_stocks = generate_results(stocks_list, abbrv_list, scored_articles)
+    fin_scored_stocks = generate_results(
+        stocks_list, abbrv_list, scored_articles, write_file
+    )
 
-    print_cml_stock_table(fin_scored_stocks)  # print the table
+    return fin_scored_stocks
 
 
-def generate_results(stocks_list, abbrv_list, scored_articles):
+def remove_dup_articles(scored_articles):
+    result = []
+    seen = set()
+    result = []
+    for dic in scored_articles:
+        key = (dic["link"], dic["title"])
+        if key in seen:
+            continue
+        result.append(dic)
+        seen.add(key)
+    scored_articles = result
+    return scored_articles
+
+
+def generate_results(stocks_list, abbrv_list, scored_articles, write_file):
     """Driver function to generate results with."""
+    [i for n, i in enumerate(scored_articles) if i not in scored_articles[n + 1 :]]
 
-    scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
+    no_dup = []
+    seen = set()
+    result = []
+    for dic in scored_articles:
+        key = (dic["link"], dic["title"])
+        if key in seen:
+            continue
+        no_dup.append(dic)
+        seen.add(key)
+
+    scored_stocks = calc_stock_sentiment(no_dup, stocks_list)
     # save run date to overall dict for csv purposes
-    scored_stocks = calc_recent_stock_sentiment(scored_articles, scored_stocks)
+    scored_stocks = calc_recent_stock_sentiment(no_dup, scored_stocks)
 
-    scored_stocks = calc_stock_trifold_rating(scored_articles, scored_stocks)
+    scored_stocks = calc_stock_trifold_rating(no_dup, scored_stocks)
 
-    scored_stocks = calc_ovr_stock_article_feelings(scored_articles, scored_stocks)
-    csv_handler.write_data(scored_articles)
+    scored_stocks = calc_ovr_stock_article_feelings(no_dup, scored_stocks)
+
+    # write data
+    if write_file == "":
+        pass
+    elif ".csv" in write_file:
+        print("VALID CSV")
+        csv_handler.write_data(scored_articles, write_file)
+    else:
+        write_file = "my_results.csv"
+        csv_handler.write_data(scored_articles, write_file)
 
     scored_stocks = calc_ovr_media_rating(scored_articles, scored_stocks)
 
@@ -351,6 +105,7 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
             open_price,
             avg_volume,
             volume,
+            yr_target,
         ) = search_scraper.get_stock_attributes(abbrv_list[i])
 
         # ^^^ I should print this out in a results_table
@@ -358,6 +113,7 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
         scored_stocks[i]["current_price"] = price
         scored_stocks[i]["volume"] = volume
         scored_stocks[i]["avg_volume"] = avg_volume
+        scored_stocks[i]["yr_target"] = yr_target
 
         i += 1
 
@@ -366,52 +122,6 @@ def generate_results(stocks_list, abbrv_list, scored_articles):
     return fin_scored_stocks
 
     # will need to ask user if they want to get media results for the stocks inside the CML, not a UI issue
-
-
-def print_cml_stock_table(fin_scored_stocks):
-    """Given completely scored stocks, print a table of major attributes."""
-
-    table = PrettyTable()
-    table.field_names = [
-        "Stock",
-        "avg_stock_sent_score",
-        "article_count",
-        "recent_article_count",
-        "rcnt_text_sent_score",
-        "ovr_stock_trifold_rating",
-        "overall_stock_articles_feelings",
-        "positive_article_count",
-        "neutral_article_count",
-        "negative_article_count",
-        "current_price",
-        "volume",
-        "avg_volume",
-        "stock_well_being_prediction",
-        "stock_well_being_prediction_feelings",
-    ]
-
-    for stock_dict in fin_scored_stocks:
-        table.add_row(
-            [
-                stock_dict["stock"],
-                stock_dict["avg_stock_sent_score"],
-                stock_dict["article_count"],
-                stock_dict["recent_article_count"],
-                stock_dict["rcnt_text_sent_score"],
-                stock_dict["ovr_stock_trifold_rating"],
-                stock_dict["overall_stock_articles_feelings"],
-                stock_dict["positive_article_count"],
-                stock_dict["neutral_article_count"],
-                stock_dict["negative_article_count"],
-                stock_dict["current_price"],
-                stock_dict["volume"],
-                stock_dict["avg_volume"],
-                stock_dict["stock_well_being_prediction"],
-                stock_dict["stock_well_being_prediction_feelings"],
-            ]
-        )
-
-    print(table)
 
 
 def calc_article_sent_scores(articles):
@@ -515,10 +225,12 @@ def calc_stock_sentiment(scored_articles, stocks_list):
                 article_count += 1
                 stock_sent_score += float(article["ovr_text_sent_score"])
         avg_stock_sent_score = stock_sent_score / article_count
+        avg_stock_sent_feelings = calc_sent_rating(avg_stock_sent_score)
 
         stock_sent_dict = {
             "stock": stock,
             "avg_stock_sent_score": avg_stock_sent_score,
+            "avg_stock_sent_feelings": avg_stock_sent_feelings,
             "article_count": article_count,
         }
         scored_stocks.append(stock_sent_dict)
@@ -555,6 +267,7 @@ def calc_recent_stock_sentiment(scored_articles, scored_stocks):
             rcnt_text_sent_score = 0
         stock["recent_article_count"] = recent_article_count
         stock["rcnt_text_sent_score"] = rcnt_text_sent_score
+        stock["rcnt_text_sent_rating"] = calc_sent_rating(rcnt_text_sent_score)
 
         try:
             day_text_sent_score = day_stock_sent_score / day_article_count
@@ -562,6 +275,7 @@ def calc_recent_stock_sentiment(scored_articles, scored_stocks):
             day_text_sent_score = 0
         stock["day_article_count"] = day_article_count
         stock["day_stock_sent_score"] = day_stock_sent_score
+        stock["day_stock_sent_rating"] = calc_sent_rating(day_stock_sent_score)
 
     return scored_stocks
 
@@ -623,6 +337,7 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
         except:
             ovr_stock_trifold_rating = 0
         stock["ovr_stock_trifold_rating"] = ovr_stock_trifold_rating
+        stock["ovr_stock_trifold_feelings"] = calc_sent_rating(ovr_stock_trifold_rating)
 
     return scored_stocks
 
@@ -653,6 +368,10 @@ def calc_ovr_media_rating(scored_articles, scored_stocks):
             except:
                 stock_media_avg_sent_score = 0
             media_sent_rating = calc_sent_rating(stock_media_avg_sent_score)
+
+            if not media:
+                media = "Unknown Source"
+
             media_dict = {
                 "media": media,
                 "media_avg_sent_score": stock_media_avg_sent_score,
@@ -673,13 +392,59 @@ def predict_stock_well_being(scored_stocks):
 
     for stock in scored_stocks:
         wght_rcnt_text = 0.25 * (float(stock["rcnt_text_sent_score"]) * 100)  # .25
-        wght_avg_text = 0.25 * (float(stock["avg_stock_sent_score"]) * 100)  # .25
-        wght_trifold = 0.20 * (stock["ovr_stock_trifold_rating"] * 100)  # .20
 
-        if stock["overall_stock_articles_feelings"] == "Positive":  # .20
-            weight_feelings = 20
-        elif stock["overall_stock_articles_feelings"] == "Neutral":
+        if wght_rcnt_text == 0:
+            wght_avg_text = 0.40 * (
+                float(stock["avg_stock_sent_score"]) * 100
+            )  # .40 if nc
+            wght_trifold = 0.25 * (
+                float(stock["ovr_stock_trifold_rating"]) * 100
+            )  # .25 if nc
+        else:
+            wght_avg_text = 0.25 * (float(stock["avg_stock_sent_score"]) * 100)  # .25
+            wght_trifold = 0.15 * (
+                float(stock["ovr_stock_trifold_rating"]) * 100
+            )  # .15
+
+        print("YR" + (stock["yr_target"]))
+        print("CR" + (stock["current_price"]))
+
+        if float(stock["yr_target"]) == float(stock["current_price"]):
+            per = 100.0
+        elif float(stock["yr_target"]) > float(stock["current_price"]):
+            try:
+                per = (
+                    abs(float(stock["yr_target"]) - float(stock["current_price"]))
+                    / float(stock["current_price"])
+                ) * 100.0
+            except ZeroDivisionError:
+                per = 0
+
+            print("per", per)
+            if per >= 15:
+                weight_yr_per = 20
+            elif per >= 10:
+                weight_yr_per = 15
+            elif per >= 5:
+                weight_yr_per = 10
+            else:
+                weight_yr_per = 7.5
+        elif float(stock["yr_target"]) < float(stock["current_price"]):
+            try:
+                per = (
+                    abs(float(stock["yr_target"]) - float(stock["current_price"]))
+                    / float(stock["current_price"])
+                ) * 100.0
+            except ZeroDivisionError:
+                per = 0
+            weight_yr_per = 5
+
+        print("wght", weight_yr_per)
+
+        if stock["overall_stock_articles_feelings"] == "Positive":  # .10
             weight_feelings = 10
+        elif stock["overall_stock_articles_feelings"] == "Neutral":
+            weight_feelings = 5
         elif stock["overall_stock_articles_feelings"] == "Negative":
             weight_feelings = 0
         elif stock_sentiments == "Undertermined":
@@ -691,14 +456,14 @@ def predict_stock_well_being(scored_stocks):
         volume = int(stock["volume"].replace(",", ""))
         avg_volume = int(stock["avg_volume"].replace(",", ""))
 
-        if volume > avg_volume:
-            volume_wght = 10
+        if volume > avg_volume:  # .05
+            volume_wght = 5
         elif avg_volume > volume:
             volume_wght = 0
         elif volume == avg_volume:
-            volume_wght = 7.5
+            volume_wght = 3
         else:
-            volume_wght = 5
+            volume_wght = 2.5
 
         stock_well_being_prediction = (
             wght_rcnt_text
@@ -706,6 +471,7 @@ def predict_stock_well_being(scored_stocks):
             + weight_feelings
             + wght_trifold
             + volume_wght
+            + weight_yr_per
         )
 
         stock["stock_well_being_prediction"] = stock_well_being_prediction
@@ -734,6 +500,3 @@ def predict_stock_well_being(scored_stocks):
 def predict_historical_stock_well_being():
     """Given an input file of scored stocks over time, generate/predict the overall stock well being rating more accurately given more data."""
     # to be implemented later
-
-
-run_project()  # run the project
