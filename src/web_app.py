@@ -39,6 +39,9 @@ def main():
 def page_home(state):
     st.title(":house: Welcome to StockStoryScraper (SSS)")
 
+    image = Image.open("../sss.png")
+    st.image(image, use_column_width=True)
+
     st.markdown("## Tool Overview:")
     st.markdown("The StockStoryScraper allows users to scrape news stories on their favorite stocks and then see what the general sentiment for these articles is. It saves investors, both new and old, time in terms of analyzing stock news. Now, you no longer need to spend numerous hours searching for articles about stocks online and then reading them to see what the thoughts/sentiment are. The tool will find the articles for you and analyze them to see if they are positive, negative, or neutral. By using the SSS tool, users can make more informed investing decisions.")
 
@@ -209,7 +212,7 @@ def display_data(state):
                 st.markdown("#### Data Table:")
                 st.write(df_all_stock_info[columns])  # display dataframe/graph that vizualizes info
 
-            
+
 
     st.write("---")
 
