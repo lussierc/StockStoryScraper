@@ -68,7 +68,7 @@ def run_web_search_scraper(
     results = [
         j for i in results for j in i
     ]  # combine inner and outer list elements (results of individual search queries)
-    [i for n, i in enumerate(results) if i not in results[n + 1:]]
+    [i for n, i in enumerate(results) if i not in results[n + 1 :]]
 
     print(results)
     return results

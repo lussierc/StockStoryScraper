@@ -11,7 +11,8 @@ from prettytable import PrettyTable
 import sentiment_analyzer
 import csv_handler
 import search_scraper
-#import web_interface
+
+# import web_interface
 
 
 class color:
@@ -40,16 +41,19 @@ def run_results_generator(scored_articles, stocks_list, abbrv_list, write_file):
         else:
             links.append(article["link"])
 
-    fin_scored_stocks = generate_results(stocks_list, abbrv_list, scored_articles, write_file)
+    fin_scored_stocks = generate_results(
+        stocks_list, abbrv_list, scored_articles, write_file
+    )
 
     return fin_scored_stocks
+
 
 def remove_dup_articles(scored_articles):
     result = []
     seen = set()
     result = []
     for dic in scored_articles:
-        key = (dic['link'], dic['title'])
+        key = (dic["link"], dic["title"])
         if key in seen:
             continue
         result.append(dic)
@@ -57,15 +61,16 @@ def remove_dup_articles(scored_articles):
     scored_articles = result
     return scored_articles
 
+
 def generate_results(stocks_list, abbrv_list, scored_articles, write_file):
     """Driver function to generate results with."""
-    [i for n, i in enumerate(scored_articles) if i not in     scored_articles[n + 1:]]
+    [i for n, i in enumerate(scored_articles) if i not in scored_articles[n + 1 :]]
 
     no_dup = []
     seen = set()
     result = []
     for dic in scored_articles:
-        key = (dic['link'], dic['title'])
+        key = (dic["link"], dic["title"])
         if key in seen:
             continue
         no_dup.append(dic)
@@ -82,7 +87,7 @@ def generate_results(stocks_list, abbrv_list, scored_articles, write_file):
     # write data
     if write_file == "":
         pass
-    elif '.csv' in write_file:
+    elif ".csv" in write_file:
         print("VALID CSV")
         csv_handler.write_data(scored_articles, write_file)
     else:
@@ -117,8 +122,6 @@ def generate_results(stocks_list, abbrv_list, scored_articles, write_file):
     return fin_scored_stocks
 
     # will need to ask user if they want to get media results for the stocks inside the CML, not a UI issue
-
-
 
 
 def calc_article_sent_scores(articles):
@@ -274,7 +277,6 @@ def calc_recent_stock_sentiment(scored_articles, scored_stocks):
         stock["day_stock_sent_score"] = day_stock_sent_score
         stock["day_stock_sent_rating"] = calc_sent_rating(day_stock_sent_score)
 
-
     return scored_stocks
 
 
@@ -335,7 +337,7 @@ def calc_stock_trifold_rating(scored_articles, scored_stocks):
         except:
             ovr_stock_trifold_rating = 0
         stock["ovr_stock_trifold_rating"] = ovr_stock_trifold_rating
-        stock['ovr_stock_trifold_feelings'] = calc_sent_rating(ovr_stock_trifold_rating)
+        stock["ovr_stock_trifold_feelings"] = calc_sent_rating(ovr_stock_trifold_rating)
 
     return scored_stocks
 
@@ -392,20 +394,29 @@ def predict_stock_well_being(scored_stocks):
         wght_rcnt_text = 0.25 * (float(stock["rcnt_text_sent_score"]) * 100)  # .25
 
         if wght_rcnt_text == 0:
-            wght_avg_text = 0.40 * (float(stock["avg_stock_sent_score"]) * 100)  # .40 if nc
-            wght_trifold = 0.25 * (float(stock["ovr_stock_trifold_rating"]) * 100)  # .25 if nc
+            wght_avg_text = 0.40 * (
+                float(stock["avg_stock_sent_score"]) * 100
+            )  # .40 if nc
+            wght_trifold = 0.25 * (
+                float(stock["ovr_stock_trifold_rating"]) * 100
+            )  # .25 if nc
         else:
             wght_avg_text = 0.25 * (float(stock["avg_stock_sent_score"]) * 100)  # .25
-            wght_trifold = 0.15 * (float(stock["ovr_stock_trifold_rating"]) * 100)  # .15
+            wght_trifold = 0.15 * (
+                float(stock["ovr_stock_trifold_rating"]) * 100
+            )  # .15
 
-        print("YR" + (stock['yr_target']))
-        print("CR" + (stock['current_price']))
+        print("YR" + (stock["yr_target"]))
+        print("CR" + (stock["current_price"]))
 
-        if float(stock['yr_target']) == float(stock['current_price']):
+        if float(stock["yr_target"]) == float(stock["current_price"]):
             per = 100.0
-        elif float(stock['yr_target']) > float(stock['current_price']):
+        elif float(stock["yr_target"]) > float(stock["current_price"]):
             try:
-                per = (abs(float(stock['yr_target']) - float(stock['current_price'])) / float(stock['current_price'])) * 100.0
+                per = (
+                    abs(float(stock["yr_target"]) - float(stock["current_price"]))
+                    / float(stock["current_price"])
+                ) * 100.0
             except ZeroDivisionError:
                 per = 0
 
@@ -418,15 +429,17 @@ def predict_stock_well_being(scored_stocks):
                 weight_yr_per = 10
             else:
                 weight_yr_per = 7.5
-        elif float(stock['yr_target']) < float(stock['current_price']):
+        elif float(stock["yr_target"]) < float(stock["current_price"]):
             try:
-                per = (abs(float(stock['yr_target']) - float(stock['current_price'])) / float(stock['current_price'])) * 100.0
+                per = (
+                    abs(float(stock["yr_target"]) - float(stock["current_price"]))
+                    / float(stock["current_price"])
+                ) * 100.0
             except ZeroDivisionError:
                 per = 0
             weight_yr_per = 5
 
         print("wght", weight_yr_per)
-
 
         if stock["overall_stock_articles_feelings"] == "Positive":  # .10
             weight_feelings = 10
@@ -440,11 +453,10 @@ def predict_stock_well_being(scored_stocks):
         else:
             pass
 
-
         volume = int(stock["volume"].replace(",", ""))
         avg_volume = int(stock["avg_volume"].replace(",", ""))
 
-        if volume > avg_volume: #.05
+        if volume > avg_volume:  # .05
             volume_wght = 5
         elif avg_volume > volume:
             volume_wght = 0
@@ -483,7 +495,6 @@ def predict_stock_well_being(scored_stocks):
             stock["stock_well_being_prediction_feelings"] = "Extremely Good Wellbeing"
 
     return scored_stocks
-
 
 
 def predict_historical_stock_well_being():

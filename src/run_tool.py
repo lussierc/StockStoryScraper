@@ -2,6 +2,7 @@ import csv_handler
 import cml_interface
 import os
 
+
 class color:
     """Defines different colors and text formatting settings to be used for CML output printing."""
 
@@ -15,6 +16,7 @@ class color:
     BOLD = "\033[1m"
     UNDERLINE = "\033[4m"
     END = "\033[0m"
+
 
 def run_project():
     run_dec = input(
@@ -40,5 +42,6 @@ def run_project():
             + color.END
         )
         cml_interface.run_cml()
+
 
 run_project()
