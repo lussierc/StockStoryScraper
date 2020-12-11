@@ -8,8 +8,9 @@ Fall 2020 Independent Study - Allegheny College.
 
 ## Tool Overview
 
-- Scrapes articles from highly rated stock news websites specified by the user. The user also enters their chosen stocks, their ticker symbols, date range for scraping, and an export file (CSV) that can be read back into the tool.
+- Scrapes articles from highly rated stock news websites specified by the user. The user also enters their chosen stocks, corresponding ticker symbols, date range for scraping, and an export file (`.csv`) that can be read back into the tool.
   - With this, users can read back in their previously exported CSVs of article information to view their results again.
+    - Code to compare results from different runs will be added in future updates.
 - Uses vaderSentiment to perform textual sentiment analysis.
 - Scores the articles, gathers their price information, and generates results pertaining to the stocks overall sentiment feelings and well being.
 - Tool is used via a User Interface (web application) using Streamlit or a Command Line Interface.
