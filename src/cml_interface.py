@@ -46,15 +46,15 @@ def run_cml():
         + "  "
     )
 
-    if read_in_dec == "Y":
+    if read_in_dec == "Y":  # read in csv
         scored_articles, stocks_list, abbrv_list = read_old_csv()
         write_file = ""
-    else:
+    else:  # new run
         scored_articles, stocks_list, abbrv_list, write_file = fresh_run()
 
     fin_scored_stocks = results_generator.run_results_generator(
         scored_articles, stocks_list, abbrv_list, write_file
-    )
+    )  # get scored stocks
 
     print_cml_stock_table(fin_scored_stocks)  # print the table
 
@@ -79,7 +79,7 @@ def print_cml_stock_table(fin_scored_stocks):
         "avg_volume",
         "stock_well_being_prediction",
         "stock_well_being_prediction_feelings",
-    ]
+    ]  # define field names for table
 
     for stock_dict in fin_scored_stocks:
         table.add_row(
@@ -100,12 +100,14 @@ def print_cml_stock_table(fin_scored_stocks):
                 stock_dict["stock_well_being_prediction"],
                 stock_dict["stock_well_being_prediction_feelings"],
             ]
-        )
+        )  # add data to table
 
-    print(table)
+    print(table)  # print prettytable of scored stock info
 
 
 def read_old_csv():
+    """CML content for reading in a previously exported CSV."""
+
     # declare necessary variables:
     websites = []
     scored_articles = []
@@ -212,28 +214,37 @@ def read_old_csv():
             start_date,
             end_date,
             stock_abbrvs,
-        )
+        )  # get old articles
 
-        new_scored_articles = results_generator.calc_article_sent_scores(articles)
+        new_scored_articles = results_generator.calc_article_sent_scores(
+            articles
+        )  # score the new articles
 
-        scored_articles = inputted_csv_list + new_scored_articles
+        scored_articles = (
+            inputted_csv_list + new_scored_articles
+        )  # combine old and new articles
 
         stocks_list = stocks.split(", ")
         abbrv_list = stock_abbrvs.split(", ")
 
         for article in scored_articles:
-            if article["stock"] not in stocks_list:
+            if (
+                article["stock"] not in stocks_list
+            ):  # get the stock names for new group of articles
                 stocks_list.append(article["stock"])
             else:
                 pass
             if article["abbrv"] not in abbrv_list:
-                abbrv_list.append(article["abbrv"])
+                abbrv_list.append(
+                    article["abbrv"]
+                )  # get the stock tickers for new group of articles
             else:
                 pass
 
     else:
-        # OLD ARTICLES ONLY
-        articles, inputted_csv_list = csv_handler.read_data(
+        # Run CML using OLD ARTICLES ONLY
+
+        scored_articles, inputted_csv_list = csv_handler.read_data(
             csv_file,
             scrape_new_dec,
             stocks,
@@ -241,29 +252,33 @@ def read_old_csv():
             start_date,
             end_date,
             stock_abbrvs,
-        )
+        )  # read in articles from previously exorted csv
 
-        scored_articles = articles  # since articles are only read in from csv, they are already scored
         for article in scored_articles:
             if article["stock"] in stocks_list:
                 pass
             else:
-                stocks_list.append(article["stock"])
+                stocks_list.append(
+                    article["stock"]
+                )  # get the stock names for new group of articles
 
             if article["abbrv"] in abbrv_list:
                 pass
             else:
-                abbrv_list.append(article["abbrv"])
+                abbrv_list.append(
+                    article["abbrv"]
+                )  # get the stock tickers for new group of articles
 
         # TODO automatically gather stocks and stock abbreviations
     return scored_articles, stocks_list, abbrv_list
 
 
 def fresh_run():
+    """Runs the program from scratch with user selected run options."""
+
     # declare necessary variables:
     websites = []
     inputted_csv_list = []
-
     scored_articles = []
     stocks_list = []
     abbrv_list = []
@@ -280,7 +295,7 @@ def fresh_run():
         + color.END
         + color.END
         + "\n (1) Motley Fool \n (2) Yahoo Finance \n (3) Bloomberg \n (4) MarketWatch \n (5) Wall Street Journal"
-    )
+    )  # ask user what websites they want to scrape from
     website_choices = input(
         color.BOLD
         + color.UNDERLINE
@@ -289,10 +304,10 @@ def fresh_run():
         + color.END
         + color.END
         + color.END
-    )
+    )  # get their choices for websites
     website_numbers = website_choices.split(", ")
 
-    for number in website_numbers:
+    for number in website_numbers:  # add websites to list of urls for scraping
         if int(number) == 1:
             websites.append("www.fool.com")
         elif int(number) == 2:
@@ -340,7 +355,6 @@ def fresh_run():
         + color.END
         + "  "
     )
-
     write_file = input(
         color.BOLD
         + color.UNDERLINE
@@ -353,10 +367,15 @@ def fresh_run():
     # run thru process with only new articles
     article_dicts = search_scraper.run_web_search_scraper(
         stocks, stock_abbrvs, websites, start_date, end_date, inputted_csv_list
-    )
-    articles = sentiment_analyzer.analyze_all_articles(article_dicts)
-    scored_articles = results_generator.calc_article_sent_scores(articles)
-    stocks_list = stocks.split(", ")
+    )  # scrape articles with user chosen options
+    articles = sentiment_analyzer.analyze_all_articles(
+        article_dicts
+    )  # get sentiment analyzed articles
+    scored_articles = results_generator.calc_article_sent_scores(
+        articles
+    )  # get scored articles
+
+    stocks_list = stocks.split(", ")  # format lists
     abbrv_list = stock_abbrvs.split(", ")
 
     return scored_articles, stocks_list, abbrv_list, write_file

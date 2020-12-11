@@ -36,11 +36,15 @@ def analyze_all_articles(article_dicts):
 
 def sent_analyze(sentence):
     """Analyze a given sentence/block of text."""
-    english = spacy.load("en_core_web_sm")
+    english = spacy.load("en_core_web_sm")  # load spacy lang
     # nlp = en_core_web_sm.load()
     result = english(sentence)
-    sentences = [str(s) for s in result.sents]
-    analyzer = vaderSentiment.SentimentIntensityAnalyzer()
-    sentiment = [analyzer.polarity_scores(str(s)) for s in sentences]
+    sentences = [str(s) for s in result.sents]  # go thru sentences
+    analyzer = (
+        vaderSentiment.SentimentIntensityAnalyzer()
+    )  # create analyzer using vaderSentiment
+    sentiment = [
+        analyzer.polarity_scores(str(s)) for s in sentences
+    ]  # calculate sentiment rating
 
     return sentiment

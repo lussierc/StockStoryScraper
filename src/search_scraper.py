@@ -30,13 +30,15 @@ def get_search_queries(stocks, websites):
 def run_web_search_scraper(
     stocks, abbrvs, websites, start_date, end_date, inputted_csv_list
 ):
-    """Driver function, runs other necesssary fucntions."""
-    googlenews = initalize_google_news(start_date, end_date)
+    """Driver function, runs other necesssary functions for scraping."""
+    googlenews = initalize_google_news(
+        start_date, end_date
+    )  # initialize the googlenews object
 
-    stock_list = stocks.split(", ")
+    stock_list = stocks.split(", ")  # format lists
     abbrv_list = abbrvs.split(", ")
 
-    queries = get_search_queries(stock_list, websites)
+    queries = get_search_queries(stock_list, websites)  # create queries
     results = []
 
     i = 0
@@ -63,14 +65,10 @@ def run_web_search_scraper(
                 )
         i += 1
 
-    print("RESULTS FORM THE HEART")
-    print(results)
     results = [
         j for i in results for j in i
-    ]  # combine inner and outer list elements (results of individual search queries)
-    [i for n, i in enumerate(results) if i not in results[n + 1 :]]
+    ]  # combine inner and outer list elements (results of individual search queries) if necessary
 
-    print(results)
     return results
 
 
@@ -92,7 +90,7 @@ def scrape_google_news_search(
         link = result["link"]
         for article in inputted_csv_list:
             if article["link"] == link:
-                search_results.remove(result)
+                search_results.remove(result)  # remove duplicate links
 
     for result in search_results:
         link = result["link"]
@@ -114,7 +112,7 @@ def initalize_google_news(start_date, end_date):
     googlenews.setlang("en")
     googlenews.setperiod("d")
     googlenews.setencode("utf-8")
-    googlenews.setTimeRange(start_date, end_date)
+    googlenews.setTimeRange(start_date, end_date)  # using user specified date range
 
     return googlenews
 
@@ -141,6 +139,7 @@ def get_stock_attributes(abbreviation):
     url = requests.get(link)
     soup = bs4.BeautifulSoup(url.text, features="html.parser")
 
+    # scrape price and stock trend info from yahoo finance:
     price = (
         soup.find_all("div", {"class": "My(6px) Pos(r) smartphone_Mt(6px)"})[0]
         .find("span")

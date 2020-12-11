@@ -1,3 +1,6 @@
+"""Web interface using Streamlit."""
+
+# imports:
 import streamlit as st
 import csv_handler
 import results_generator
@@ -5,7 +8,6 @@ import pandas as pd
 from PIL import Image
 from streamlit.hashing import _CodeHasher
 
-# other files:
 import sentiment_analyzer
 import csv_handler
 import search_scraper
@@ -21,6 +23,7 @@ except ModuleNotFoundError:
 
 
 def main():
+    """Runs the web interface."""
     state = _get_state()
     pages = {
         "Home": page_home,
@@ -39,9 +42,11 @@ def main():
 
 
 def page_home(state):
+    """Sets up the home page of the web app."""
+
     st.title(":house: Welcome to StockStoryScraper (SSS)")
 
-    image = Image.open("../sss.png")
+    image = Image.open("../sss.png")  # load logo
     st.image(image, use_column_width=True)
 
     st.markdown("## Tool Overview:")
@@ -65,22 +70,27 @@ def page_home(state):
 
 
 def page_dashboard(state):
+    """Dashboard page where user sees their data."""
+
     st.title(":chart_with_upwards_trend: Dashboard")
-    if st.checkbox("View Your Chosen Run Settings"):
+
+    if st.checkbox(
+        "View Your Chosen Run Settings"
+    ):  # give user the option to view their defined run options
         display_state_values(state)
     st.write("---")
 
-    if state.cb_csvread == True:
+    if state.cb_csvread == True:  # displays results for imported data
         st.write(
             "Your CSV file of previously scraped articles has been properly imported! View the results below!"
         )
         st.write("# Your Imported Results:")
         display_data(state)
-    elif state.cb_freshrun == True:
+    elif state.cb_freshrun == True:  # displays results for newly scraped data
         st.write("Here is your newly scraped data:")
         st.write("# Your Scraped and Analyzed Results:")
         display_data(state)
-    else:
+    else:  # occurs if user does not define run options or they are improper
         st.markdown("## No Results Available!")
         st.markdown(
             "No results available. Configure your settings to run the program in the `Run Settings` page."
@@ -88,6 +98,8 @@ def page_dashboard(state):
 
 
 def read_csv(state):
+    """Reads in a user defined CSV of articles from a previous run."""
+
     websites = []
     scored_articles = []
     stocks_list = []
@@ -106,7 +118,7 @@ def read_csv(state):
         start_date,
         end_date,
         stock_abbrvs,
-    )
+    )  # read in the csv
 
     scored_articles = (
         articles  # since articles are only read in from csv, they are already scored
@@ -123,9 +135,11 @@ def read_csv(state):
         else:
             abbrv_list.append(article["abbrv"])
 
-    st.markdown("### *PLEASE WAIT! Reading in your CSV now!*")
-    # find duplicate links and remove them
+    st.markdown(
+        "### *PLEASE WAIT! Reading in your CSV now!*"
+    )  # alert the user the program is still preparing their data
 
+    # find duplicate links and remove them:
     seen = set()
     result = []
     for dic in scored_articles:
@@ -140,11 +154,13 @@ def read_csv(state):
     state.scored_articles = result
     state.fin_scored_stocks = results_generator.generate_results(
         stocks_list, abbrv_list, result, state.write_file
-    )
+    )  # get scored stocks
 
 
 def fresh_run(state):
-    inputted_csv_list = []
+    """Runs the program fresh, with their defined inputs."""
+
+    inputted_csv_list = []  # shows no CSV is being read in, no impact
 
     # run thru process with only new articles
     article_dicts = search_scraper.run_web_search_scraper(
@@ -154,10 +170,16 @@ def fresh_run(state):
         state.start_date,
         state.end_date,
         inputted_csv_list,
-    )
-    articles = sentiment_analyzer.analyze_all_articles(article_dicts)
-    scored_articles = results_generator.calc_article_sent_scores(articles)
+    )  # get articles
 
+    articles = sentiment_analyzer.analyze_all_articles(
+        article_dicts
+    )  # sentiment analyze the articles
+    scored_articles = results_generator.calc_article_sent_scores(
+        articles
+    )  # score the articles
+
+    # find and remove duplicate links if necessary:
     seen = set()
     result = []
     for dic in scored_articles:
@@ -170,16 +192,21 @@ def fresh_run(state):
     state.scored_articles = result
     state.stocks_list = state.stocks.split(", ")
     state.abbrv_list = state.abbrvs.split(", ")
+
     state.fin_scored_stocks = results_generator.run_results_generator(
         state.scored_articles, state.stocks_list, state.abbrv_list, state.write_file
-    )
+    )  # get scored stock info
 
 
 def display_data(state):
+    """Displays user data on the Dashboard page."""
+
     st.markdown("## View An Overview of Your Analyzed Stock Data:")
+
     if st.checkbox("See All Stocks Overview"):
         st.markdown("### Graphical Sentiment Representation:")
         st.markdown("*Hover over specific columns to get a closer look.*")
+
         df_all_stock_ovr = pd.DataFrame.from_records(
             state.fin_scored_stocks, index=state.stocks_list
         ).T
@@ -187,9 +214,9 @@ def display_data(state):
         all_ovr_clm = st.multiselect(
             label="Enter the names of stocks scraped below:",
             options=df_all_stock_ovr.columns,
-        )  # allow users to display specific contributor information on dataframe graph
+        )  # allow users to display stock information on dataframe graph
 
-        df_all_sent = df_all_stock_ovr.iloc[[1, 10]]
+        df_all_sent = df_all_stock_ovr.iloc[[1, 10]]  # gets avg sent and trifold rating
 
         if not all_ovr_clm:  # if nothing is selected show all media!
             st.bar_chart(df_all_sent)
@@ -234,7 +261,7 @@ def display_data(state):
             columns = st.multiselect(
                 label="Enter the names of stocks you scraped below:",
                 options=df_all_stock_info.columns,
-            )  # allow users to display specific contributor information on dataframe graph
+            )  # allow users to display stock information on dataframe graph
 
             df_all_stock_info = df_all_stock_info
 
@@ -356,7 +383,7 @@ def display_data(state):
                     columns = st.multiselect(
                         label="Enter the names of specific media sources below:",
                         options=df_media.columns,
-                    )  # allow users to display specific contributor information on dataframe graph
+                    )  # allow users to display specific media information on dataframe graph
 
                     df_media = df_media.iloc[1]  # only use the avg_sentiment
                     if not columns:  # if nothing is selected show all media!
