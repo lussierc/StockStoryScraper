@@ -50,17 +50,23 @@ def page_home(state):
 
 
 def page_dashboard(state):
-    st.title(":chart_with_upwards_trend: Dashboard page")
-    display_state_values(state)
+    st.title(":chart_with_upwards_trend: Dashboard")
+    if st.checkbox("View Your Chosen Run Settings"):
+        display_state_values(state)
     st.write("---")
 
 
     if state.cb_csvread == True:
         st.write("Your CSV file of previously scraped articles has been properly imported! View the results below!")
+        st.write("# Your Imported Results:")
         display_data(state)
     elif state.cb_freshrun == True:
         st.write("Here is your newly scraped data:")
+        st.write("# Your Scraped and Analyzed Results:")
         display_data(state)
+    else:
+        st.markdown("## No Results Available!")
+        st.markdown("No results available. Configure your settings to run the program in the `Run Settings` `page.")
 
 
 def read_csv(state):
@@ -98,7 +104,7 @@ def read_csv(state):
         else:
             abbrv_list.append(article["abbrv"])
 
-    st.markdown('PLEASE WAIT! Reading in your CSV now!')
+    st.markdown('### *PLEASE WAIT! Reading in your CSV now!*')
         # find duplicate links and remove them
 
 
@@ -237,6 +243,8 @@ def page_settings(state):
     display_state_values(state)
 
     st.write("---")
+    st.markdown("## Choose your Run Type and configure it's Settings:")
+
     if st.checkbox("Read in Previous CSV", state.cb_csvread):
         state.cb_csvread = True
         state.csv_file = st.text_input("Enter CSV Filename", state.csv_file or "")
@@ -245,7 +253,7 @@ def page_settings(state):
             state.bt_csv = True
             read_csv(state)
         if state.bt_csv == True:
-            st.write("Go to the dashboard to view your data.")
+            st.markdown("## *Go to the dashboard to view your data.*")
 
     elif st.checkbox("Fresh Run", state.cb_freshrun):
         state.cb_freshrun = True
@@ -282,9 +290,11 @@ def page_settings(state):
 
         if st.button("Run the Scraping Tool", state.bt_fresh):
             state.bt_fresh = True
+            st.markdown("### *PLEASE WAIT! Scraping and analyzing your articles now!*")
             fresh_run(state)
         if state.bt_fresh == True:
-            st.write("Go to the dashboard to view your newly scraped data.")
+            st.markdown("## *Go to the dashboard to view your newly scraped data data.*")
+
 
     # if st.checkbox("Set checkbox2 value."):
     #     state.websites.append("Yahoo")
@@ -299,24 +309,25 @@ def page_settings(state):
 
 
 def display_state_values(state):
-    st.write("Read in Old CSV", state.cb_csvread)
-    st.write("CSV Name", state.csv_file)
-    st.write("Input state:", state.stocks)
-    st.write("Input state:", state.abbrvs)
-    st.write("Input state:", state.start_date)
-    st.write("Input state:", state.end_date)
+    st.write("Read in Old CSV: ", state.cb_csvread)
+    st.write("Chosen CSV Import Filename: ", state.csv_file)
+    st.write("Chosen Stocks: ", state.stocks)
+    st.write("Corresponding Stock Ticker Symbols (Abbreviations): ", state.abbrvs)
+    st.write("Start of Date Range: ", state.start_date)
+    st.write("End of Date Range: ", state.end_date)
+    st.write("Selected Websites: ", state.websites)
+    st.write("Chosen CSV Export Filename: ", state.write_file)
 
     # st.write("Slider state:", state.abbrvs)
     # st.write("Radio state:", state.radio)
-    #st.write("Motley Fool state:", state.foolbox)
-    st.write("Websites:", state.websites)
+    # st.write("Motley Fool state:", state.foolbox)
     # st.write("Selectbox state:", state.selectbox)
     # st.write("Multiselect state:", state.multiselect)
     #
     # for i in range(3):
     #     st.write(f"Value {i}:", state[f"State value {i}"])
 
-    if st.button("Clear state"):
+    if st.button("Reset Current Run Options (Restart Tool)"):
         state.clear()
 
 
