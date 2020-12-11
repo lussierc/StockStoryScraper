@@ -46,6 +46,7 @@ def run_results_generator(scored_articles, stocks_list, abbrv_list, write_file):
 
 def generate_results(stocks_list, abbrv_list, scored_articles, write_file):
     """Driver function to generate results with."""
+    [i for n, i in enumerate(scored_articles) if i not in scored_articles[n + 1:]]
 
     scored_stocks = calc_stock_sentiment(scored_articles, stocks_list)
     # save run date to overall dict for csv purposes

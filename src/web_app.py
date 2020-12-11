@@ -91,19 +91,21 @@ def read_csv(state):
 
     st.markdown('CSV has successfully been read in!')
         # find duplicate links and remove them
-    links = []
-    for article in scored_articles:
-        check_list = isinstance(article, list)
-        if article["link"] in links:
-            print("*!!* Duplicate article - removing...", article["link"])
-            scored_articles.remove(article)
-        else:
-            links.append(article["link"])
 
-    state.scored_articles = scored_articles
+
+    seen = set()
+    result = []
+    for dic in scored_articles:
+        key = (dic['link'], dic['title'])
+        if key in seen:
+            continue
+        result.append(dic)
+        seen.add(key)
+
     state.stocks_list = stocks_list
     state.abbrv_list = abbrv_list
-    state.fin_scored_stocks = results_generator.generate_results(stocks_list, abbrv_list, scored_articles, state.write_file)
+    state.scored_articles = result
+    state.fin_scored_stocks = results_generator.generate_results(stocks_list, abbrv_list, result, state.write_file)
 
 def fresh_run(state):
     inputted_csv_list = []
@@ -169,7 +171,7 @@ def display_data(state):
                         st.markdown(" - *Number of Recent Articles Used For Score:* " + str(stock['day_article_count']))
 
                 ################### MEDIA #############################
-                if st.checkbox('View Media Specific Ratings'):
+                if st.checkbox('View Media Specific Ratings for: ' + stock['stock']):
                     media_results = stock['media_results']
                     media_list = []
                     for media in stock['media_results']:
@@ -195,6 +197,13 @@ def display_data(state):
                             st.markdown(" - Numerical Score: " + str(media['media_avg_sent_score']))
                             st.markdown(" - Article Count for this Media Source: " + str(media['article_count']))
                 ################################################
+
+                if st.checkbox('View all Articles for: ' + stock['stock']):
+                    st.write(state.scored_articles)
+                    for article in state.scored_articles:
+                        if article['stock'] == stock['stock']:
+                            if st.checkbox(stock['stock']+ " - View article: " + article['title']):
+                                st.write(article)
 
                 st.markdown("### The Overall Stock Trifold Feelings were " + str(stock['ovr_stock_trifold_feelings']))
                 st.markdown(" - *Numerical Overall Stock Trifold Rating:* " + str(stock['ovr_stock_trifold_rating']))
