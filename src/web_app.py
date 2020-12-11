@@ -46,7 +46,7 @@ def page_home(state):
 
     st.title(":house: Welcome to StockStoryScraper (SSS)")
 
-    image = Image.open("../sss.png")  # load logo
+    image = Image.open("../images/sss.png")  # load logo
     st.image(image, use_column_width=True)
 
     st.markdown("## Tool Overview:")
