@@ -24,11 +24,11 @@ def main():
     pages = {
         "Home": page_home,
         "Dashboard": page_dashboard,
-        "Settings": page_settings,
+        "Run Settings": page_settings,
     }
 
-    st.sidebar.title(":floppy_disk: Page states")
-    page = st.sidebar.radio("Select your page", tuple(pages.keys()))
+    st.sidebar.title(":mag: Navigation Hub")
+    page = st.sidebar.radio("Select your page:", tuple(pages.keys()))
 
     # Display the selected page with the session state
     pages[page](state)
@@ -37,7 +37,7 @@ def main():
     state.sync()
 
 def page_home(state):
-    st.title("Welcome to StockStoryScraper (SSS)")
+    st.title(":house: Welcome to StockStoryScraper (SSS)")
 
     st.markdown("## Tool Overview:")
     st.markdown("The StockStoryScraper allows users to scrape news stories on their favorite stocks and then see what the general sentiment for these articles is. It saves investors, both new and old, time in terms of analyzing stock news. Now, you no longer need to spend numerous hours searching for articles about stocks online and then reading them to see what the thoughts/sentiment are. The tool will find the articles for you and analyze them to see if they are positive, negative, or neutral. By using the SSS tool, users can make more informed investing decisions.")
@@ -232,7 +232,8 @@ def display_data(state):
         st.write("---")
 
 def page_settings(state):
-    st.title(":wrench: Fresh Run")
+    st.title(":wrench: Run Settings")
+    st.markdown("### Your Chosen Settings are Currently:")
     display_state_values(state)
 
     st.write("---")
