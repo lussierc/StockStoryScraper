@@ -66,7 +66,7 @@ def page_dashboard(state):
         display_data(state)
     else:
         st.markdown("## No Results Available!")
-        st.markdown("No results available. Configure your settings to run the program in the `Run Settings` `page.")
+        st.markdown("No results available. Configure your settings to run the program in the `Run Settings` page.")
 
 
 def read_csv(state):
@@ -247,7 +247,8 @@ def page_settings(state):
 
     if st.checkbox("Read in Previous CSV", state.cb_csvread):
         state.cb_csvread = True
-        state.csv_file = st.text_input("Enter CSV Filename", state.csv_file or "")
+        st.markdown("#### Enter CSV Import File:")
+        state.csv_file = st.text_input("Enter CSV Filename (EX: oldresults.csv)", state.csv_file or "")
         state.write_file = ""
         if st.button("Read in CSV", state.bt_csv):
             state.bt_csv = True
@@ -258,16 +259,16 @@ def page_settings(state):
     elif st.checkbox("Fresh Run", state.cb_freshrun):
         state.cb_freshrun = True
 
-        options = ["Hello", "World", "Goodbye"]
-        state.stocks = st.text_input("Enter Stock Names", state.stocks or "")
-        state.abbrvs = st.text_input("Enter Stock Tickers", state.abbrvs or "")
-        state.start_date = st.text_input("Enter Start of Date Range", state.start_date or "")
-        state.end_date = st.text_input("Enter End of Date Range", state.end_date or "")
+        st.markdown("#### Enter Stock Names:")
+        state.stocks = st.text_input("Enter Stock Names Separated by Commas (EX: apple, microsoft):", state.stocks or "")
+        st.markdown("#### Enter Stock Ticker Symbols:")
+        state.abbrvs = st.text_input("Enter Stock Ticker Symbols Separated by Commas in the same order as your stocks (EX: aapl, msft):", state.abbrvs or "")
 
-        # state.slider = st.slider("Set slider value.", 1, 10, state.slider)
-        # state.radio = st.radio("Set radio value.", options, options.index(state.radio) if state.radio else 0)
-        #state.foolbox = st.checkbox("Set checkbox value.", state.foolbox)
+        st.markdown("#### Enter Date Range for Scraping:")
+        state.start_date = st.text_input("Enter Start of Date Range (EX: 11/21/2020):", state.start_date or "")
+        state.end_date = st.text_input("Enter End of Date Range:", state.end_date or "")
 
+        st.markdown("#### Choose Websites for Scraping:")
         state.websites = []
         if st.checkbox("Motley Fool", state.cb_motfool):
             state.cb_motfool = True
@@ -285,8 +286,8 @@ def page_settings(state):
             state.cb_wsj = True
             state.websites.append("www.wsj.com")
 
-        state.write_file = st.text_input("Enter a CSV to save your result to:", state.write_file or "")
-
+        st.markdown("#### Enter CSV Export File:")
+        state.write_file = st.text_input("Enter a CSV to save your result to (EX: myresults.csv):", state.write_file or "")
 
         if st.button("Run the Scraping Tool", state.bt_fresh):
             state.bt_fresh = True
@@ -294,18 +295,6 @@ def page_settings(state):
             fresh_run(state)
         if state.bt_fresh == True:
             st.markdown("## *Go to the dashboard to view your newly scraped data data.*")
-
-
-    # if st.checkbox("Set checkbox2 value."):
-    #     state.websites.append("Yahoo")
-
-    # state.selectbox = st.selectbox("Select value.", options, options.index(state.selectbox) if state.selectbox else 0)
-    # state.multiselect = st.multiselect("Select value(s).", options, state.multiselect)
-    #
-    # # Dynamic state assignments
-    # for i in range(3):
-    #     key = f"State value {i}"
-    #     state[key] = st.slider(f"Set value {i}", 1, 10, state[key])
 
 
 def display_state_values(state):
@@ -317,15 +306,6 @@ def display_state_values(state):
     st.write("End of Date Range: ", state.end_date)
     st.write("Selected Websites: ", state.websites)
     st.write("Chosen CSV Export Filename: ", state.write_file)
-
-    # st.write("Slider state:", state.abbrvs)
-    # st.write("Radio state:", state.radio)
-    # st.write("Motley Fool state:", state.foolbox)
-    # st.write("Selectbox state:", state.selectbox)
-    # st.write("Multiselect state:", state.multiselect)
-    #
-    # for i in range(3):
-    #     st.write(f"Value {i}:", state[f"State value {i}"])
 
     if st.button("Reset Current Run Options (Restart Tool)"):
         state.clear()
