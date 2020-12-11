@@ -209,6 +209,7 @@ def display_data(state):
                 st.markdown("#### Data Table:")
                 st.write(df_all_stock_info[columns])  # display dataframe/graph that vizualizes info
 
+            
 
     st.write("---")
 
@@ -251,7 +252,7 @@ def display_data(state):
                         st.markdown(" - *Number of Recent Articles Used For Score:* " + str(stock['day_article_count']))
 
                 ################### MEDIA #############################
-                if st.checkbox('View Media Specific Ratings for: ' + stock['stock']):
+                if st.checkbox('View Media Specific Ratings for ' + stock['stock']):
                     media_results = stock['media_results']
                     media_list = []
                     for media in stock['media_results']:
@@ -278,16 +279,17 @@ def display_data(state):
                             st.markdown(" - Article Count for this Media Source: " + str(media['article_count']))
                 ################################################
 
-                if st.checkbox('View all Articles for: ' + stock['stock']):
+                if st.checkbox('View all Articles for ' + stock['stock']):
                     st.markdown("#### Choose Specific Articles to View:")
                     for article in state.scored_articles:
                         if article['stock'] == stock['stock']:
                             if st.checkbox("View article: " + article['title']):
                                 st.write(article)
 
-                st.markdown("### The Overall Stock Trifold Feelings were " + str(stock['ovr_stock_trifold_feelings']))
-                st.markdown(" - *Numerical Overall Stock Trifold Rating:* " + str(stock['ovr_stock_trifold_rating']))
-                st.markdown(" - *** This rating is the: Average rating of all article sentiment ratings for the title, description/summary, and text.")
+                if st.checkbox('View Stock Trifold Rating for ' + stock['stock']):
+                    st.markdown("### The Overall Stock Trifold Rating was " + str(stock['ovr_stock_trifold_feelings']))
+                    st.markdown(" - *Numerical Overall Stock Trifold Rating:* " + str(stock['ovr_stock_trifold_rating']))
+                    st.markdown(" - *** This rating is the: Average rating of all article sentiment ratings for the title, description/summary, and text.")
 
         st.write("---")
 

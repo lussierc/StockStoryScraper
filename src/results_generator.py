@@ -390,13 +390,48 @@ def predict_stock_well_being(scored_stocks):
 
     for stock in scored_stocks:
         wght_rcnt_text = 0.25 * (float(stock["rcnt_text_sent_score"]) * 100)  # .25
-        wght_avg_text = 0.25 * (float(stock["avg_stock_sent_score"]) * 100)  # .25
-        wght_trifold = 0.20 * (stock["ovr_stock_trifold_rating"] * 100)  # .20
 
-        if stock["overall_stock_articles_feelings"] == "Positive":  # .20
-            weight_feelings = 20
-        elif stock["overall_stock_articles_feelings"] == "Neutral":
+        if wght_rcnt_text == 0:
+            wght_avg_text = 0.40 * (float(stock["avg_stock_sent_score"]) * 100)  # .40 if nc
+            wght_trifold = 0.25 * (float(stock["ovr_stock_trifold_rating"]) * 100)  # .25 if nc
+        else:
+            wght_avg_text = 0.25 * (float(stock["avg_stock_sent_score"]) * 100)  # .25
+            wght_trifold = 0.15 * (float(stock["ovr_stock_trifold_rating"]) * 100)  # .15
+
+        print("YR" + (stock['yr_target']))
+        print("CR" + (stock['current_price']))
+
+        if float(stock['yr_target']) == float(stock['current_price']):
+            per = 100.0
+        elif float(stock['yr_target']) > float(stock['current_price']):
+            try:
+                per = (abs(float(stock['yr_target']) - float(stock['current_price'])) / float(stock['current_price'])) * 100.0
+            except ZeroDivisionError:
+                per = 0
+
+            print("per", per)
+            if per >= 15:
+                weight_yr_per = 20
+            elif per >= 10:
+                weight_yr_per = 15
+            elif per >= 5:
+                weight_yr_per = 10
+            else:
+                weight_yr_per = 7.5
+        elif float(stock['yr_target']) < float(stock['current_price']):
+            try:
+                per = (abs(float(stock['yr_target']) - float(stock['current_price'])) / float(stock['current_price'])) * 100.0
+            except ZeroDivisionError:
+                per = 0
+            weight_yr_per = 5
+
+        print("wght", weight_yr_per)
+
+
+        if stock["overall_stock_articles_feelings"] == "Positive":  # .10
             weight_feelings = 10
+        elif stock["overall_stock_articles_feelings"] == "Neutral":
+            weight_feelings = 5
         elif stock["overall_stock_articles_feelings"] == "Negative":
             weight_feelings = 0
         elif stock_sentiments == "Undertermined":
@@ -405,17 +440,18 @@ def predict_stock_well_being(scored_stocks):
         else:
             pass
 
+
         volume = int(stock["volume"].replace(",", ""))
         avg_volume = int(stock["avg_volume"].replace(",", ""))
 
-        if volume > avg_volume:
-            volume_wght = 10
+        if volume > avg_volume: #.05
+            volume_wght = 5
         elif avg_volume > volume:
             volume_wght = 0
         elif volume == avg_volume:
-            volume_wght = 7.5
+            volume_wght = 3
         else:
-            volume_wght = 5
+            volume_wght = 2.5
 
         stock_well_being_prediction = (
             wght_rcnt_text
@@ -423,6 +459,7 @@ def predict_stock_well_being(scored_stocks):
             + weight_feelings
             + wght_trifold
             + volume_wght
+            + weight_yr_per
         )
 
         stock["stock_well_being_prediction"] = stock_well_being_prediction
