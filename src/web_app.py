@@ -46,7 +46,7 @@ def page_home(state):
 
     st.title(":house: Welcome to StockStoryScraper (SSS)")
 
-    image = Image.open("../images/sss.png")  # load logo
+    image = Image.open("sss.png")  # load logo
     st.image(image, use_column_width=True)
 
     st.markdown("## Tool Overview:")
@@ -338,7 +338,7 @@ def display_data(state):
                 if (
                     int(stock["recent_article_count"]) != 0
                 ):  # if there are no recent articles, don't give the option to view them
-                    if st.checkbox("View Recent Sentiment Info"):
+                    if st.checkbox("View Recent Sentiment Info for " + stock['stock']):
                         # within this give the option for looking at the graph or textual
                         st.markdown("### Recent Sentiment:")
 
