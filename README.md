@@ -42,8 +42,6 @@ There are builder scripts for each type of machine. First ensure you are in the 
 2. `sh ./docker/run_macOS.sh` -- enters the container
 3. `python3 run_tool.py` -- run the program
 
-Note, if you run into Spacy issues while running the program, you may have to run the command `python3 -m spacy install en`.
-
 #### OS-specific scripts to build and run containers
 The following bash scripts simplify building the container.
 
@@ -73,6 +71,8 @@ First ensure Python and Pip are installed on your machine. Then navigate to the 
 You can install the required packages for the project using Pip by running `pip3 install -r requirements.txt` or `pip install -r requirements.txt` depending on your machine's Pip installation.
 
 Then, you can run the program by using the command `python3 run_tool.py`.
+
+*Note:* if you run into Spacy issues while running the program, you may have to run the command `python3 -m spacy download en`.
 
 ## Problems, Ideas, or Praise
 
