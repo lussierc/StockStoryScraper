@@ -9,6 +9,9 @@ The StockStoryScraper (SSS) tool gathers and analyzes the sentiment of news arti
 
 Users give the tool their selected stocks, corresponding ticker symbols, date range, and an export file name (so articles can be used again for future analysis). The tool scrapes Google News to get relevant article information than scrapes their texts. VaderSentiment is then used to analyze the texts to determine their sentiment rating. Results are then generated that apply textual feelings to the numerical sentiment ratings. More in-depth results are then generated regarding the average sentiment of all articles for a stock and the stocks overall well being. Now all the articles are in one place for a stock and they have already been automatically analyzed to determine their positivity, saving both professional and amateur traders time and effort.
 
+*Example of running the tool without importing a CSV and all new settings:*
+![Run Settings Page Example](images/baserun.png)
+
 ### Motivations
 
 I have always had an interest in stocks. At the beginning of the COVID-19 lockdown, I began to trade some stocks lightly, on the side. I noticed the problem that it was impossible to keep up with the news surrounding stocks. With social media and internet news outlets being so prevalent in our society, it is near impossible to keep up. News can impact stocks in big ways, negatively or positively. It is important to be in the know regarding what is going on with stocks you currently own and stocks you are interested in.

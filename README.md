@@ -22,16 +22,57 @@ It takes a lot of time to read every available news article about a stock, wheth
 
 This saves lots of time and gives users a one stop shop for stock news and the automatic analysis of them.
 
-## Running the Program using Pipenv
+#### View the Program in Action
+
+Here is an example of the projects web app UI (using Streamlit) in action. The example shows the settings being configured for a new, fresh run of the project:
+
+![Run screen!](images/baserun.png)
+
+## Running the Project
+
+There are a few ways that users can run the project! These methods include using your own local Python3 installation, Pipenv, or Docker.
+
+### Running with Docker
+
+The program can be run within a Docker Container using Docker Desktop. For more information on how to install this program, view [this](https://www.docker.com/) resource.
+
+There are builder scripts for each type of machine. First ensure you are in the `src` directory. To run the `Mac OS` version for instance, you would use the following commands:
+
+1. `sh ./docker/build_macOS.sh` -- builds the container
+2. `sh ./docker/run_macOS.sh` -- enters the container
+3. `python3 run_tool.py` -- run the program
+
+Note, if you run into Spacy issues while running the program, you may have to run the command `python3 -m spacy install en`.
+
+#### OS-specific scripts to build and run containers
+The following bash scripts simplify building the container.
+
+| OS  | Building  | Running  |
+|---|---|---|
+| MacOS  		|  `./build_macOS.sh` |  `./run_macOS.sh` |
+| Linux   	|  `./build_linux.sh` | `./run_linux.sh`  |
+| Windows 	|  `build_win.bat` 		|  `run_win.bat` |
+
+These files may be found in the directory, `docker/` and the builder require a copy of `Dockerfile` to run which is in the `src` directory, hence why these command should be run from the `src` directory like in the example above.
+
+### Running with Pipenv
 Make sure Python(3) and Pipenv are installed on your machine. Find information on installing pipenv [here](https://pipenv-fork.readthedocs.io/en/latest/install.html).
 
-### Pipenv
+#### Pipenv
 
 The project comes with a `Pipfile` in the `src` directory that will install the necessary packages for the program, making it easy for users with Pipenv to run the project on their machines.
 
 First navigate to the `src` directory using `cd src`. Then run the command `pipenv lock` to install the necessary Python packages.
 
 You can then run the command `pipenv run python3 run_tool.py` to run the program. You will be presented with the option to run either the UI web interface or the Command Line Interface.
+
+### Running with Python
+
+First ensure Python and Pip are installed on your machine. Then navigate to the `src` directory.
+
+You can install the required packages for the project using Pip by running `pip3 install -r requirements.txt` or `pip install -r requirements.txt` depending on your machine's Pip installation.
+
+Then, you can run the program by using the command `python3 run_tool.py`.
 
 ## Problems, Ideas, or Praise
 
