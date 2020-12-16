@@ -49,5 +49,3 @@ While my Independent Study will be over in mid-December for this tool, I still p
 - Allow user to read in multiple CSVs of articles that were previously exported from the tool so they can compare them in an effort to see overall stock performance.
 - Improve stock well being rating so it uses a neural network, machine learning, or something of the like.
 - Add More Run Methods: Allow the user to run the program using other resources like Docker.
-
-## Preliminary Evidence of Tool Accuracy
